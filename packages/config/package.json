@@ -1,0 +1,24 @@
+{
+  "name": "config",
+  "version": "1.0.0",
+  "author": "Dmitry Paskhin <d.pasxin@gmail.com>",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "node": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build:prod": "ts-node --project tsconfig.generate.json ./src/main/bin/generateEnvConfig.ts && eslint ./src/main/gen/**/* --fix --no-ignore && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "build:start": "node ./dist/index.cjs",
+    "build:watch": "exit 0",
+    "clean:dist": "rimraf './dist'",
+    "clean:all": "npm run clean:dist && rimraf './node_modules' && rimraf './src/main/gen'",
+    "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\"",
+    "check:lint:fix": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\" --fix",
+    "check:test": "exit 0",
+    "check:all": "npm run check:lint && npm run check:test"
+  },
+  "dependencies": {
+    "dotenv-extended": "^2.9.0"
+  }
+}
