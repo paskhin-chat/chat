@@ -13,4 +13,10 @@ export class CreateUserInput {
    */
   @Field({ description: "User's last name." })
   public lastName!: string;
+
+  /**
+   * User's last name.
+   */
+  @Field({ description: "User's dob." })
+  public dob!: string;
 }

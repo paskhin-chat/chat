@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build:prod": "ttsc --project tsconfig.build.json",
+    "build:prod": "ttsc --project tsconfig.build.json && cosmos-export",
     "build:start": "exit 0",
     "build:watch": "cosmos",
     "clean:dist": "rimraf './dist'",

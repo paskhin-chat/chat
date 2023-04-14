@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.eslint.json",
   "include": ["**/*.ts", "**/*.js", "**/*.json", "./.eslintrc.js"],
-  "exclude": ["**/*.sh", "**/*.prisma"]
+  "exclude": ["**/*.prisma"]
 }

@@ -8,7 +8,8 @@ datasource db {
 }
 
 model User {
-  id        String @default(uuid()) @id
+  id        String @id @default(uuid())
   firstName String
   lastName  String
+  dob       DateTime
 }

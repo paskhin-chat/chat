@@ -33,7 +33,7 @@ export class UsersService {
    *
    * @param id
    */
-  public findOne(id: string): Promise<User | null> {
+  public async findOne(id: string): Promise<User | null> {
     return this.prismaService.user.findUnique({
       where: { id },
     });

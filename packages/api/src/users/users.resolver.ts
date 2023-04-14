@@ -6,18 +6,20 @@ import {
   ID,
   Subscription,
 } from '@nestjs/graphql';
-import { RedisPubSub } from 'graphql-redis-subscriptions';
+
+import { RedisService } from '../redis/redis.service';
 
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
-const pubSub = new RedisPubSub();
-
 @Resolver(() => User)
 export class UsersResolver {
-  public constructor(private readonly usersService: UsersService) {}
+  public constructor(
+    private readonly usersService: UsersService,
+    private readonly redisService: RedisService,
+  ) {}
 
   /**
    * Creates user.
@@ -30,7 +32,7 @@ export class UsersResolver {
   ): Promise<User> {
     const user = await this.usersService.create(createUserInput);
 
-    await pubSub.publish('userCreated', { userCreated: user });
+    await this.redisService.publish('userCreated', { userCreated: user });
 
     return user;
   }
@@ -76,6 +78,6 @@ export class UsersResolver {
    */
   @Subscription(() => User)
   public userCreated(): AsyncIterator<User> {
-    return pubSub.asyncIterator('userCreated');
+    return this.redisService.asyncIterator('userCreated');
   }
 }
