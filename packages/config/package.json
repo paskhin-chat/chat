@@ -8,17 +8,21 @@
     "node": "./dist/index.cjs"
   },
   "scripts": {
-    "build:prod": "ts-node --project tsconfig.generate.json ./src/main/bin/generateEnvConfig.ts && eslint ./src/main/gen/**/* --fix --no-ignore && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
-    "build:start": "node ./dist/index.cjs",
+    "build:prod": "npm run clean:dist && ts-node --project tsconfig.generate.json src/main/bin/generate.ts && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "build:start": "exit 0",
     "build:watch": "exit 0",
-    "clean:dist": "rimraf './dist'",
-    "clean:all": "npm run clean:dist && rimraf './node_modules' && rimraf './src/main/gen'",
+    "clean:dist": "rimraf './dist' && rimraf './src/main/gen'",
+    "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\"",
     "check:lint:fix": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\" --fix",
     "check:test": "exit 0",
     "check:all": "npm run check:lint && npm run check:test"
   },
   "dependencies": {
-    "dotenv-extended": "^2.9.0"
+    "dotenv": "^16.0.3",
+    "dotenv-expand": "^10.0.0",
+    "doubter": "^2.1.0",
+    "lodash": "^4.17.21",
+    "utility-types": "^3.10.0"
   }
 }

@@ -240,6 +240,14 @@ module.exports = {
         aspects: ['noHref', 'invalidHref', 'preferButton'],
       },
     ],
+    '@typescript-eslint/restrict-template-expressions': [
+      'error',
+      {
+        allowNumber: true,
+        allowBoolean: true,
+        allowNullish: true,
+      },
+    ],
   },
   overrides: [
     {
@@ -344,6 +352,7 @@ module.exports = {
         'unicorn/numeric-separators-style': 'off',
         'unicorn/filename-case': 'off',
         'no-template-curly-in-string': 'off',
+        '@typescript-eslint/restrict-template-expressions': 'off',
         quotes: 'off',
       },
     },

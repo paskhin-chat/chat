@@ -1,1 +1,2 @@
-export * as config from './gen/envConfig';
+export * as config from './gen/config';
+export type { IConfig } from './bin';
