@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
+
+      - name: Build packages
+        run: npm run build:prod
+
+      - name: Run eslint and test
+        run: npm run check:all
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      - name: Login to Docker HUB
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker images
+        run: docker-compose push
+
+      - name: Copy docker-compose to chat-prod
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.CHAT_PROD_HOST }}
+          username: ${{ secrets.CHAT_PROD_USER }}
+          key: ${{ secrets.CHAT_PROD_SSH_PRIVATE_KEY }}
+          source: ./docker-compose.yml,./.env
+          target: ./root/
+
+      - name: Run docker-compose up on chat-prod
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CHAT_PROD_HOST }}
+          username: ${{ secrets.CHAT_PROD_USER }}
+          key: ${{ secrets.CHAT_PROD_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/root/
+
+            sudo apt-get update
+            sudo apt-get install -y docker-compose
+
+            docker-compose pull && docker-compose up -d
