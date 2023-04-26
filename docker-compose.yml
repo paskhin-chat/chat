@@ -4,6 +4,7 @@ services:
 
   node:
     container_name: node
+    image: pasxin/chat-node
     environment:
       DATABASE_URL: ${DATABASE_URL}
     build:
@@ -37,6 +38,7 @@ services:
 
   nginx:
     container_name: nginx
+    image: pasxin/chat-nginx
     build:
       dockerfile: ./.docker/nginx/Dockerfile
       context: ./
