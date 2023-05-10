@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   node:
-    container_name: node
+    container_name: chat-node
     image: pasxin/chat-node
     environment:
       DATABASE_URL: ${DATABASE_URL}
@@ -15,9 +15,11 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - paskhin-me
 
   postgres:
-    container_name: postgres
+    container_name: chat-postgres
     image: postgres
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -27,17 +29,21 @@ services:
       - ${DATABASE_PORT}:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - paskhin-me
 
   redis:
-    container_name: redis
+    container_name: chat-redis
     image: redis
     ports:
       - ${REDIS_PORT}:6379
     volumes:
       - cache:/data
+    networks:
+      - paskhin-me
 
   nginx:
-    container_name: nginx
+    container_name: chat-nginx
     image: pasxin/chat-nginx
     build:
       dockerfile: ./.docker/nginx/Dockerfile
@@ -46,7 +52,13 @@ services:
         - HTTP_AUTH_PASSWORD=${HTTP_AUTH_PASSWORD}
     ports:
       - ${CLIENT_PORT}:80
+    networks:
+      - paskhin-me
 
 volumes:
   pgdata: {}
   cache: {}
+
+networks:
+  paskhin-me:
+    name: paskhin-me
