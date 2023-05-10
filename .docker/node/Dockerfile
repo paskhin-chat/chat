@@ -1,7 +1,5 @@
 FROM node
 
-RUN apt update
-
 WORKDIR /app
 
 COPY ./packages/api/ /app/packages/api/
@@ -12,5 +10,7 @@ COPY ./package.json /app/
 COPY ./.docker/node/pm2.config.json ./.docker/node/init.sh /app/
 
 ENTRYPOINT ["/app/init.sh"]
+
+EXPOSE 3002
 
 CMD []
