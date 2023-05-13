@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import { config } from 'config';
 
 /**
  * Vite config.
@@ -13,6 +12,6 @@ export default defineConfig(() => ({
   base: '',
   plugins: [react()],
   server: {
-    port: config.CLIENT_PORT,
+    port: 6_005,
   },
 }));

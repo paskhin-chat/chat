@@ -1,14 +1,13 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import { Button, Input } from 'ui';
-import { config } from 'config';
 
 /**
  * App root.
  */
 export const App: FC = () => (
   <SWrapper>
-    <Button>{`Click me - ${config.API_PORT}`}</Button>
+    <Button>Click me</Button>
     <Input />
   </SWrapper>
 );

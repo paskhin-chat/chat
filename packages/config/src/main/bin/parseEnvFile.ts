@@ -3,15 +3,6 @@ import * as dotenvExpand from 'dotenv-expand';
 import * as d from 'doubter';
 
 const configShape = d.object({
-  CLIENT_PORT: d.string().transform(toNumber),
-
-  API_PORT: d.string().transform(toNumber),
-  API_PREFIX: d.string().regex(/^\/\w+/),
-  API_GQL_PLAYGROUND_ENABLED: d
-    .string()
-    .optional()
-    .transform((input) => (input ? toBoolean(input) : null)),
-
   DATABASE_USER: d.string(),
   DATABASE_PASSWORD: d.string(),
   DATABASE_HOST: d.string(),
@@ -87,16 +78,4 @@ function toNumber(input: string): number {
   }
 
   return output;
-}
-
-function toBoolean(input: string): boolean {
-  if (input !== 'true' && input !== 'false') {
-    throw new d.ValidationError([
-      {
-        message: `Unable to convert "${input}" to boolean, use either "true" or "false".`,
-      },
-    ]);
-  }
-
-  return input === 'true';
 }

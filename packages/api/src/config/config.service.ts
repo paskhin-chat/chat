@@ -21,20 +21,6 @@ export class ConfigService {
   }
 
   /**
-   * Api port.
-   */
-  public get apiPort(): number {
-    return this.get('API_PORT');
-  }
-
-  /**
-   * Api prefix.
-   */
-  public get apiPrefix(): string {
-    return this.get('API_PREFIX');
-  }
-
-  /**
    * Redis host.
    */
   public get redisHost(): string {
@@ -53,13 +39,6 @@ export class ConfigService {
    */
   public get redisUrl(): string {
     return this.get('REDIS_URL');
-  }
-
-  /**
-   * Gql playground enabled.
-   */
-  public get gqlPlaygroundEnabled(): boolean | null {
-    return this.get('API_GQL_PLAYGROUND_ENABLED');
   }
 
   /**
