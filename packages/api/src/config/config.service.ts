@@ -46,6 +46,20 @@ export class ConfigService {
   }
 
   /**
+   * JWT secret token.
+   */
+  public get jwtSecretToken(): string {
+    return this.get('JWT_SECRET_TOKEN');
+  }
+
+  /**
+   * Cookies secret token.
+   */
+  public get cookiesSecretToken(): string {
+    return this.get('COOKIES_SECRET_TOKEN');
+  }
+
+  /**
    * Retrieve a production configuration based on its name.
    */
   public getProd<Name extends keyof IConfig>(name: Name): IConfig[Name] {
