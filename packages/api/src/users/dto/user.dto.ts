@@ -1,7 +1,13 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@InputType()
-export class CreateUserInput {
+@ObjectType()
+export class User {
+  /**
+   * User's id.
+   */
+  @Field(() => ID)
+  public id!: string;
+
   /**
    * User's login.
    */
@@ -21,20 +27,14 @@ export class CreateUserInput {
   public lastName!: string;
 
   /**
-   * User's last name.
+   * User's second name.
    */
   @Field(() => String, { nullable: true })
-  public secondName?: string;
+  public secondName!: string | null;
 
   /**
    * User's date of birth.
    */
   @Field(() => String, { nullable: true })
-  public dob?: string;
-
-  /**
-   * User's password.
-   */
-  @Field()
-  public password!: string;
+  public dob!: Date | null;
 }

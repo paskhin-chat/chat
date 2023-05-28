@@ -6,11 +6,13 @@ import {
   ID,
   Subscription,
 } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 
 import { RedisService } from '../redis/redis.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { User } from './dto/user.dto';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
@@ -23,14 +25,12 @@ export class UsersResolver {
 
   /**
    * Creates user.
-   *
-   * @param createUserInput
    */
   @Mutation(() => User)
   public async createUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
+    @Args('input') input: CreateUserInput,
   ): Promise<User> {
-    const user = await this.usersService.create(createUserInput);
+    const user = await this.usersService.create(input);
 
     await this.redisService.publish('userCreated', { userCreated: user });
 
@@ -40,6 +40,7 @@ export class UsersResolver {
   /**
    * Finds all users.
    */
+  @UseGuards(AuthGuard)
   @Query(() => [User], { name: 'users' })
   public findAll(): Promise<User[]> {
     return this.usersService.findAll();
@@ -59,10 +60,8 @@ export class UsersResolver {
    * Updates user.
    */
   @Mutation(() => User)
-  public updateUser(
-    @Args('updateUserInput') updateUserInput: UpdateUserInput,
-  ): Promise<User> {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
+  public updateUser(@Args('input') input: UpdateUserInput): Promise<User> {
+    return this.usersService.update(input.id, input);
   }
 
   /**

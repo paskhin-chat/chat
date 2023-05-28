@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
 import { CreateUserInput } from './dto/create-user.input';
-import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
@@ -29,9 +29,7 @@ export class UsersService {
   }
 
   /**
-   * Finds concrete user.
-   *
-   * @param id
+   * Finds concrete user by id.
    */
   public async findOne(id: string): Promise<User | null> {
     return this.prismaService.user.findUnique({
@@ -40,10 +38,16 @@ export class UsersService {
   }
 
   /**
+   * Finds concrete user by login.
+   */
+  public async findByLogin(login: string): Promise<User | null> {
+    return this.prismaService.user.findUnique({
+      where: { login },
+    });
+  }
+
+  /**
    * Updates user and returns it.
-   *
-   * @param id
-   * @param updateUserInput
    */
   public update(id: string, updateUserInput: UpdateUserInput): Promise<User> {
     return this.prismaService.user.update({
@@ -54,8 +58,6 @@ export class UsersService {
 
   /**
    * Removes concrete user and returns it.
-   *
-   * @param id
    */
   public remove(id: string): Promise<User> {
     return this.prismaService.user.delete({ where: { id } });
