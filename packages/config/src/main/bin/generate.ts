@@ -4,7 +4,9 @@ import { Primitive } from 'utility-types';
 
 import { parseEnvFile } from './parseEnvFile';
 
-const config = parseEnvFile(path.resolve('../../.env'));
+const prodConfig = parseEnvFile(path.resolve('../../.env'));
+const devConfig = parseEnvFile(path.resolve('../../.env.dev'));
+const testConfig = parseEnvFile(path.resolve('../../.env.test'));
 
 const dir = './src/main/gen';
 
@@ -12,13 +14,25 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
-const prodConfigFilePath = path.resolve(process.cwd(), dir, 'config.ts');
+const prodConfigFilePath = path.resolve(process.cwd(), dir, 'prod-config.ts');
+const devConfigFilePath = path.resolve(process.cwd(), dir, 'dev-config.ts');
+const testConfigFilePath = path.resolve(process.cwd(), dir, 'test-config.ts');
 
 if (fs.existsSync(prodConfigFilePath)) {
   fs.unlinkSync(prodConfigFilePath);
 }
 
-fs.appendFileSync(prodConfigFilePath, generateConsts(config));
+if (fs.existsSync(devConfigFilePath)) {
+  fs.unlinkSync(devConfigFilePath);
+}
+
+if (fs.existsSync(testConfigFilePath)) {
+  fs.unlinkSync(testConfigFilePath);
+}
+
+fs.appendFileSync(prodConfigFilePath, generateConsts(prodConfig));
+fs.appendFileSync(devConfigFilePath, generateConsts(devConfig));
+fs.appendFileSync(testConfigFilePath, generateConsts(testConfig));
 
 function generateConsts<
   Source extends Record<string, Exclude<Primitive, symbol>>,

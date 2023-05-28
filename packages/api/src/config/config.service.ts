@@ -1,23 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { config, IConfig } from 'config';
+import { testConfig, prodConfig, devConfig, IConfig } from 'config';
 
 @Injectable()
 export class ConfigService {
-  private readonly NODE_ENV =
-    process.env.NODE_ENV === 'production' ? 'production' : 'development';
-
   /**
    * Is it production environment.
    */
   public get prod(): boolean {
-    return this.NODE_ENV === 'production';
+    return process.env.NODE_ENV === 'production';
   }
 
   /**
    * Is it development environment.
    */
   public get dev(): boolean {
-    return this.NODE_ENV === 'development';
+    return process.env.NODE_ENV === 'development';
+  }
+
+  /**
+   * Is it testing environment.
+   */
+  public get test(): boolean {
+    return process.env.NODE_ENV === 'test';
   }
 
   /**
@@ -42,11 +46,38 @@ export class ConfigService {
   }
 
   /**
-   * Get config by its name.
-   *
-   * @param name
+   * Retrieve a production configuration based on its name.
+   */
+  public getProd<Name extends keyof IConfig>(name: Name): IConfig[Name] {
+    return prodConfig[name];
+  }
+
+  /**
+   * Retrieve a development configuration based on its name.
+   */
+  public getDev<Name extends keyof IConfig>(name: Name): IConfig[Name] {
+    return devConfig[name];
+  }
+
+  /**
+   * Retrieve a testing configuration based on its name.
+   */
+  public getTest<Name extends keyof IConfig>(name: Name): IConfig[Name] {
+    return testConfig[name];
+  }
+
+  /**
+   * Retrieve a configuration based on its name and the current environment.
    */
   public get<Name extends keyof IConfig>(name: Name): IConfig[Name] {
-    return config[name];
+    if (this.prod) {
+      return this.getProd(name);
+    }
+
+    if (this.test) {
+      return this.getTest(name);
+    }
+
+    return this.getDev(name);
   }
 }
