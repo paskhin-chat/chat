@@ -14,21 +14,29 @@ export class AuthResolver {
    * Creates user and returns access token.
    */
   @Mutation(() => String)
-  public register(
+  public async register(
     @Args('input') input: RegisterInput,
     @Context() context: GqlContext,
   ): Promise<string> {
-    return this.authService.register(input, context);
+    const [accessToken, refreshToken] = await this.authService.register(input);
+
+    context.setRefreshToken(refreshToken);
+
+    return accessToken;
   }
 
   /**
    * Logs user in and returns access token.
    */
   @Mutation(() => String)
-  public login(
+  public async login(
     @Args('input') input: LoginInput,
     @Context() context: GqlContext,
   ): Promise<string> {
-    return this.authService.login(input, context);
+    const [accessToken, refreshToken] = await this.authService.login(input);
+
+    context.setRefreshToken(refreshToken);
+
+    return accessToken;
   }
 }

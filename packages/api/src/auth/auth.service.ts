@@ -4,7 +4,6 @@ import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 
 import { UsersService } from '../users/users.service';
-import type { GqlContext } from '../common/gql-context';
 
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
@@ -33,10 +32,7 @@ export class AuthService {
   /**
    * Creates user, sets refresh token and returns access token.
    */
-  public async register(
-    dto: RegisterInput,
-    context: GqlContext,
-  ): Promise<string> {
+  public async register(dto: RegisterInput): Promise<[string, string]> {
     if (await this.usersService.findByLogin(dto.login)) {
       throw new HttpException(
         'This login is already being used.',
@@ -50,17 +46,13 @@ export class AuthService {
       password: await hash(dto.password, 5),
     });
 
-    const [access, refresh] = await this.generateTokens(user);
-
-    context.setRefreshToken(refresh);
-
-    return access;
+    return this.generateTokens(user);
   }
 
   /**
    * Logs user in, sets refresh token and returns access token.
    */
-  public async login(dto: LoginInput, context: GqlContext): Promise<string> {
+  public async login(dto: LoginInput): Promise<[string, string]> {
     const candidate = await this.usersService.findByLogin(dto.login);
 
     if (!candidate || !(await compare(dto.password, candidate.password))) {
@@ -74,11 +66,7 @@ export class AuthService {
       );
     }
 
-    const [access, refresh] = await this.generateTokens(candidate);
-
-    context.setRefreshToken(refresh);
-
-    return access;
+    return this.generateTokens(candidate);
   }
 
   /**
