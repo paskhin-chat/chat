@@ -15,6 +15,9 @@ const configShape = d.object({
   REDIS_URL: d.string(),
 
   HTTP_AUTH_PASSWORD: d.string(),
+
+  JWT_SECRET_TOKEN: d.string(),
+  COOKIES_SECRET_TOKEN: d.string(),
 });
 
 /**

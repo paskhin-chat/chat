@@ -1,6 +1,7 @@
-import * as childProcess from 'node:child_process';
 import { devConfig } from 'config';
 import * as process from 'node:process';
+
+import { containerRunScriptCreator, spawn } from '../utils';
 
 (async function main() {
   await spawn('bash', [
@@ -38,35 +39,3 @@ import * as process from 'node:process';
     'ts-node-dev --inspect=0.0.0.0:5555 --transpile-only --exit-child -- ./src/index.ts',
   ]);
 })();
-
-function spawn(command: string, args: string[]): Promise<void> {
-  return new Promise<void>((resolve) => {
-    childProcess
-      .spawn(command, args, { stdio: 'inherit' })
-      .on('close', resolve);
-  });
-}
-
-function containerRunScriptCreator(
-  name: string,
-  image: string,
-  options: Array<[string, string?]>,
-): string {
-  return `
-    #!/bin/bash
-      export CONTAINER_NAME="${name}"
-
-      if [ ! "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-        if [ "$(docker ps -aq -f status=exited -f name=$CONTAINER_NAME)" ]; then
-          docker rm $CONTAINER_NAME
-        fi
-
-        docker run --name $CONTAINER_NAME ${options
-          .map(([flag, value]) => `${flag} ${value || ''}`)
-          .join(' ')} ${image}
-
-      else
-        echo $(docker ps -q -f name=$CONTAINER_NAME)
-      fi
-    `;
-}
