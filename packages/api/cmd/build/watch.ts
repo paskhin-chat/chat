@@ -1,5 +1,4 @@
 import { devConfig } from 'config';
-import * as process from 'node:process';
 
 import { containerRunScriptCreator, spawn } from '../utils';
 
@@ -27,11 +26,32 @@ import { containerRunScriptCreator, spawn } from '../utils';
     ]),
   ]);
 
+  await spawn('bash', [
+    '-c',
+    `
+    #!/bin/bash
+
+    read -p "Need to create a migration? (Y/n): " migration_necessity
+
+    if [[ $migration_necessity == [Yy] ]]; then
+      read -p "Enter migration name: " migration_name
+
+      if [[ $migration_name ]]; then
+        DATABASE_URL=${devConfig.DATABASE_URL} npx prisma migrate dev --name "$migration_name"
+        DATABASE_URL=${devConfig.DATABASE_URL} npx prisma generate
+
+        exit 0
+      else
+        echo "Migration name cannot be empty. Skipping migration creation."
+      fi
+    fi
+    
+    DATABASE_URL=${devConfig.DATABASE_URL} npx prisma db push
+    DATABASE_URL=${devConfig.DATABASE_URL} npx prisma generate
+    `,
+  ]);
+
   process.env.DATABASE_URL = devConfig.DATABASE_URL;
-
-  await spawn('npm', ['exec', '-c', 'prisma migrate dev']);
-
-  await spawn('npm', ['exec', '-c', 'prisma generate']);
 
   await spawn('npm', [
     'exec',
