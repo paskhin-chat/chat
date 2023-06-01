@@ -3,12 +3,12 @@ import { forwardRef, Module } from '@nestjs/common';
 // eslint-disable-next-line import/no-cycle
 import { AuthModule } from '../auth/auth.module';
 
-import { UsersService } from './users.service';
-import { UsersResolver } from './users.resolver';
+import { UserService } from './user.service';
+import { UserResolver } from './user.resolver';
 
 @Module({
-  providers: [UsersResolver, UsersService],
-  exports: [UsersService],
+  providers: [UserResolver, UserService],
+  exports: [UserService],
   imports: [forwardRef(() => AuthModule)],
 })
-export class UsersModule {}
+export class UserModule {}

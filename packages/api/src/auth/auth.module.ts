@@ -2,7 +2,7 @@ import { forwardRef, Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 // eslint-disable-next-line import/no-cycle
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../user/user.module';
 import { ConfigService } from '../config/config.service';
 
 import { AuthService } from './auth.service';
@@ -11,7 +11,7 @@ import { AuthResolver } from './auth.resolver';
 @Global()
 @Module({
   imports: [
-    forwardRef(() => UsersModule),
+    forwardRef(() => UserModule),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         global: true,

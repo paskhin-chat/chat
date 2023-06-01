@@ -7,7 +7,7 @@ import { isJWT } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import setCookieParser from 'set-cookie-parser';
 
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../user/user.module';
 import { RedisModule } from '../redis/redis.module';
 import { ConfigModule } from '../config/config.module';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -29,7 +29,7 @@ describe('Auth integration', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        UsersModule,
+        UserModule,
         ConfigModule,
         RedisModule,
         PrismaModule,

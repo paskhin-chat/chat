@@ -1,0 +1,88 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Room } from '@prisma/client';
+
+import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
+
+import { CreateRoomInput } from './dto/create-room.input';
+
+@Injectable()
+export class RoomService {
+  public constructor(
+    private readonly prismaService: PrismaService,
+    private readonly usersService: UserService,
+  ) {}
+
+  /**
+   * Finds or creates room by users.
+   */
+  public async create(
+    input: CreateRoomInput,
+    authorizedUserId: string,
+  ): Promise<Room> {
+    const userIds = [...input.userIds, authorizedUserId];
+    const users = await this.usersService.findByIds(userIds);
+
+    if (users.length !== userIds.length) {
+      throw new HttpException(
+        'Invalid user IDs Detected',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return (
+      (await this.findRoomByUsers(userIds)) ||
+      (await this.prismaService.room.create({
+        data: {
+          name: input.name,
+          members: {
+            createMany: {
+              data: userIds.map((id) => ({ userId: id })),
+              skipDuplicates: true,
+            },
+          },
+        },
+      }))
+    );
+  }
+
+  /**
+   * Finds room by its id.
+   */
+  public findRoomById(id: string): Promise<Room | null> {
+    return this.prismaService.room.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  /**
+   * Finds room by its member user.
+   */
+  public findRoomsByUserId(userId: string): Promise<Room[]> {
+    return this.prismaService.room.findMany({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+  }
+
+  private findRoomByUsers(userIds: string[]): Promise<Room | null> {
+    return this.prismaService.room.findFirst({
+      where: {
+        members: {
+          every: {
+            userId: {
+              in: userIds,
+            },
+          },
+        },
+      },
+    });
+  }
+}

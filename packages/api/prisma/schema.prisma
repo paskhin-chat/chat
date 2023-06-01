@@ -8,11 +8,42 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  login      String    @unique
-  firstName  String
-  secondName String?
-  lastName   String
-  dob        DateTime?
-  password   String
+  id               String    @id @default(uuid())
+  login            String    @unique
+  firstName        String
+  secondName       String?
+  lastName         String
+  dob              DateTime?
+  email            String?
+  registrationDate DateTime  @default(now())
+  password         String
+  members          Member[]
+}
+
+model Room {
+  id           String    @id @default(uuid())
+  name         String?
+  creationDate DateTime  @default(now())
+  members      Member[]
+  messages     Message[]
+}
+
+model Member {
+  id       String    @id @default(uuid())
+  room     Room      @relation(fields: [roomId], references: [id])
+  roomId   String
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+  joinDate DateTime  @default(now())
+  messages Message[]
+}
+
+model Message {
+  id       String   @id @default(uuid())
+  room     Room     @relation(fields: [roomId], references: [id])
+  roomId   String
+  member   Member   @relation(fields: [memberId], references: [id])
+  memberId String
+  content  String
+  sendTime DateTime @default(now())
 }

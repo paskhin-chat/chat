@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { isJWT, isUUID } from 'class-validator';
 
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../user/user.module';
 import { RedisModule } from '../redis/redis.module';
 import { ConfigModule } from '../config/config.module';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -16,7 +16,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [UsersModule, RedisModule, ConfigModule, PrismaModule],
+      imports: [UserModule, RedisModule, ConfigModule, PrismaModule],
       providers: [AuthService],
     }).compile();
 

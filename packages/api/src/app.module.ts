@@ -5,7 +5,7 @@ import Keyv from 'keyv';
 import { KeyvAdapter } from '@apollo/utils.keyvadapter';
 import { Request, Response } from 'express';
 
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { ConfigModule } from './config/config.module';
@@ -13,10 +13,12 @@ import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
 import { GqlContext } from './common/gql-context';
 import { AuthService } from './auth/auth.service';
+import { RoomModule } from './room/room.module';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     ConfigModule,
     RedisModule,
     PrismaModule,
@@ -51,6 +53,8 @@ import { AuthService } from './auth/auth.service';
       inject: [ConfigService, AuthService],
     }),
     AuthModule,
+    RoomModule,
+    MemberModule,
   ],
 })
 export class AppModule {}
