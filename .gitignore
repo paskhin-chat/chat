@@ -3,3 +3,4 @@ packages/*/dist
 .env
 packages/**/gen
 .DS_Store
+.idea
