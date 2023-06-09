@@ -1,6 +1,20 @@
 import { devConfig } from 'config';
+import { program } from 'commander';
 
 import { containerRunScriptCreator, spawn } from '../utils';
+
+const opts = program
+  .option(
+    '-m',
+    'Create a migration file that corresponds to the differences between the database and schema.',
+  )
+  .option(
+    '-r',
+    'Reset the database and seed it by executing the corresponding script.',
+  )
+  .option('-s', 'Start the database studio with a UI on localhost:1234.')
+  .parse()
+  .opts<{ m?: boolean; r?: boolean; s?: boolean }>();
 
 (async function main() {
   await spawn('bash', [
@@ -26,32 +40,23 @@ import { containerRunScriptCreator, spawn } from '../utils';
     ]),
   ]);
 
-  await spawn('bash', [
-    '-c',
-    `
-    #!/bin/bash
-
-    read -p "Need to create a migration? (Y/n): " migration_necessity
-
-    if [[ $migration_necessity == [Yy] ]]; then
-      read -p "Enter migration name: " migration_name
-
-      if [[ $migration_name ]]; then
-        DATABASE_URL=${devConfig.DATABASE_URL} npx prisma migrate dev --name "$migration_name"
-        DATABASE_URL=${devConfig.DATABASE_URL} npx prisma generate
-
-        exit 0
-      else
-        echo "Migration name cannot be empty. Skipping migration creation."
-      fi
-    fi
-    
-    DATABASE_URL=${devConfig.DATABASE_URL} npx prisma db push
-    DATABASE_URL=${devConfig.DATABASE_URL} npx prisma generate
-    `,
-  ]);
-
   process.env.DATABASE_URL = devConfig.DATABASE_URL;
+
+  await (opts.m
+    ? spawn('npm', ['exec', '-c', 'prisma migrate dev'])
+    : spawn('npm', ['exec', '-c', 'prisma db push']));
+
+  if (opts.r) {
+    await spawn('npm', ['exec', '-c', 'prisma migrate reset']);
+  }
+
+  if (opts.s) {
+    void spawn('npm', [
+      'exec',
+      '-c',
+      'prisma studio --browser none --port 1234',
+    ]);
+  }
 
   await spawn('npm', [
     'exec',

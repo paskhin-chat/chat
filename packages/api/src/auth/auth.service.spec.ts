@@ -5,8 +5,8 @@ import { UsersModule } from '../users/users.module';
 import { RedisModule } from '../redis/redis.module';
 import { ConfigModule } from '../config/config.module';
 import { PrismaModule } from '../prisma/prisma.module';
-import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
+import { resetDatabase } from '../common/test';
 
 import { AuthService } from './auth.service';
 
@@ -20,12 +20,11 @@ describe('AuthService', () => {
       providers: [AuthService],
     }).compile();
 
-    await module.get<PrismaService>(PrismaService).user.deleteMany();
-
     authService = module.get<AuthService>(AuthService);
   });
 
   afterEach(async () => {
+    await resetDatabase();
     await module.get<RedisService>(RedisService).close();
   });
 
