@@ -29,7 +29,7 @@ import { containerRunScriptCreator, spawn } from '../utils';
 
   process.env.DATABASE_URL = testConfig.DATABASE_URL;
 
-  await spawn('npm', ['exec', '-c', 'prisma db push']);
+  await spawn('npm', ['exec', '-c', 'prisma migrate dev']);
 
-  await spawn('jest', []);
+  await spawn('jest', ['-i']);
 })();

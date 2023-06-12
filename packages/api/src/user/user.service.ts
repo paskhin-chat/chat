@@ -51,6 +51,15 @@ export class UserService {
   }
 
   /**
+   * Find member's user.
+   */
+  public findUserByMemberId(memberId: string): Promise<User | null> {
+    return this.prismaService.member
+      .findUnique({ where: { id: memberId } })
+      .user();
+  }
+
+  /**
    * Updates user and returns it.
    */
   public update(id: string, updateUserInput: UpdateUserInput): Promise<User> {

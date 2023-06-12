@@ -34,8 +34,9 @@ export class RoomResolver {
   @Query(() => RoomDto, { nullable: true, name: 'room' })
   public findOne(
     @Args('id', { type: () => ID }) id: string,
+    @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
   ): Promise<Room | null> {
-    return this.roomService.findRoomById(id);
+    return this.roomService.findRoomByIdAndUserId(id, authorizedUserData.id);
   }
 
   /**

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from '@prisma/client';
+import { uniq } from 'lodash';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
@@ -20,7 +21,7 @@ export class RoomService {
     input: CreateRoomInput,
     authorizedUserId: string,
   ): Promise<Room> {
-    const userIds = [...input.userIds, authorizedUserId];
+    const userIds = uniq([...input.userIds, authorizedUserId]);
     const users = await this.usersService.findByIds(userIds);
 
     if (users.length !== userIds.length) {
@@ -38,7 +39,6 @@ export class RoomService {
           members: {
             createMany: {
               data: userIds.map((id) => ({ userId: id })),
-              skipDuplicates: true,
             },
           },
         },
@@ -47,14 +47,15 @@ export class RoomService {
   }
 
   /**
-   * Finds room by its id.
+   * Finds room by its id and user id.
    */
-  public findRoomById(id: string): Promise<Room | null> {
-    return this.prismaService.room.findUnique({
-      where: {
-        id,
-      },
-    });
+  public async findRoomByIdAndUserId(
+    id: string,
+    userId: string,
+  ): Promise<Room | null> {
+    const availableRooms = await this.findRoomsByUserId(userId);
+
+    return availableRooms.find((room) => room.id === id) || null;
   }
 
   /**

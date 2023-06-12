@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Member, User } from '@prisma/client';
+import { Member } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -14,14 +14,5 @@ export class MemberService {
     return this.prismaService.room
       .findUnique({ where: { id: roomId } })
       .members();
-  }
-
-  /**
-   * Find member's user.
-   */
-  public findByUserId(memberId: string): Promise<User | null> {
-    return this.prismaService.member
-      .findUnique({ where: { id: memberId } })
-      .user();
   }
 }
