@@ -26,9 +26,9 @@ import { MemberModule } from './member/member.module';
       driver: ApolloDriver,
       useFactory: (configService: ConfigService, authService: AuthService) => ({
         driver: ApolloDriver,
-        autoSchemaFile: './src/gen/schema.gql',
+        autoSchemaFile: './src/schema/schema.gql',
         definitions: {
-          path: './src/gen/schema.ts',
+          path: './src/schema/schema.ts',
           customScalarTypeMapping: {
             DateTime: 'string',
           },

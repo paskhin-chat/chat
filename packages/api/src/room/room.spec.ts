@@ -12,7 +12,7 @@ import {
   resetDatabase,
 } from '../common/test';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateRoomInput, RoomDto } from '../gen/schema';
+import { CreateRoomInput, RoomDto } from '../schema/schema';
 import { AuthService } from '../auth/auth.service';
 
 describe('Room integration', () => {

@@ -7,7 +7,7 @@
     "build:start": "NODE_ENV=production node ./dist/index.js",
     "build:watch": "ts-node --transpile-only ./cmd/build/watch.ts",
     "clean:dist": "rimraf './dist'",
-    "clean:all": "npm run clean:dist && rimraf './node_modules' && rimraf './src/gen'",
+    "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\"",
     "check:lint:fix": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\" --fix",
     "check:test": "NODE_ENV=test ts-node ./cmd/check/test.ts",

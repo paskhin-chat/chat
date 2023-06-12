@@ -12,7 +12,7 @@ import {
   requestCreator,
   resetDatabase,
 } from '../common/test';
-import { LoginInput, RegisterInput } from '../gen/schema';
+import { LoginInput, RegisterInput } from '../schema/schema';
 
 import { AuthService } from './auth.service';
 
