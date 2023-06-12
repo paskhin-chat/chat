@@ -14,8 +14,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { ConfigService } from '../config/config.service';
 import { GqlContext } from '../common/gql-context';
 import { RedisService } from '../redis/redis.service';
-import { gql, requestCreator } from '../common/test/utils';
-import { PrismaService } from '../prisma/prisma.service';
+import { gql, requestCreator, resetDatabase } from '../common/test';
 
 import { AuthService } from './auth.service';
 import { AuthModule } from './auth.module';
@@ -64,8 +63,6 @@ describe('Auth integration', () => {
 
     app = module.createNestApplication();
 
-    await module.get<PrismaService>(PrismaService).user.deleteMany();
-
     app.use(
       cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken),
     );
@@ -73,6 +70,7 @@ describe('Auth integration', () => {
   });
 
   afterEach(async () => {
+    await resetDatabase();
     await app.close();
     await module.get<RedisService>(RedisService).close();
   });
