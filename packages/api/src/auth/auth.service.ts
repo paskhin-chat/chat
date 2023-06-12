@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
@@ -25,7 +25,7 @@ export interface IAuthorizedUserData {
 @Injectable()
 export class AuthService {
   public constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 

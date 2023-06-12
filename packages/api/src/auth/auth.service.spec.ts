@@ -1,31 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { isJWT, isUUID } from 'class-validator';
+import { faker } from '@faker-js/faker';
 
-import { UsersModule } from '../users/users.module';
-import { RedisModule } from '../redis/redis.module';
-import { ConfigModule } from '../config/config.module';
-import { PrismaModule } from '../prisma/prisma.module';
 import { RedisService } from '../redis/redis.service';
-import { resetDatabase } from '../common/test';
+import { createModule, resetDatabase } from '../common/test';
 
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let module: TestingModule;
+  let redisService: RedisService;
 
   beforeEach(async () => {
-    module = await Test.createTestingModule({
-      imports: [UsersModule, RedisModule, ConfigModule, PrismaModule],
-      providers: [AuthService],
-    }).compile();
+    const module = await createModule();
 
-    authService = module.get<AuthService>(AuthService);
+    authService = module.get(AuthService);
+    redisService = module.get(RedisService);
   });
 
   afterEach(async () => {
     await resetDatabase();
-    await module.get<RedisService>(RedisService).close();
+    await redisService.close();
   });
 
   it('should be defined', () => {
@@ -34,11 +28,10 @@ describe('AuthService', () => {
 
   it('should register new user, return access and refresh tokens', async () => {
     const [accessToken, refreshToken] = await authService.register({
-      login: 'login',
-      password: 'password',
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      firstName: 'First name',
-      lastName: 'Last name',
+      login: faker.internet.userName(),
+      password: faker.internet.password(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
     });
 
     expect(isJWT(accessToken)).toEqual(true);
@@ -46,16 +39,19 @@ describe('AuthService', () => {
   });
 
   it('should register user and log this user in, return access and refresh tokens', async () => {
+    const login = faker.internet.userName();
+    const password = faker.internet.password();
+
     await authService.register({
-      login: 'login',
-      password: 'password',
-      firstName: 'First name',
-      lastName: 'Last name',
+      login,
+      password,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
     });
 
     const [accessToken, refreshToken] = await authService.login({
-      login: 'login',
-      password: 'password',
+      login,
+      password,
     });
 
     expect(isJWT(accessToken)).toEqual(true);
@@ -63,20 +59,22 @@ describe('AuthService', () => {
   });
 
   it('should verify token', async () => {
+    const login = faker.internet.userName();
+
     const [accessToken, refreshToken] = await authService.register({
-      login: 'login',
-      password: 'password',
-      firstName: 'First name',
-      lastName: 'Last name',
+      login,
+      password: faker.internet.password(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
     });
 
     const atAuthorizedUserData = await authService.verifyToken(accessToken);
     const rtAuthorizedUserData = await authService.verifyToken(refreshToken);
 
     expect(isUUID(atAuthorizedUserData?.id)).toEqual(true);
-    expect(atAuthorizedUserData?.login).toEqual('login');
+    expect(atAuthorizedUserData?.login).toEqual(login);
 
     expect(isUUID(rtAuthorizedUserData?.id)).toEqual(true);
-    expect(rtAuthorizedUserData?.login).toEqual('login');
+    expect(rtAuthorizedUserData?.login).toEqual(login);
   });
 });

@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {
+export class UserDto {
   /**
    * User's id.
    */
@@ -35,6 +35,6 @@ export class User {
   /**
    * User's date of birth.
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => Date, { nullable: true })
   public dob!: Date | null;
 }

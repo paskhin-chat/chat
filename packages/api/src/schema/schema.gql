@@ -1,0 +1,86 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserDto {
+  id: ID!
+  login: String!
+  firstName: String!
+  lastName: String!
+  secondName: String
+  dob: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type MemberDto {
+  id: ID!
+  joinDate: DateTime!
+  user: UserDto!
+}
+
+type RoomDto {
+  id: ID!
+  name: String
+  creationDate: DateTime
+  members: [MemberDto!]!
+}
+
+type Query {
+  user(id: ID!): UserDto
+  room(id: ID!): RoomDto
+  rooms: [RoomDto!]
+}
+
+type Mutation {
+  updateUser(input: UpdateUserInput!): UserDto!
+  removeUser(id: ID!): UserDto!
+  createUser(input: CreateUserInput!): UserDto!
+  register(input: RegisterInput!): String!
+  login(input: LoginInput!): String!
+  createRoom(input: CreateRoomInput!): RoomDto!
+}
+
+input UpdateUserInput {
+  login: String
+  firstName: String
+  lastName: String
+  secondName: String
+  dob: String
+  password: String
+  id: ID!
+}
+
+input CreateUserInput {
+  login: String!
+  firstName: String!
+  lastName: String!
+  secondName: String
+  dob: String
+  password: String!
+}
+
+input RegisterInput {
+  login: String!
+  firstName: String!
+  lastName: String!
+  secondName: String
+  password: String!
+}
+
+input LoginInput {
+  login: String!
+  password: String!
+}
+
+input CreateRoomInput {
+  userIds: [ID!]!
+  name: String
+}
+
+type Subscription {
+  userCreated: UserDto!
+}

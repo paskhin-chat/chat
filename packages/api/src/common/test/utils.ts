@@ -19,19 +19,30 @@ export function gql(arr: TemplateStringsArray): string {
  */
 export function requestCreator(
   url: string,
-): <Data>(
+): <Data, Variables = unknown>(
   query: string,
-  variables: unknown,
+  variables: Variables,
+  accessToken?: string,
 ) => Promise<AxiosResponse<{ data: Data }>> {
-  return async <Data>(query: string, variables: unknown) => {
+  return async (query, variables, accessToken) => {
     try {
-      return await axios.post(`${url}/graphql`, {
-        query,
-        variables,
-      });
+      return await axios.post(
+        `${url}/graphql`,
+        {
+          query,
+          variables,
+        },
+        {
+          headers: accessToken
+            ? {
+                Authorization: `Bearer ${accessToken}`,
+              }
+            : undefined,
+        },
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.log((error as AxiosError<{ data: Data }>).response?.data);
+      console.log((error as AxiosError).response?.data);
       throw error;
     }
   };

@@ -7,13 +7,11 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   /**
    * Creates new user and returns it.
-   *
-   * @param createUserInput
    */
   public create(createUserInput: CreateUserInput): Promise<User> {
     return this.prismaService.user.create({
@@ -22,16 +20,22 @@ export class UsersService {
   }
 
   /**
-   * Finds all users.
+   * Finds users by its ids.
    */
-  public async findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany();
+  public async findByIds(ids: string[]): Promise<User[]> {
+    return this.prismaService.user.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
   }
 
   /**
    * Finds concrete user by id.
    */
-  public async findOne(id: string): Promise<User | null> {
+  public async findById(id: string): Promise<User | null> {
     return this.prismaService.user.findUnique({
       where: { id },
     });
@@ -44,6 +48,15 @@ export class UsersService {
     return this.prismaService.user.findUnique({
       where: { login },
     });
+  }
+
+  /**
+   * Find member's user.
+   */
+  public findUserByMemberId(memberId: string): Promise<User | null> {
+    return this.prismaService.member
+      .findUnique({ where: { id: memberId } })
+      .user();
   }
 
   /**
