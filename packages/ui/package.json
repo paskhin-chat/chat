@@ -16,8 +16,15 @@
     "check:all": "npm run check:lint && npm run check:test"
   },
   "dependencies": {
+    "@roqueform/doubter-plugin": "^2.0.0",
+    "@roqueform/react": "^1.0.0",
+    "@roqueform/ref-plugin": "^4.0.0",
+    "@roqueform/reset-plugin": "^3.0.0",
+    "doubter": "^2.1.0",
     "react": "^18.2.0",
-    "react-cosmos": "^5.7.2"
+    "react-cosmos": "^5.7.2",
+    "roqueform": "^4.0.0",
+    "styled-components": "^5.3.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

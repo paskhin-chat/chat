@@ -3,7 +3,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import Keyv from 'keyv';
 import { KeyvAdapter } from '@apollo/utils.keyvadapter';
-import { Request, Response } from 'express';
 
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -11,10 +10,12 @@ import { RedisModule } from './redis/redis.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
-import { GqlContext } from './common/gql-context';
+import { contextFactory } from './common/context';
 import { AuthService } from './auth/auth.service';
 import { RoomModule } from './room/room.module';
 import { MemberModule } from './member/member.module';
+import { MessageModule } from './message/message.module';
+import { DateScalar } from './common/graphql';
 
 @Module({
   imports: [
@@ -34,19 +35,16 @@ import { MemberModule } from './member/member.module';
           },
         },
         subscriptions: {
-          'graphql-ws': true,
-          'subscriptions-transport-ws': true,
+          'graphql-ws': {
+            /**
+             * If user tries to connect ws server without authorization, then
+             * it'll be rejected.
+             */
+            onConnect: (ctx) => !!ctx.connectionParams?.authorization,
+          },
+          'subscriptions-transport-ws': false,
         },
-        context: (context: {
-          /**
-           * Internal request.
-           */
-          req: Request;
-          /**
-           * Internal response.
-           */
-          res: Response;
-        }): GqlContext => new GqlContext(context.req, context.res, authService),
+        context: contextFactory(authService),
         useGlobalPrefix: true,
         cache: new KeyvAdapter(new Keyv(configService.redisUrl)),
       }),
@@ -55,6 +53,8 @@ import { MemberModule } from './member/member.module';
     AuthModule,
     RoomModule,
     MemberModule,
+    MessageModule,
   ],
+  providers: [DateScalar],
 })
 export class AppModule {}

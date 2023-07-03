@@ -38,6 +38,9 @@ module.exports = {
     },
   },
   rules: {
+    'unicorn/expiring-todo-comments': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'import/no-unresolved': 'error',
     'prettier/prettier': [
       'error',

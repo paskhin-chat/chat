@@ -36,6 +36,15 @@ export class UserResolver {
   }
 
   /**
+   * Finds all.
+   */
+  @UseGuards(AuthGuard)
+  @Query(() => [UserDto], { name: 'users' })
+  public findAll(): Promise<User[]> {
+    return this.usersService.findAllUsers();
+  }
+
+  /**
    * Updates user.
    */
   @Mutation(() => UserDto)

@@ -90,7 +90,7 @@ export class AuthService {
 
     return Promise.all([
       this.jwtService.signAsync(data, {
-        expiresIn: '30m',
+        expiresIn: '30d',
       }),
       this.jwtService.signAsync(data, {
         expiresIn: '30d',

@@ -21,7 +21,7 @@ export function requestCreator(
   url: string,
 ): <Data, Variables = unknown>(
   query: string,
-  variables: Variables,
+  variables?: Variables,
   accessToken?: string,
 ) => Promise<AxiosResponse<{ data: Data }>> {
   return async (query, variables, accessToken) => {

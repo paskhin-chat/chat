@@ -51,12 +51,19 @@ export class UserService {
   }
 
   /**
-   * Find member's user.
+   * Finds member's user.
    */
   public findUserByMemberId(memberId: string): Promise<User | null> {
     return this.prismaService.member
       .findUnique({ where: { id: memberId } })
       .user();
+  }
+
+  /**
+   * Finds all users.
+   */
+  public findAllUsers(): Promise<User[]> {
+    return this.prismaService.user.findMany();
   }
 
   /**

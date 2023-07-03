@@ -47,15 +47,10 @@ export class RoomService {
   }
 
   /**
-   * Finds room by its id and user id.
+   * Finds room by its id.
    */
-  public async findRoomByIdAndUserId(
-    id: string,
-    userId: string,
-  ): Promise<Room | null> {
-    const availableRooms = await this.findRoomsByUserId(userId);
-
-    return availableRooms.find((room) => room.id === id) || null;
+  public findById(id: string): Promise<Room | null> {
+    return this.prismaService.room.findUnique({ where: { id } });
   }
 
   /**
