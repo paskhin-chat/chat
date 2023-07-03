@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { GqlContext } from '../gql-context';
+import { GqlContext } from '../context';
 
 /**
  * Gets authorized user data from request context.

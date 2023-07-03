@@ -12,7 +12,7 @@ import {
   requestCreator,
   resetDatabase,
 } from '../common/test';
-import { LoginInput, RegisterInput } from '../schema/schema';
+import { LoginInput, RegisterInput, UserDto } from '../schema/schema';
 
 import { AuthService } from './auth.service';
 
@@ -111,5 +111,31 @@ describe('Auth integration', () => {
     expect(cookie?.secure).toEqual(true);
 
     expect(isJWT(response.data.data.login)).toEqual(true);
+  });
+
+  it('should get the viewer', async () => {
+    const login = faker.internet.userName();
+
+    const [accessToken] = await authService.register({
+      login,
+      password: faker.internet.password(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
+
+    const response = await request<{ viewer: UserDto }>(
+      gql`
+        query Viewer {
+          viewer {
+            id
+            login
+          }
+        }
+      `,
+      undefined,
+      accessToken,
+    );
+
+    expect(response.data.data.viewer.login).toEqual(login);
   });
 });

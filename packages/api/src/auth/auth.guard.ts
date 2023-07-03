@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { GqlContext } from '../common/gql-context';
+import { GqlContext } from '../common/context/gql-context';
 
 import { AuthService } from './auth.service';
 

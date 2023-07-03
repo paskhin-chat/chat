@@ -14,11 +14,21 @@
     "check:all": "npm run check:lint && npm run check:test"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.16",
+    "@roqueform/react": "^1.0.0",
+    "api": "^1.0.0",
     "config": "^1.0.0",
+    "doubter": "^2.1.0",
+    "flatted": "^3.2.7",
+    "graphql": "^16.6.0",
+    "graphql-ws": "^5.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6",
-    "ui": "^1.0.0"
+    "react-hookers": "^5.1.0",
+    "styled-components": "^5.3.11",
+    "styled-normalize": "^8.0.7",
+    "ui": "^1.0.0",
+    "wouter": "^2.11.0"
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.26",

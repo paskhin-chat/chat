@@ -47,57 +47,6 @@ describe('Room integration', () => {
     await app.close();
   });
 
-  it('should find room by its id', async () => {
-    const roomId = faker.string.uuid();
-    const mainUserLogin = faker.internet.userName();
-
-    const [accessToken] = await authService.register({
-      login: mainUserLogin,
-      password: faker.internet.password(),
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-    });
-
-    await prismaService.room.create({
-      data: {
-        id: roomId,
-        members: {
-          create: {
-            user: {
-              connect: {
-                login: mainUserLogin,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const response = await request<{ room: RoomDto }, { id: string }>(
-      gql`
-        query Room($id: ID!) {
-          room(id: $id) {
-            id
-            members {
-              user {
-                login
-              }
-            }
-          }
-        }
-      `,
-      {
-        id: roomId,
-      },
-      accessToken,
-    );
-
-    expect(response.data.data.room.id).toEqual(roomId);
-    expect(response.data.data.room.members[0]?.user.login).toEqual(
-      mainUserLogin,
-    );
-  });
-
   it('should find all rooms', async () => {
     const mainUserLogin = faker.internet.userName();
 

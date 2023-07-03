@@ -14,7 +14,7 @@ export class MemberDto {
    * When member joined the room.
    */
   @Field(() => Date)
-  public joinDate!: Date | null;
+  public joinDate!: Date;
 
   /**
    * Member's user.

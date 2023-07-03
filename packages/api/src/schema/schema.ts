@@ -45,18 +45,23 @@ export interface CreateRoomInput {
     name?: Nullable<string>;
 }
 
+export interface CreateMessageInput {
+    roomId: string;
+    content: string;
+}
+
 export interface UserDto {
     id: string;
     login: string;
     firstName: string;
     lastName: string;
     secondName?: Nullable<string>;
-    dob?: Nullable<DateTime>;
+    dob?: Nullable<Date>;
 }
 
 export interface MemberDto {
     id: string;
-    joinDate: DateTime;
+    joinDate: Date;
     user: UserDto;
 }
 
@@ -67,10 +72,22 @@ export interface RoomDto {
     members: MemberDto[];
 }
 
+export interface MessageDto {
+    id: string;
+    roomId: string;
+    room: RoomDto;
+    memberId: string;
+    member: MemberDto;
+    content: string;
+    sendTime: Date;
+}
+
 export interface IQuery {
     user(id: string): Nullable<UserDto> | Promise<Nullable<UserDto>>;
-    room(id: string): Nullable<RoomDto> | Promise<Nullable<RoomDto>>;
-    rooms(): Nullable<RoomDto[]> | Promise<Nullable<RoomDto[]>>;
+    users(): UserDto[] | Promise<UserDto[]>;
+    viewer(): Nullable<UserDto> | Promise<Nullable<UserDto>>;
+    rooms(): RoomDto[] | Promise<RoomDto[]>;
+    messages(roomId: string): MessageDto[] | Promise<MessageDto[]>;
 }
 
 export interface IMutation {
@@ -80,10 +97,12 @@ export interface IMutation {
     register(input: RegisterInput): string | Promise<string>;
     login(input: LoginInput): string | Promise<string>;
     createRoom(input: CreateRoomInput): RoomDto | Promise<RoomDto>;
+    createMessage(input: CreateMessageInput): MessageDto | Promise<MessageDto>;
 }
 
 export interface ISubscription {
     userCreated(): UserDto | Promise<UserDto>;
+    messageCreated(): MessageDto | Promise<MessageDto>;
 }
 
 export type DateTime = string;

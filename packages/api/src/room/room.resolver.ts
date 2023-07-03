@@ -1,6 +1,5 @@
 import {
   Args,
-  ID,
   Mutation,
   Query,
   Resolver,
@@ -11,7 +10,7 @@ import { UseGuards } from '@nestjs/common';
 import { Member, Room } from '@prisma/client';
 
 import { AuthGuard } from '../auth/auth.guard';
-import { AuthorizedUserDataDecorator } from '../common/decorators/authorized-user-data.decorator';
+import { AuthorizedUserDataDecorator } from '../common/decorators';
 import type { IAuthorizedUserData } from '../auth/auth.service';
 import { MemberDto } from '../member/dto/member.dto';
 import { MemberService } from '../member/member.service';
@@ -28,22 +27,10 @@ export class RoomResolver {
   ) {}
 
   /**
-   * Finds the room by its id.
-   */
-  @UseGuards(AuthGuard)
-  @Query(() => RoomDto, { nullable: true, name: 'room' })
-  public findOne(
-    @Args('id', { type: () => ID }) id: string,
-    @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
-  ): Promise<Room | null> {
-    return this.roomService.findRoomByIdAndUserId(id, authorizedUserData.id);
-  }
-
-  /**
    * Finds the authorized user's rooms.
    */
   @UseGuards(AuthGuard)
-  @Query(() => [RoomDto], { nullable: true, name: 'rooms' })
+  @Query(() => [RoomDto], { name: 'rooms' })
   public findAll(
     @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
   ): Promise<Room[]> {

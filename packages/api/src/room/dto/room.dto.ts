@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, GraphQLISODateTime } from '@nestjs/graphql';
 
 import { MemberDto } from '../../member/dto/member.dto';
 
@@ -19,7 +19,7 @@ export class RoomDto {
   /**
    * Room's creation date.
    */
-  @Field(() => Date, { nullable: true })
+  @Field(() => GraphQLISODateTime, { nullable: true })
   public creationDate!: Date | null;
 
   /**

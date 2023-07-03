@@ -9,5 +9,6 @@ import { RoomResolver } from './room.resolver';
 @Module({
   providers: [RoomService, RoomResolver],
   imports: [MemberModule, UserModule],
+  exports: [RoomService],
 })
 export class RoomModule {}
