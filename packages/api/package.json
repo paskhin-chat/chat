@@ -5,7 +5,7 @@
   "scripts": {
     "build:prod": "npm run clean:dist && prisma generate && ttsc --project tsconfig.build.json",
     "build:start": "NODE_ENV=production node ./dist/index.js",
-    "build:watch": "ts-node --transpile-only ./cmd/build/watch.ts",
+    "build:watch": "NODE_ENV=development ts-node --transpile-only ./cmd/build/watch.ts",
     "clean:dist": "rimraf './dist'",
     "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\"",

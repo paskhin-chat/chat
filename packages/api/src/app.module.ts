@@ -46,6 +46,7 @@ import { DateScalar } from './common/graphql';
         },
         context: contextFactory(authService),
         useGlobalPrefix: true,
+        cors: configService.dev ? { origin: '*' } : false,
         cache: new KeyvAdapter(new Keyv(configService.redisUrl)),
       }),
       inject: [ConfigService, AuthService],

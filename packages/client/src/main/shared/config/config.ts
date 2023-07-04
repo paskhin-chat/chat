@@ -40,9 +40,11 @@ export const config: IConfig = {
   get apiUri(): string {
     return config.dev
       ? 'http://localhost:3002/graphql'
-      : 'https://api.chat.paskhin.me';
+      : 'https://api.chat.paskhin.me/graphql';
   },
   get apiWsUri(): string {
-    return config.dev ? 'ws://localhost:3002/graphql' : '';
+    return config.dev
+      ? 'ws://localhost:3002/graphql'
+      : 'wss://api.chat.paskhin.me/graphql';
   },
 };
