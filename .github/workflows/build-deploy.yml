@@ -1,9 +1,9 @@
 name: Build deploy
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+  release:
+    types: [ created ]
 
 jobs:
   build-deploy:
@@ -33,7 +33,10 @@ jobs:
           sudo apt-get install -y docker-compose
 
       - name: Build Docker images
-        run: docker-compose build
+        run: |
+          docker-compose build --no-cache --quiet
+          docker tag pasxin/chat-nginx:latest pasxin/chat-nginx:1.0.0
+          docker tag pasxin/chat-node:latest pasxin/chat-node:1.0.0
 
       - name: Login to Docker HUB
         uses: docker/login-action@v2
