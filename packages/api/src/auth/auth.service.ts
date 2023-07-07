@@ -9,9 +9,9 @@ import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
 
 /**
- * Encoded in JWT token user data.
+ * Encoded in JWT token viewer data.
  */
-export interface IAuthorizedUserData {
+export interface IViewerData {
   /**
    * User's id.
    */
@@ -72,18 +72,16 @@ export class AuthService {
   /**
    * Verifies token and returns data encoded in it.
    */
-  public async verifyToken(
-    token: string,
-  ): Promise<IAuthorizedUserData | undefined> {
+  public async verifyToken(token: string): Promise<IViewerData | undefined> {
     try {
-      return await this.jwtService.verifyAsync<IAuthorizedUserData>(token);
+      return await this.jwtService.verifyAsync<IViewerData>(token);
     } catch {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
 
   private async generateTokens(user: User): Promise<[string, string]> {
-    const data: IAuthorizedUserData = {
+    const data: IViewerData = {
       id: user.id,
       login: user.login,
     };

@@ -47,11 +47,11 @@ describe('RoomService', () => {
       ),
     );
 
-    const authorizedUserId = users.splice(0, 1)[0]?.id;
+    const viewerId = users.splice(0, 1)[0]?.id;
 
     const room = await service.create(
       { userIds: users.map((user) => user.id) },
-      authorizedUserId || '',
+      viewerId || '',
     );
 
     expect(isUUID(room.id)).toEqual(true);
@@ -75,16 +75,16 @@ describe('RoomService', () => {
       ),
     );
 
-    const authorizedUserId = users.splice(0, 1)[0]!.id;
+    const viewerId = users.splice(0, 1)[0]!.id;
 
     const viewerPersonalRoom = await service.create(
-      { userIds: [authorizedUserId] },
-      authorizedUserId,
+      { userIds: [viewerId] },
+      viewerId,
     );
 
     const createdRoom = await service.create(
       { userIds: users.map((user) => user.id) },
-      authorizedUserId,
+      viewerId,
     );
 
     expect(isUUID(viewerPersonalRoom.id)).toEqual(true);

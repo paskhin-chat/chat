@@ -10,8 +10,8 @@ import { UseGuards } from '@nestjs/common';
 import { Member, Room } from '@prisma/client';
 
 import { AuthGuard } from '../auth/auth.guard';
-import { AuthorizedUserDataDecorator } from '../common/decorators';
-import type { IAuthorizedUserData } from '../auth/auth.service';
+import { ViewerDataDecorator } from '../common/decorators';
+import type { IViewerData } from '../auth/auth.service';
 import { MemberDto } from '../member/dto/member.dto';
 import { MemberService } from '../member/member.service';
 
@@ -27,14 +27,14 @@ export class RoomResolver {
   ) {}
 
   /**
-   * Finds the authorized user's rooms.
+   * Finds the viewer's rooms.
    */
   @UseGuards(AuthGuard)
   @Query(() => [RoomDto], { name: 'rooms' })
   public findAll(
-    @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
+    @ViewerDataDecorator() viewerData: IViewerData,
   ): Promise<Room[]> {
-    return this.roomService.findRoomsByUserId(authorizedUserData.id);
+    return this.roomService.findRoomsByUserId(viewerData.id);
   }
 
   /**
@@ -53,8 +53,8 @@ export class RoomResolver {
   @Mutation(() => RoomDto)
   public async createRoom(
     @Args('input') input: CreateRoomInput,
-    @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
+    @ViewerDataDecorator() viewerData: IViewerData,
   ): Promise<Room> {
-    return this.roomService.create(input, authorizedUserData.id);
+    return this.roomService.create(input, viewerData.id);
   }
 }

@@ -68,13 +68,13 @@ describe('AuthService', () => {
       lastName: faker.person.lastName(),
     });
 
-    const atAuthorizedUserData = await authService.verifyToken(accessToken);
-    const rtAuthorizedUserData = await authService.verifyToken(refreshToken);
+    const atViewerData = await authService.verifyToken(accessToken);
+    const rtViewerData = await authService.verifyToken(refreshToken);
 
-    expect(isUUID(atAuthorizedUserData?.id)).toEqual(true);
-    expect(atAuthorizedUserData?.login).toEqual(login);
+    expect(isUUID(atViewerData?.id)).toEqual(true);
+    expect(atViewerData?.login).toEqual(login);
 
-    expect(isUUID(rtAuthorizedUserData?.id)).toEqual(true);
-    expect(rtAuthorizedUserData?.login).toEqual(login);
+    expect(isUUID(rtViewerData?.id)).toEqual(true);
+    expect(rtViewerData?.login).toEqual(login);
   });
 });

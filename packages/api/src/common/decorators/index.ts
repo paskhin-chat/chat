@@ -1,1 +1,1 @@
-export * from './authorized-user-data.decorator';
+export * from './viewer-data.decorator';

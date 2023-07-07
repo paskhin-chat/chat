@@ -16,8 +16,8 @@ import { MemberDto } from '../member/dto/member.dto';
 import { RoomDto } from '../room/dto/room.dto';
 import { MemberService } from '../member/member.service';
 import { RoomService } from '../room/room.service';
-import { AuthorizedUserDataDecorator } from '../common/decorators';
-import type { IAuthorizedUserData } from '../auth/auth.service';
+import { ViewerDataDecorator } from '../common/decorators';
+import type { IViewerData } from '../auth/auth.service';
 import { RedisService } from '../redis/redis.service';
 import { GqlContext } from '../common/context';
 
@@ -40,13 +40,13 @@ export class MessageResolver {
   ) {}
 
   /**
-   * Finds the authorized user's rooms.
+   * Finds the viewer's rooms.
    */
   @UseGuards(AuthGuard)
   @Query(() => [MessageDto], { name: 'messages' })
   public async findAll(
     @Args('roomId', { type: () => ID }) roomId: string,
-    @AuthorizedUserDataDecorator() viewerData: IAuthorizedUserData,
+    @ViewerDataDecorator() viewerData: IViewerData,
   ): Promise<Message[]> {
     return (
       (await this.messageService.findByRoomIdAndUserId(
@@ -81,11 +81,11 @@ export class MessageResolver {
   @Mutation(() => MessageDto)
   public async createMessage(
     @Args('input') input: CreateMessageInput,
-    @AuthorizedUserDataDecorator() authorizedUserData: IAuthorizedUserData,
+    @ViewerDataDecorator() viewerData: IViewerData,
   ): Promise<Message> {
     const message = await this.messageService.createByRoomIdAndUserId(
       input,
-      authorizedUserData.id,
+      viewerData.id,
     );
     const roomMembers = await this.memberService.findByRoomId(input.roomId);
 
@@ -110,7 +110,7 @@ export class MessageResolver {
       variables,
       context: GqlContext,
     ): Promise<boolean> => {
-      const viewerData = await context.getAuthorizedUserData();
+      const viewerData = await context.getViewerData();
 
       if (!viewerData) {
         return false;
