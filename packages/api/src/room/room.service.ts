@@ -68,8 +68,8 @@ export class RoomService {
     });
   }
 
-  private findRoomByUsers(userIds: string[]): Promise<Room | null> {
-    return this.prismaService.room.findFirst({
+  private async findRoomByUsers(userIds: string[]): Promise<Room | null> {
+    const rooms = await this.prismaService.room.findMany({
       where: {
         members: {
           every: {
@@ -79,6 +79,11 @@ export class RoomService {
           },
         },
       },
+      include: {
+        members: true,
+      },
     });
+
+    return rooms.find((room) => room.members.length === userIds.length) || null;
   }
 }
