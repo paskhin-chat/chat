@@ -1,13 +1,13 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from '@prisma/client';
 
-import type { GqlContext } from '../common/context/gql-context';
+import type { GqlContext } from '../common/context';
 import { UserDto } from '../user/dto/user.dto';
-import { AuthorizedUserDataDecorator } from '../common/decorators';
+import { ViewerDataDecorator } from '../common/decorators';
 import { UserService } from '../user/user.service';
 
 import { AuthService } from './auth.service';
-import type { IAuthorizedUserData } from './auth.service';
+import type { IViewerData } from './auth.service';
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
 
@@ -21,14 +21,12 @@ export class AuthResolver {
   /**
    * Gets authenticated user.
    */
-  @Query(() => UserDto, { nullable: true, name: 'viewer' })
+  @Query(() => UserDto, { nullable: true })
   public async viewer(
-    @AuthorizedUserDataDecorator()
-    authorizedUserData: IAuthorizedUserData | undefined,
+    @ViewerDataDecorator()
+    viewerData: IViewerData | undefined,
   ): Promise<User | null> {
-    return authorizedUserData
-      ? this.usersService.findById(authorizedUserData.id)
-      : null;
+    return viewerData ? this.usersService.findById(viewerData.id) : null;
   }
 
   /**

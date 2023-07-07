@@ -4,13 +4,13 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { GqlContext } from '../context';
 
 /**
- * Gets authorized user data from request context.
+ * Gets viewer data from request context.
  */
-export const AuthorizedUserDataDecorator = createParamDecorator(
+export const ViewerDataDecorator = createParamDecorator(
   (_, context: ExecutionContext) => {
     const gqlContext =
       GqlExecutionContext.create(context).getContext<GqlContext>();
 
-    return gqlContext.getAuthorizedUserData();
+    return gqlContext.getViewerData();
   },
 );

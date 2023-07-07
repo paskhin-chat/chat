@@ -4,7 +4,7 @@ import { Context, WebSocket } from 'graphql-ws/lib/server';
 import { ContextFunction } from 'apollo-server-core/src/types';
 
 import type { AuthService } from '../../auth/auth.service';
-import { IAuthorizedUserData } from '../../auth/auth.service';
+import { IViewerData } from '../../auth/auth.service';
 import { IConnectionParams } from '../../schema/connection-params';
 
 interface IGraphqlInternalContext {
@@ -66,11 +66,9 @@ export class GqlContext {
   }
 
   /**
-   * Gets user data from access token.
+   * Gets viewer data from access token.
    */
-  public async getAuthorizedUserData(): Promise<
-    IAuthorizedUserData | undefined
-  > {
+  public async getViewerData(): Promise<IViewerData | undefined> {
     const accessToken = this.getAccessToken();
 
     if (!accessToken) {

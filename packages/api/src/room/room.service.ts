@@ -17,11 +17,8 @@ export class RoomService {
   /**
    * Finds or creates room by users.
    */
-  public async create(
-    input: CreateRoomInput,
-    authorizedUserId: string,
-  ): Promise<Room> {
-    const userIds = uniq([...input.userIds, authorizedUserId]);
+  public async create(input: CreateRoomInput, viewerId: string): Promise<Room> {
+    const userIds = uniq([...input.userIds, viewerId]);
     const users = await this.usersService.findByIds(userIds);
 
     if (users.length !== userIds.length) {
