@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { isDate, isUUID } from 'class-validator';
 
 import { createModule, resetDatabase } from '../common/test';
 import { RedisService } from '../redis/redis.service';
@@ -48,9 +49,51 @@ describe('RoomService', () => {
 
     const authorizedUserId = users.splice(0, 1)[0]?.id;
 
-    await service.create(
+    const room = await service.create(
       { userIds: users.map((user) => user.id) },
       authorizedUserId || '',
     );
+
+    expect(isUUID(room.id)).toEqual(true);
+    expect(isDate(room.creationDate)).toEqual(true);
+  });
+
+  it('should create a room even if there is a room with fewer users than in creating a new room', async () => {
+    const users = await Promise.all(
+      Array.from({ length: 3 }).map(() =>
+        prismaService.user.create({
+          data: {
+            login: faker.internet.userName(),
+            password: faker.internet.password(),
+            email: faker.internet.email(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            dob: faker.date.birthdate(),
+            registrationDate: faker.date.past(),
+          },
+        }),
+      ),
+    );
+
+    const authorizedUserId = users.splice(0, 1)[0]!.id;
+
+    const viewerPersonalRoom = await service.create(
+      { userIds: [authorizedUserId] },
+      authorizedUserId,
+    );
+
+    const createdRoom = await service.create(
+      { userIds: users.map((user) => user.id) },
+      authorizedUserId,
+    );
+
+    expect(isUUID(viewerPersonalRoom.id)).toEqual(true);
+    expect(isUUID(createdRoom.id)).toEqual(true);
+
+    /**
+     * If the ids match, the code works wrong - not create a new room, and
+     * instead returns the room with narrowed user ids.
+     */
+    expect(viewerPersonalRoom.id).not.toEqual(createdRoom.id);
   });
 });
