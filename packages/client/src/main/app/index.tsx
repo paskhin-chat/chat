@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { ApolloProvider } from '@apollo/client';
 
-import { Router } from '../pages';
-import { apiClient, GlobalStyles } from '../shared';
+import { Router } from 'page';
+import { apiClient, GlobalStyles } from 'shared';
 
 /**
  * App root.

@@ -1,27 +1,32 @@
 import { FC, SyntheticEvent, useEffect } from 'react';
+import { UiFieldErrorCard, UiTextInputField } from 'ui';
+import { useUiField } from 'ui/src/main';
 import * as d from 'doubter';
-import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
 import styled from 'styled-components';
 
-import { viewerModel } from '../../../entities';
+import { viewerModel } from 'entity';
 
-const loginShape = d.object({
-  login: d.string(),
-  password: d.string(),
+const signUpShape = d.object({
+  login: d.string().min(5),
+  firstName: d.string().min(1),
+  lastName: d.string().min(1),
+  password: d.string().min(5),
 });
 
 /**
- * Component for log in feature.
+ * Component for sign up feature.
  */
-export const LoginForm: FC = () => {
-  const [login, result] = viewerModel.useLogin();
+export const SignUpForm: FC = () => {
+  const [signUp, result] = viewerModel.useSignUp();
 
   const field = useUiField(
     {
       login: '',
+      firstName: '',
+      lastName: '',
       password: '',
     },
-    loginShape,
+    signUpShape,
   );
 
   const handleSubmit = (event: SyntheticEvent): void => {
@@ -34,7 +39,7 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    login(field.value);
+    signUp(field.value);
   };
 
   useEffect(() => {
@@ -45,14 +50,13 @@ export const LoginForm: FC = () => {
 
   return (
     <SForm onSubmit={handleSubmit}>
+      <UiTextInputField placeholder='Login' field={field.at('login')} />
       <UiTextInputField
-        placeholder='Enter your login'
-        field={field.at('login')}
+        placeholder='First name'
+        field={field.at('firstName')}
       />
-      <UiTextInputField
-        placeholder='Enter your password'
-        field={field.at('password')}
-      />
+      <UiTextInputField placeholder='Last name' field={field.at('lastName')} />
+      <UiTextInputField placeholder='Password' field={field.at('password')} />
 
       <UiFieldErrorCard field={field} />
 

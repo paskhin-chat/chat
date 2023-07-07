@@ -2,24 +2,24 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Link } from 'wouter';
 
-import { AuthUi } from '../../features';
+import { AuthUi } from 'feature';
 
-const SignUpPage: FC = () => (
+const LoginPage: FC = () => (
   <SPageWrapper>
     <SFormWrapper>
       <STitle>
-        Sign up or <Link href='/login'>login</Link>
+        Login or <Link href='/sign-up'>sing up</Link>
       </STitle>
 
-      <AuthUi.SignUpForm />
+      <AuthUi.LoginForm />
     </SFormWrapper>
   </SPageWrapper>
 );
 
 /**
- * Sign up page.
+ * Login page.
  */
-export default SignUpPage;
+export default LoginPage;
 
 const SPageWrapper = styled.div`
   display: grid;

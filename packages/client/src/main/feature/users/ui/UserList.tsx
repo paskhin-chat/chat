@@ -2,7 +2,7 @@ import { FC, Fragment } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'wouter';
 
-import { userModel, roomModel } from '../../../entities';
+import { userModel, roomModel } from 'entity';
 
 /**
  * Feature for listing users.

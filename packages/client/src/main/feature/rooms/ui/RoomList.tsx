@@ -2,7 +2,7 @@ import { FC, Fragment } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'wouter';
 
-import { roomModel, viewerModel } from '../../../entities';
+import { roomModel, viewerModel } from 'entity';
 
 /**
  * Feature for listing rooms.

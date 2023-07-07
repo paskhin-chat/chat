@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { UsersUi } from '../../features';
+import { UsersUi } from 'feature';
 
 const UsersPage: FC = () => (
   <SPageWrapper>

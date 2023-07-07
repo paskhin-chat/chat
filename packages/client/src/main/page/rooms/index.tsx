@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { viewerModel } from '../../entities';
-import { MessageUi, RoomsUi, MessagesUi } from '../../features';
+import { viewerModel } from 'entity';
+import { MessageUi, RoomsUi, MessagesUi } from 'feature';
 
 interface IProps {
   params: {

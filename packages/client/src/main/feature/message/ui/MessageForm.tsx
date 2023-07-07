@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import * as d from 'doubter';
 import { FieldRenderer } from '@roqueform/react';
 
-import { messageModel } from '../../../entities';
+import { messageModel } from 'entity';
 
 const messageShape = d.object({
   content: d.string(),

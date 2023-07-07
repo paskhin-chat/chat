@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { messageModel, viewerModel } from '../../../entities';
+import { messageModel, viewerModel } from 'entity';
 
 interface IProps {
   roomId: string;

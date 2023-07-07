@@ -1,7 +1,7 @@
 import React, { FC, lazy, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'wouter';
 
-import { viewerModel } from '../entities';
+import { viewerModel } from 'entity';
 
 const UsersPage = lazy(() => import('./users'));
 const LoginPage = lazy(() => import('./login'));

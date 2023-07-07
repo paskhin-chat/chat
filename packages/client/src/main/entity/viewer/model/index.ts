@@ -2,7 +2,7 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { LoginInput, RegisterInput, UserDto } from 'api/src/schema/schema';
 import { ApolloError } from '@apollo/client/errors';
 
-import { accessTokenProvider, apiClient } from '../../../shared';
+import { accessTokenProvider, apiClient } from 'shared';
 
 /**
  * Viewer.
