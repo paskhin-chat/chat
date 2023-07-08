@@ -5,7 +5,7 @@ import { ContextFunction } from 'apollo-server-core/src/types';
 
 import type { AuthService } from '../../auth/auth.service';
 import { IViewerData } from '../../auth/auth.service';
-import { IConnectionParams } from '../../schema/connection-params';
+import { IConnectionParams } from '../../schema';
 
 interface IGraphqlInternalContext {
   req: Request;
@@ -17,7 +17,10 @@ type TGraphqlWsInternalContext = Context<
   { socket: WebSocket; req: Request }
 >;
 
-enum CookiesName {
+/**
+ * All available cookie keys.
+ */
+export enum CookiesName {
   REFRESH_TOKEN = 'rt',
 }
 
@@ -69,13 +72,7 @@ export class GqlContext {
    * Gets viewer data from access token.
    */
   public async getViewerData(): Promise<IViewerData | undefined> {
-    const accessToken = this.getAccessToken();
-
-    if (!accessToken) {
-      return undefined;
-    }
-
-    return this.authService.verifyToken(accessToken);
+    return this.authService.verifyToken(this.getAccessToken() || '');
   }
 
   /**
@@ -115,7 +112,7 @@ export class GqlContext {
     }
 
     throw new HttpException(
-      "There is no the response in the context. Perhaps it's ws request.",
+      "There is no the response in the context. Perhaps it's WS request.",
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
   }

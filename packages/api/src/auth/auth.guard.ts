@@ -1,13 +1,7 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { GqlContext } from '../common/context/gql-context';
+import { GqlContext } from '../common/context';
 
 import { AuthService } from './auth.service';
 
@@ -22,11 +16,13 @@ export class AuthGuard implements CanActivate {
     const gqlContext =
       GqlExecutionContext.create(context).getContext<GqlContext>();
 
-    const accessToken = gqlContext.getAccessToken();
+    const accessToken = gqlContext.getAccessToken() || '';
+    const refreshToken = gqlContext.getRefreshToken() || '';
 
-    if (!accessToken || !(await this.authService.verifyToken(accessToken))) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    await Promise.all([
+      this.authService.verifyToken(accessToken),
+      this.authService.verifyToken(refreshToken),
+    ]);
 
     return true;
   }

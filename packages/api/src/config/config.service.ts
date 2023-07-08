@@ -60,6 +60,13 @@ export class ConfigService {
   }
 
   /**
+   * Client URL.
+   */
+  public get clientUrl(): string {
+    return this.prod ? 'https://chat.paskhin.me' : 'http://localhost:6005';
+  }
+
+  /**
    * Retrieve a production configuration based on its name.
    */
   public getProd<Name extends keyof IConfig>(name: Name): IConfig[Name] {

@@ -12,7 +12,7 @@ import {
   resetDatabase,
 } from '../common/test';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateRoomInput, RoomDto } from '../schema/schema';
+import { CreateRoomInput, RoomDto } from '../schema';
 import { AuthService } from '../auth/auth.service';
 
 describe('Room integration', () => {
@@ -50,7 +50,7 @@ describe('Room integration', () => {
   it('should find all rooms', async () => {
     const mainUserLogin = faker.internet.userName();
 
-    const [accessToken] = await authService.register({
+    const [at, rt] = await authService.register({
       login: mainUserLogin,
       password: faker.internet.password(),
       firstName: faker.person.firstName(),
@@ -96,7 +96,7 @@ describe('Room integration', () => {
         }
       `,
       undefined,
-      accessToken,
+      { at, rt },
     );
 
     expect(response.data.data.rooms.length).toEqual(2);
@@ -109,7 +109,7 @@ describe('Room integration', () => {
   it('should create a room', async () => {
     const mainUserLogin = faker.internet.userName();
 
-    const [accessToken] = await authService.register({
+    const [at, rt] = await authService.register({
       login: mainUserLogin,
       password: faker.internet.password(),
       firstName: faker.person.firstName(),
@@ -143,7 +143,7 @@ describe('Room integration', () => {
           userIds: [user?.id || ''],
         },
       },
-      accessToken,
+      { at, rt },
     );
 
     expect(isUUID(response.data.data.createRoom.id)).toEqual(true);

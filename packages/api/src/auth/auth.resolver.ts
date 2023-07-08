@@ -1,5 +1,6 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from '@prisma/client';
+import { UseGuards } from '@nestjs/common';
 
 import type { GqlContext } from '../common/context';
 import { UserDto } from '../user/dto/user.dto';
@@ -10,6 +11,7 @@ import { AuthService } from './auth.service';
 import type { IViewerData } from './auth.service';
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
+import { AuthGuard } from './auth.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -21,6 +23,7 @@ export class AuthResolver {
   /**
    * Gets authenticated user.
    */
+  @UseGuards(AuthGuard)
   @Query(() => UserDto, { nullable: true })
   public async viewer(
     @ViewerDataDecorator()

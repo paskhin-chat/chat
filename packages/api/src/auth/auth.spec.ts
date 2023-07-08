@@ -12,7 +12,7 @@ import {
   requestCreator,
   resetDatabase,
 } from '../common/test';
-import { LoginInput, RegisterInput, UserDto } from '../schema/schema';
+import { LoginInput, RegisterInput, UserDto } from '../schema';
 
 import { AuthService } from './auth.service';
 
@@ -116,7 +116,7 @@ describe('Auth integration', () => {
   it('should get the viewer', async () => {
     const login = faker.internet.userName();
 
-    const [accessToken] = await authService.register({
+    const [at, rt] = await authService.register({
       login,
       password: faker.internet.password(),
       firstName: faker.person.firstName(),
@@ -133,7 +133,7 @@ describe('Auth integration', () => {
         }
       `,
       undefined,
-      accessToken,
+      { at, rt },
     );
 
     expect(response.data.data.viewer.login).toEqual(login);

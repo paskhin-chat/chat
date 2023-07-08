@@ -19,6 +19,7 @@ import { accessTokenProvider } from './accessTokenProvider';
 function clientInitiator(): ApolloClient<NormalizedCacheObject> {
   const httpLink = new HttpLink({
     uri: appConfig.apiUri,
+    credentials: 'include',
   });
 
   const wsLink = new GraphQLWsLink(
