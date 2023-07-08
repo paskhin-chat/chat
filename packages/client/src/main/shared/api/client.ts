@@ -10,7 +10,7 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
-import { IConnectionParams } from 'api/src/schema/connection-params';
+import { IConnectionParams } from 'api';
 
 import { appConfig } from '../config';
 

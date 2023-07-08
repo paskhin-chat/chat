@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { LoginInput, RegisterInput, UserDto } from 'api/src/schema/schema';
+import { LoginInput, RegisterInput, UserDto } from 'api';
 import { ApolloError } from '@apollo/client/errors';
 
 import { accessTokenProvider, apiClient } from 'shared';

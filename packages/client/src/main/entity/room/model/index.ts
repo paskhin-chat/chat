@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { CreateRoomInput, RoomDto } from 'api/src/schema/schema';
+import { CreateRoomInput, RoomDto } from 'api';
 import { ApolloError } from '@apollo/client/errors';
 
 /**

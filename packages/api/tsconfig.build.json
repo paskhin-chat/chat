@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": false,
+    "declaration": true,
     "target": "esnext",
     "module": "commonjs",
     "removeComments": true

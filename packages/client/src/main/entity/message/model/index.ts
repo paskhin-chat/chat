@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { CreateMessageInput, MessageDto } from 'api/src/schema/schema';
 import { ApolloError } from '@apollo/client/errors';
+import { CreateMessageInput, MessageDto } from 'api';
 import { useEffect } from 'react';
 
 /**

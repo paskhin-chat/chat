@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { UserDto } from 'api/src/schema/schema';
+import { UserDto } from 'api';
 
 /**
  * User.

@@ -2,6 +2,7 @@
   "name": "api",
   "version": "1.0.0",
   "author": "Dmitry Paskhin <d.pasxin@gmail.com>",
+  "types": "./dist/schema/index.d.ts",
   "scripts": {
     "build:prod": "npm run clean:dist && prisma generate && ttsc --project tsconfig.build.json",
     "build:start": "NODE_ENV=production node ./dist/index.js",

@@ -1,6 +1,5 @@
 import { FC, SyntheticEvent, useEffect } from 'react';
-import { UiFieldErrorCard, UiTextInputField } from 'ui';
-import { useUiField } from 'ui/src/main';
+import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
 import * as d from 'doubter';
 import styled from 'styled-components';
 
