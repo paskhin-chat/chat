@@ -1,5 +1,6 @@
 import { isJWT, isUUID } from 'class-validator';
 import { faker } from '@faker-js/faker';
+import { keys } from 'lodash';
 
 import { RedisService } from '../redis/redis.service';
 import { createModule, resetDatabase } from '../common/test';
@@ -71,10 +72,28 @@ describe('AuthService', () => {
     const atViewerData = await authService.verifyToken(accessToken);
     const rtViewerData = await authService.verifyToken(refreshToken);
 
-    expect(isUUID(atViewerData?.id)).toEqual(true);
-    expect(atViewerData?.login).toEqual(login);
+    expect(keys(atViewerData)).toEqual(['id', 'login']);
+    expect(isUUID(atViewerData.id)).toBe(true);
+    expect(atViewerData.login).toBe(login);
 
-    expect(isUUID(rtViewerData?.id)).toEqual(true);
-    expect(rtViewerData?.login).toEqual(login);
+    expect(keys(rtViewerData)).toEqual(['id', 'login']);
+    expect(isUUID(rtViewerData.id)).toBe(true);
+    expect(rtViewerData.login).toBe(login);
+  });
+
+  it('should refresh access token', async () => {
+    const [, refreshToken] = await authService.register({
+      login: faker.internet.userName(),
+      password: faker.internet.password(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
+
+    const accessToken = await authService.refreshAccessToken(refreshToken);
+
+    const viewerData = await authService.verifyToken(accessToken);
+
+    expect(keys(viewerData)).toEqual(['id', 'login']);
+    expect(isUUID(viewerData.id)).toBe(true);
   });
 });

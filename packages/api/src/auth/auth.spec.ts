@@ -1,8 +1,9 @@
 import { INestApplication } from '@nestjs/common';
-import { isJWT } from 'class-validator';
+import { isJWT, isUUID } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import setCookieParser from 'set-cookie-parser';
 import { faker } from '@faker-js/faker';
+import { keys } from 'lodash';
 
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
@@ -12,7 +13,7 @@ import {
   requestCreator,
   resetDatabase,
 } from '../common/test';
-import { LoginInput, RegisterInput, UserDto } from '../schema/schema';
+import { LoginInput, RegisterInput, UserDto } from '../schema';
 
 import { AuthService } from './auth.service';
 
@@ -116,7 +117,7 @@ describe('Auth integration', () => {
   it('should get the viewer', async () => {
     const login = faker.internet.userName();
 
-    const [accessToken] = await authService.register({
+    const [at, rt] = await authService.register({
       login,
       password: faker.internet.password(),
       firstName: faker.person.firstName(),
@@ -133,9 +134,36 @@ describe('Auth integration', () => {
         }
       `,
       undefined,
-      accessToken,
+      { at, rt },
     );
 
     expect(response.data.data.viewer.login).toEqual(login);
+  });
+
+  it('should refresh access token', async () => {
+    const [, rt] = await authService.register({
+      login: faker.internet.userName(),
+      password: faker.internet.password(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
+
+    const response = await request<{ refreshAccessToken: string }>(
+      gql`
+        mutation RefreshAccessToken {
+          refreshAccessToken
+        }
+      `,
+      undefined,
+      { at: '', rt },
+    );
+
+    const accessToken = response.data.data.refreshAccessToken;
+
+    const viewerData = await authService.verifyToken(accessToken);
+
+    expect(isJWT(accessToken)).toBe(true);
+    expect(keys(viewerData)).toEqual(['id', 'login']);
+    expect(isUUID(viewerData.id)).toBe(true);
   });
 });

@@ -37,7 +37,7 @@ import { DateScalar } from './common/graphql';
         subscriptions: {
           'graphql-ws': {
             /**
-             * If user tries to connect ws server without authorization, then
+             * If user tries to connect WS server without authorization, then
              * it'll be rejected.
              */
             onConnect: (ctx) => !!ctx.connectionParams?.authorization,
@@ -46,7 +46,9 @@ import { DateScalar } from './common/graphql';
         },
         context: contextFactory(authService),
         useGlobalPrefix: true,
-        cors: configService.dev ? { origin: '*' } : false,
+        cors: configService.dev
+          ? { origin: configService.clientUrl, credentials: true }
+          : false,
         cache: new KeyvAdapter(new Keyv(configService.redisUrl)),
       }),
       inject: [ConfigService, AuthService],

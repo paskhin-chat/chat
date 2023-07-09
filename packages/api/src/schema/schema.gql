@@ -55,6 +55,7 @@ type Mutation {
   removeUser(id: ID!): UserDto!
   createUser(input: CreateUserInput!): UserDto!
   register(input: RegisterInput!): String!
+  refreshAccessToken: String!
   login(input: LoginInput!): String!
   createRoom(input: CreateRoomInput!): RoomDto!
   createMessage(input: CreateMessageInput!): MessageDto!

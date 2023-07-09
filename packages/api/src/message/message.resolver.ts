@@ -112,10 +112,6 @@ export class MessageResolver {
     ): Promise<boolean> => {
       const viewerData = await context.getViewerData();
 
-      if (!viewerData) {
-        return false;
-      }
-
       return payload.userIds.includes(viewerData.id);
     },
   })

@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
+import { CookiesName } from '../context';
+
 /**
  * Gql tag.
  */
@@ -14,6 +16,11 @@ export function gql(arr: TemplateStringsArray): string {
   return query;
 }
 
+interface ISession {
+  at: string;
+  rt: string;
+}
+
 /**
  * Request function factory.
  */
@@ -22,9 +29,9 @@ export function requestCreator(
 ): <Data, Variables = unknown>(
   query: string,
   variables?: Variables,
-  accessToken?: string,
+  session?: ISession,
 ) => Promise<AxiosResponse<{ data: Data }>> {
-  return async (query, variables, accessToken) => {
+  return async (query, variables, session) => {
     try {
       return await axios.post(
         `${url}/graphql`,
@@ -33,9 +40,11 @@ export function requestCreator(
           variables,
         },
         {
-          headers: accessToken
+          withCredentials: true,
+          headers: session
             ? {
-                Authorization: `Bearer ${accessToken}`,
+                Cookie: `${CookiesName.REFRESH_TOKEN}=${session.rt}`,
+                Authorization: `Bearer ${session.at}`,
               }
             : undefined,
         },

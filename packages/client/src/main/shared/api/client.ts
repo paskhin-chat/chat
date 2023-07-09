@@ -2,7 +2,6 @@ import {
   ApolloClient,
   InMemoryCache,
   NormalizedCacheObject,
-  concat,
   HttpLink,
   ApolloLink,
   split,
@@ -15,10 +14,12 @@ import { IConnectionParams } from 'api';
 import { appConfig } from '../config';
 
 import { accessTokenProvider } from './accessTokenProvider';
+import { createErrorLink } from './errorLink';
 
 function clientInitiator(): ApolloClient<NormalizedCacheObject> {
   const httpLink = new HttpLink({
     uri: appConfig.apiUri,
+    credentials: 'include',
   });
 
   const wsLink = new GraphQLWsLink(
@@ -42,23 +43,19 @@ function clientInitiator(): ApolloClient<NormalizedCacheObject> {
     return forward(operation);
   });
 
-  const httpLinkWithAuth = concat(authLink, httpLink);
-
-  const splitLink = split(
-    ({ query }) => {
-      const definition = getMainDefinition(query);
-
-      return (
-        definition.kind === 'OperationDefinition' &&
-        definition.operation === 'subscription'
-      );
-    },
-    wsLink,
-    httpLinkWithAuth,
-  );
-
   return new ApolloClient({
-    link: splitLink,
+    link: split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+
+        return (
+          definition.kind === 'OperationDefinition' &&
+          definition.operation === 'subscription'
+        );
+      },
+      wsLink,
+      ApolloLink.from([createErrorLink(), authLink, httpLink]),
+    ),
     cache: new InMemoryCache(),
   });
 }
