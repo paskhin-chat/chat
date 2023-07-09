@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
+import { pick } from 'lodash';
 
 import { UserService } from '../user/user.service';
 
@@ -21,6 +22,9 @@ export interface IViewerData {
    */
   login: string;
 }
+
+const ACCESS_TOKEN_EXPIRES_IN = '30m';
+const REFRESH_TOKEN_EXPIRES_IN = '30d';
 
 @Injectable()
 export class AuthService {
@@ -72,27 +76,41 @@ export class AuthService {
   /**
    * Verifies token and returns data encoded in it.
    */
-  public async verifyToken(token: string): Promise<IViewerData | undefined> {
+  public async verifyToken(token: string): Promise<IViewerData> {
     try {
-      return await this.jwtService.verifyAsync<IViewerData>(token);
+      return pick(await this.jwtService.verifyAsync<IViewerData>(token), [
+        'id',
+        'login',
+      ]);
     } catch {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
 
-  private async generateTokens(user: User): Promise<[string, string]> {
-    const data: IViewerData = {
-      id: user.id,
-      login: user.login,
-    };
+  /**
+   * Refreshes access token using refresh token.
+   */
+  public async refreshAccessToken(refreshToken: string): Promise<string> {
+    return this.generateToken(
+      await this.verifyToken(refreshToken),
+      ACCESS_TOKEN_EXPIRES_IN,
+    );
+  }
 
+  private async generateTokens(user: User): Promise<[string, string]> {
     return Promise.all([
-      this.jwtService.signAsync(data, {
-        expiresIn: '30m',
-      }),
-      this.jwtService.signAsync(data, {
-        expiresIn: '30d',
-      }),
+      this.generateToken(user, ACCESS_TOKEN_EXPIRES_IN),
+      this.generateToken(user, REFRESH_TOKEN_EXPIRES_IN),
     ]);
+  }
+
+  private async generateToken<Data extends IViewerData>(
+    data: Data,
+    expiresIn: string,
+  ): Promise<string> {
+    return this.jwtService.signAsync(
+      pick<Data, keyof Data>(data, ['id', 'login']),
+      { expiresIn },
+    );
   }
 }

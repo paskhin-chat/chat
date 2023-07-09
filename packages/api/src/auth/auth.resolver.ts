@@ -48,6 +48,16 @@ export class AuthResolver {
   }
 
   /**
+   * Refreshes access token using refresh token from cookie.
+   */
+  @Mutation(() => String)
+  public async refreshAccessToken(
+    @Context() context: GqlContext,
+  ): Promise<string> {
+    return this.authService.refreshAccessToken(context.getRefreshToken() || '');
+  }
+
+  /**
    * Logs user in and returns access token.
    */
   @Mutation(() => String)

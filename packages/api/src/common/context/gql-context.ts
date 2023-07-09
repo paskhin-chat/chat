@@ -71,7 +71,7 @@ export class GqlContext {
   /**
    * Gets viewer data from access token.
    */
-  public async getViewerData(): Promise<IViewerData | undefined> {
+  public async getViewerData(): Promise<IViewerData> {
     return this.authService.verifyToken(this.getAccessToken() || '');
   }
 
