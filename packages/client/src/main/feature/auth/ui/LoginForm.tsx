@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useEffect } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import * as d from 'doubter';
 import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
 import styled from 'styled-components';
@@ -14,8 +14,6 @@ const loginShape = d.object({
  * Component for log in feature.
  */
 export const LoginForm: FC = () => {
-  const [login, result] = viewerModel.useLogin();
-
   const field = useUiField(
     {
       login: '',
@@ -23,6 +21,12 @@ export const LoginForm: FC = () => {
     },
     loginShape,
   );
+
+  const loginExecutor = viewerModel.useLoginExecutor({
+    onError: (error) => {
+      field.setError(error.message);
+    },
+  });
 
   const handleSubmit = (event: SyntheticEvent): void => {
     event.preventDefault();
@@ -34,14 +38,8 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    login(field.value);
+    loginExecutor.execute(field.value);
   };
-
-  useEffect(() => {
-    if (result.error) {
-      field.setError(result.error.message);
-    }
-  }, [field, result.error]);
 
   return (
     <SForm onSubmit={handleSubmit}>
@@ -56,7 +54,9 @@ export const LoginForm: FC = () => {
 
       <UiFieldErrorCard field={field} />
 
-      <button type='submit'>{result.loading ? 'Disabled' : 'Confirm'}</button>
+      <button type='submit'>
+        {loginExecutor.loading ? 'Disabled' : 'Confirm'}
+      </button>
     </SForm>
   );
 };

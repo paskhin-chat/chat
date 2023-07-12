@@ -10,24 +10,26 @@ import { userModel, roomModel } from 'entity';
 export const UserList: FC = () => {
   const [, setLocation] = useLocation();
 
-  const { users, loading } = userModel.useUsers();
-  const [createRoom, { loading: createRoomLoading }] =
-    roomModel.useCreateRoom();
+  const usersExecutor = userModel.useUsersExecutor();
+  const createRoomExecutor = roomModel.useCreateRoomExecutor({
+    onCompleted: (data) => {
+      setLocation(`/rooms/${data.id}`);
+    },
+  });
 
-  if (loading) {
+  const users = usersExecutor.response;
+
+  if (usersExecutor.loading) {
     return <>Loading...</>;
   }
 
-  const handleCreateRoom = async (userId: string): Promise<void> => {
-    await createRoom({
-      userIds: [userId],
-    });
-    setLocation('/rooms');
+  const handleCreateRoom = (userId: string): void => {
+    createRoomExecutor.execute({ userIds: [userId] });
   };
 
   return (
     <SWrapper>
-      {users.map((user, index) => (
+      {users?.map((user, index) => (
         <Fragment key={user.id}>
           <SUserWrapper>
             <span>
@@ -36,7 +38,7 @@ export const UserList: FC = () => {
 
             <button
               type='button'
-              disabled={createRoomLoading}
+              disabled={createRoomExecutor.loading}
               onClick={() => handleCreateRoom(user.id)}
             >
               Create room

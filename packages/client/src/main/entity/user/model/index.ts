@@ -1,5 +1,7 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { UserDto } from 'api';
+
+import { IExecutor, useQueryExecutor } from 'shared';
 
 /**
  * User.
@@ -34,8 +36,8 @@ export interface IUser {
 /**
  * Hooks for getting and storing users.
  */
-export function useUsers(): { users: IUser[]; loading: boolean } {
-  const { data, loading } = useQuery<{ users: UserDto[] }>(
+export function useUsersExecutor(): IExecutor<IUser[]> {
+  const executor = useQueryExecutor<{ users: UserDto[] }>(
     gql`
       query Users {
         users {
@@ -50,15 +52,21 @@ export function useUsers(): { users: IUser[]; loading: boolean } {
     `,
   );
 
-  const users: IUser[] =
-    data?.users.map((user) => ({
-      ...user,
-      dob: user.dob ? new Date(user.dob) : undefined,
-      secondName: user.secondName || undefined,
-    })) || [];
-
   return {
-    users,
-    loading,
+    ...executor,
+    response:
+      executor.response?.users &&
+      executor.response.users.map((user) => userMapper(user)),
+  };
+}
+
+function userMapper(dto: UserDto): IUser {
+  return {
+    id: dto.id,
+    firstName: dto.firstName,
+    secondName: dto.secondName || undefined,
+    lastName: dto.lastName,
+    login: dto.login,
+    dob: dto.dob ? new Date(dto.dob) : undefined,
   };
 }

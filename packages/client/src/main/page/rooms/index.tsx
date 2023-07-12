@@ -11,7 +11,9 @@ interface IProps {
 }
 
 const RoomsPage: FC<IProps> = ({ params }) => {
-  const { viewer } = viewerModel.useViewer();
+  const viewerExecutor = viewerModel.useViewerExecutor();
+
+  const viewer = viewerExecutor.response;
 
   const handleLogout = (): void => {
     void viewerModel.logout();

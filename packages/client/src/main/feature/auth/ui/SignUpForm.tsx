@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useEffect } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
 import * as d from 'doubter';
 import styled from 'styled-components';
@@ -16,8 +16,6 @@ const signUpShape = d.object({
  * Component for sign up feature.
  */
 export const SignUpForm: FC = () => {
-  const [signUp, result] = viewerModel.useSignUp();
-
   const field = useUiField(
     {
       login: '',
@@ -27,6 +25,12 @@ export const SignUpForm: FC = () => {
     },
     signUpShape,
   );
+
+  const signUpExecutor = viewerModel.useSignUpExecutor({
+    onError: (error) => {
+      field.setError(error.message);
+    },
+  });
 
   const handleSubmit = (event: SyntheticEvent): void => {
     event.preventDefault();
@@ -38,14 +42,8 @@ export const SignUpForm: FC = () => {
       return;
     }
 
-    signUp(field.value);
+    signUpExecutor.execute(field.value);
   };
-
-  useEffect(() => {
-    if (result.error) {
-      field.setError(result.error.message);
-    }
-  }, [field, result.error]);
 
   return (
     <SForm onSubmit={handleSubmit}>
@@ -59,7 +57,9 @@ export const SignUpForm: FC = () => {
 
       <UiFieldErrorCard field={field} />
 
-      <button type='submit'>{result.loading ? 'Disabled' : 'Confirm'}</button>
+      <button type='submit'>
+        {signUpExecutor.loading ? 'Disabled' : 'Confirm'}
+      </button>
     </SForm>
   );
 };

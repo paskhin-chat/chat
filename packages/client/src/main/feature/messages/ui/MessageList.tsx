@@ -11,27 +11,29 @@ interface IProps {
  * Feature for listing messages.
  */
 export const MessageList: FC<IProps> = ({ roomId }) => {
-  const { messages, loading } = messageModel.useMessages(roomId);
-  const { viewer, loading: viewerLoading } = viewerModel.useViewer();
+  const messagesExecutor = messageModel.useMessagesExecutor({
+    variables: { roomId },
+  });
+  const viewerExecutor = viewerModel.useViewerExecutor();
 
-  // useS(roomId);
+  const messages = messagesExecutor.response;
 
-  if (loading || viewerLoading) {
+  if (messagesExecutor.loading || viewerExecutor.loading) {
     return <>Loading...</>;
   }
 
-  if (messages.length === 0) {
+  if (messages?.length === 0) {
     return <SEmptyWrapper>There&apos;re no messages yet.</SEmptyWrapper>;
   }
 
   return (
     <SWrapper>
-      {messages.map((message) => (
+      {messages?.map((message) => (
         <SMessageWrapper key={message.id}>
           <SMessageContent>{message.content}</SMessageContent>
 
           <SMessageMember>
-            {viewer?.id === message.member.userId
+            {viewerExecutor.response?.id === message.member.userId
               ? 'You'
               : message.member.firstName}
           </SMessageMember>

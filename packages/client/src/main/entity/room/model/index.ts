@@ -1,6 +1,13 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { CreateRoomInput, RoomDto } from 'api';
-import { ApolloError } from '@apollo/client/errors';
+
+import {
+  IExecutor,
+  IMutationExecutor,
+  TMutationOptions,
+  useMutationExecutor,
+  useQueryExecutor,
+} from 'shared';
 
 /**
  * Room member.
@@ -50,66 +57,10 @@ export interface IRoom {
 }
 
 /**
- * Hook for getting room.
- */
-export function useRoom(id: string): {
-  room: IRoom | undefined;
-  loading: boolean;
-} {
-  const { data, loading } = useQuery<{ room: RoomDto | null }, { id: string }>(
-    gql`
-      query Room($id: ID!) {
-        room(id: $id) {
-          id
-          name
-          members {
-            id
-            user {
-              id
-              firstName
-              lastName
-            }
-          }
-        }
-      }
-    `,
-    {
-      variables: {
-        id,
-      },
-    },
-  );
-
-  const room: IRoom | undefined = data?.room
-    ? {
-        ...data.room,
-        name: data.room.name || undefined,
-        creationDate: data.room.creationDate
-          ? new Date(data.room.creationDate)
-          : undefined,
-        members: data.room.members.map((member) => ({
-          id: member.id,
-          userId: member.user.id,
-          firstName: member.user.firstName,
-          lastName: member.user.lastName,
-        })),
-      }
-    : undefined;
-
-  return {
-    room,
-    loading,
-  };
-}
-
-/**
  * Hook for getting rooms.
  */
-export function useRooms(): {
-  rooms: IRoom[];
-  loading: boolean;
-} {
-  const { data, loading } = useQuery<{ rooms: RoomDto[] }>(
+export function useRoomsExecutor(): IExecutor<IRoom[]> {
+  const executor = useQueryExecutor<{ rooms: RoomDto[] }>(
     gql`
       query Rooms {
         rooms {
@@ -130,36 +81,21 @@ export function useRooms(): {
     `,
   );
 
-  const rooms: IRoom[] =
-    data?.rooms.map((room) => ({
-      ...room,
-      name: room.name || undefined,
-      creationDate: room.creationDate ? new Date(room.creationDate) : undefined,
-      members: room.members.map((member) => ({
-        id: member.id,
-        userId: member.user.id,
-        firstName: member.user.firstName,
-        lastName: member.user.lastName,
-      })),
-    })) || [];
-
   return {
-    rooms,
-    loading,
+    ...executor,
+    response:
+      executor.response &&
+      executor.response.rooms.map((room) => roomMapper(room)),
   };
 }
 
 /**
  * Hook for creating a room.
  */
-export function useCreateRoom(): [
-  createRoom: (input: CreateRoomInput) => Promise<void>,
-  result: { loading: boolean; error: ApolloError | undefined },
-] {
-  const [createRoomMutation, { loading, error }] = useMutation<
-    { createRoom: { id: string } },
-    { input: CreateRoomInput }
-  >(
+export function useCreateRoomExecutor(
+  options?: TMutationOptions<{ id: string }, CreateRoomInput>,
+): IMutationExecutor<{ id: string }, CreateRoomInput> {
+  return useMutationExecutor(
     gql`
       mutation CreateRoom($input: CreateRoomInput!) {
         createRoom(input: $input) {
@@ -167,16 +103,20 @@ export function useCreateRoom(): [
         }
       }
     `,
-    {
-      fetchPolicy: 'network-only',
-    },
+    options,
   );
+}
 
-  const createRoom = async (input: CreateRoomInput): Promise<void> => {
-    await createRoomMutation({
-      variables: { input },
-    });
+function roomMapper(dto: RoomDto): IRoom {
+  return {
+    id: dto.id,
+    name: dto.name || undefined,
+    creationDate: dto.creationDate ? new Date(dto.creationDate) : undefined,
+    members: dto.members.map((member) => ({
+      id: member.id,
+      userId: member.user.id,
+      firstName: member.user.firstName,
+      lastName: member.user.lastName,
+    })),
   };
-
-  return [createRoom, { error, loading }];
 }

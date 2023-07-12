@@ -1,7 +1,15 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { ApolloError } from '@apollo/client/errors';
+import { gql } from '@apollo/client';
 import { CreateMessageInput, MessageDto } from 'api';
 import { useEffect } from 'react';
+
+import {
+  IExecutor,
+  IMutationExecutor,
+  TMutationOptions,
+  IQueryOptions,
+  useMutationExecutor,
+  useQueryExecutor,
+} from 'shared';
 
 /**
  * Message.
@@ -29,45 +37,36 @@ export interface IMessage {
   sendTime: Date;
 }
 
-const MessagesQuery = gql`
-  query Messages($roomId: ID!) {
-    messages(roomId: $roomId) {
-      id
-      content
-      sendTime
-      roomId
-      member {
-        user {
+/**
+ * Hook for getting, storing and subscribing to messages.
+ */
+export function useMessagesExecutor(
+  options: IQueryOptions<{ messages: MessageDto[] }, { roomId: string }>,
+): IExecutor<IMessage[], { roomId: string }> {
+  const executor = useQueryExecutor(
+    gql`
+      query Messages($roomId: ID!) {
+        messages(roomId: $roomId) {
           id
-          lastName
-          firstName
+          content
+          sendTime
+          roomId
+          member {
+            user {
+              id
+              lastName
+              firstName
+            }
+          }
         }
       }
-    }
-  }
-`;
-
-/**
- * Hook for getting and storing messages.
- */
-export function useMessages(roomId: string): {
-  messages: IMessage[];
-  loading: boolean;
-} {
-  const { data, loading, subscribeToMore } = useQuery<
-    { messages: MessageDto[] },
-    { roomId: string }
-  >(MessagesQuery, {
-    variables: {
-      roomId,
-    },
-  });
+    `,
+    options,
+  );
 
   useEffect(() => {
-    subscribeToMore<{ messageCreated: MessageDto }>({
-      variables: {
-        roomId,
-      },
+    executor.subscribeToMore<{ messageCreated: MessageDto }>({
+      variables: options.variables,
       document: gql`
         subscription MessageCreated {
           messageCreated {
@@ -85,8 +84,8 @@ export function useMessages(roomId: string): {
           }
         }
       `,
-      updateQuery: (previousQueryResult, options) => {
-        const newMessage = options.subscriptionData.data.messageCreated;
+      updateQuery: (previousQueryResult, opt) => {
+        const newMessage = opt.subscriptionData.data.messageCreated;
 
         const exists = previousQueryResult.messages.find(
           ({ id }) => id === newMessage.id,
@@ -101,40 +100,23 @@ export function useMessages(roomId: string): {
         };
       },
     });
-  }, [roomId, subscribeToMore]);
-
-  const messages: IMessage[] =
-    data?.messages.map((message) => ({
-      id: message.id,
-      content: message.content,
-      member: {
-        userId: message.member.user.id,
-        firstName: message.member.user.firstName,
-        lastName: message.member.user.lastName,
-      },
-      sendTime: new Date(message.sendTime),
-    })) || [];
+  }, [executor, options.variables]);
 
   return {
-    messages,
-    loading,
+    ...executor,
+    response:
+      executor.response?.messages &&
+      executor.response.messages.map((message) => messageMapper(message)),
   };
 }
 
 /**
- * Creates and stores a message.
+ * Creates a message.
  */
-export function useCreateMessage(onCompleted?: () => void): [
-  createMessage: (input: CreateMessageInput) => void,
-  result: {
-    loading: boolean;
-    error: ApolloError | undefined;
-  },
-] {
-  const [createMessage, { loading, error }] = useMutation<
-    { createMessage: MessageDto },
-    { input: CreateMessageInput }
-  >(
+export function useCreateMessageExecutor(
+  options?: TMutationOptions<MessageDto, CreateMessageInput>,
+): IMutationExecutor<MessageDto, CreateMessageInput> {
+  return useMutationExecutor(
     gql`
       mutation CreateMessage($input: CreateMessageInput!) {
         createMessage(input: $input) {
@@ -152,38 +134,19 @@ export function useCreateMessage(onCompleted?: () => void): [
         }
       }
     `,
-    {
-      // update: (cache, result, options) => {
-      //   const data = cache.readQuery<
-      //     { messages: MessageDto[] },
-      //     { roomId: string }
-      //   >({
-      //     query: MessagesQuery,
-      //     variables: {
-      //       roomId: options.variables!.input.roomId,
-      //     },
-      //   });
-      //
-      //   if (!data) {
-      //     return;
-      //   }
-      //
-      //   cache.writeQuery<{ messages: MessageDto[] }, { roomId: string }>({
-      //     query: MessagesQuery,
-      //     variables: {
-      //       roomId: options.variables!.input.roomId,
-      //     },
-      //     data: {
-      //       messages: [...data.messages, result.data!.createMessage],
-      //     },
-      //   });
-      // },
-      onCompleted,
-    },
+    options,
   );
+}
 
-  return [
-    (input) => createMessage({ variables: { input } }),
-    { loading, error },
-  ];
+function messageMapper(dto: MessageDto): IMessage {
+  return {
+    id: dto.id,
+    content: dto.content,
+    member: {
+      userId: dto.member.user.id,
+      firstName: dto.member.user.firstName,
+      lastName: dto.member.user.lastName,
+    },
+    sendTime: new Date(dto.sendTime),
+  };
 }
