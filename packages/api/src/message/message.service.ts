@@ -1,5 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
+import { ApolloError } from 'apollo-server';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { MemberService } from '../member/member.service';
@@ -38,9 +40,9 @@ export class MessageService {
     );
 
     if (!viewerMember) {
-      throw new HttpException(
-        "Viewer's member's not been found viewer",
-        HttpStatus.UNAUTHORIZED,
+      throw new ApolloError(
+        "Viewer's member's not been found",
+        ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE,
       );
     }
 

@@ -1,7 +1,7 @@
 import { Scalar, CustomScalar } from '@nestjs/graphql';
 import { Kind, ValueNode } from 'graphql';
-import { ValidationError } from 'apollo-server';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { ApolloError, ValidationError } from 'apollo-server';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 @Scalar('Date', () => Date)
 export class DateScalar implements CustomScalar<string, Date> {
@@ -30,9 +30,9 @@ export class DateScalar implements CustomScalar<string, Date> {
     }
 
     if (!(value instanceof Date)) {
-      throw new HttpException(
+      throw new ApolloError(
         'The value for serialization must be a Date object.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        ApolloServerErrorCode.INTERNAL_SERVER_ERROR,
       );
     }
 

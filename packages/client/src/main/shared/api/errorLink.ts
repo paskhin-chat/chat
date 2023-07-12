@@ -13,8 +13,7 @@ export function createErrorLink(): ApolloLink {
   return onError(({ forward, operation, graphQLErrors }) => {
     if (graphQLErrors) {
       for (const graphQLError of graphQLErrors) {
-        // TODO: fix it in {@link https://github.com/dPaskhin/chat/issues/27}
-        if (graphQLError.message === 'Unauthorized') {
+        if (graphQLError.extensions.code === 'UNAUTHENTICATED') {
           return fromPromise(getNewAccessToken()).flatMap((accessToken) => {
             operation.setContext({
               headers: {
