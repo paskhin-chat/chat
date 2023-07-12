@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { pick } from 'lodash';
+import { UserInputError, AuthenticationError } from 'apollo-server';
 
 import { UserService } from '../user/user.service';
 
@@ -38,11 +39,7 @@ export class AuthService {
    */
   public async register(dto: RegisterInput): Promise<[string, string]> {
     if (await this.usersService.findByLogin(dto.login)) {
-      throw new HttpException(
-        'This login is already being used.',
-        HttpStatus.BAD_REQUEST,
-        { description: 'This login is already being used.' },
-      );
+      throw new UserInputError('This login is already being used');
     }
 
     const user = await this.usersService.create({
@@ -60,14 +57,7 @@ export class AuthService {
     const candidate = await this.usersService.findByLogin(dto.login);
 
     if (!candidate || !(await compare(dto.password, candidate.password))) {
-      throw new HttpException(
-        'Incorrect login or password.',
-        HttpStatus.UNAUTHORIZED,
-        {
-          description:
-            'Your email or password is incorrect. Please double check and try again.',
-        },
-      );
+      throw new AuthenticationError('Incorrect login or password');
     }
 
     return this.generateTokens(candidate);
@@ -83,7 +73,7 @@ export class AuthService {
         'login',
       ]);
     } catch {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new AuthenticationError('Unauthorized');
     }
   }
 

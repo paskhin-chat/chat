@@ -1,7 +1,8 @@
 import type { CookieOptions, Request, Response } from 'express';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { Context, WebSocket } from 'graphql-ws/lib/server';
 import { ContextFunction } from 'apollo-server-core/src/types';
+import { ApolloError } from 'apollo-server';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import type { AuthService } from '../../auth/auth.service';
 import { IViewerData } from '../../auth/auth.service';
@@ -110,10 +111,9 @@ export class GqlContext {
 
       return;
     }
-
-    throw new HttpException(
+    throw new ApolloError(
       "There is no the response in the context. Perhaps it's WS request.",
-      HttpStatus.INTERNAL_SERVER_ERROR,
+      ApolloServerErrorCode.INTERNAL_SERVER_ERROR,
     );
   }
 }

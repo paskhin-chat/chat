@@ -26,10 +26,9 @@ export class AuthResolver {
   @UseGuards(AuthGuard)
   @Query(() => UserDto, { nullable: true })
   public async viewer(
-    @ViewerDataDecorator()
-    viewerData: IViewerData | undefined,
+    @ViewerDataDecorator() viewerData: IViewerData,
   ): Promise<User | null> {
-    return viewerData ? this.usersService.findById(viewerData.id) : null;
+    return this.usersService.findById(viewerData.id);
   }
 
   /**

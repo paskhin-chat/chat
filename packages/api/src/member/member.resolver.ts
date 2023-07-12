@@ -1,6 +1,8 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { ApolloError } from 'apollo-server';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { UserDto } from '../user/dto/user.dto';
@@ -21,7 +23,10 @@ export class MemberResolver {
     const user = await this.userService.findUserByMemberId(member.id);
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new ApolloError(
+        'User not found',
+        ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE,
+      );
     }
 
     return user;

@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Room } from '@prisma/client';
 import { uniq } from 'lodash';
+import { UserInputError } from 'apollo-server';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
@@ -22,10 +23,7 @@ export class RoomService {
     const users = await this.usersService.findByIds(userIds);
 
     if (users.length !== userIds.length) {
-      throw new HttpException(
-        'Invalid user IDs Detected',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new UserInputError('Invalid user IDs detected');
     }
 
     return (
