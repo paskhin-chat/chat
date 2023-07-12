@@ -1,8 +1,15 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { LoginInput, RegisterInput, UserDto } from 'api';
-import { ApolloError } from '@apollo/client/errors';
 
-import { accessTokenProvider, apiClient } from 'shared';
+import {
+  accessTokenProvider,
+  apiClient,
+  IExecutor,
+  IMutationExecutor,
+  TMutationOptions,
+  useMutationExecutor,
+  useQueryExecutor,
+} from 'shared';
 
 /**
  * Viewer.
@@ -33,11 +40,8 @@ export interface IViewer {
 /**
  * Hook for storing and getting viewer.
  */
-export function useViewer(): {
-  viewer: IViewer | undefined;
-  loading: boolean;
-} {
-  const { data, loading } = useQuery<{ viewer: UserDto | null }>(
+export function useViewerExecutor(): IExecutor<IViewer> {
+  const executor = useQueryExecutor<{ viewer: UserDto | null }>(
     gql`
       query Viewer {
         viewer {
@@ -52,85 +56,72 @@ export function useViewer(): {
     `,
   );
 
-  const viewer = data?.viewer
-    ? {
-        ...data.viewer,
-        secondName: data.viewer.secondName || undefined,
-      }
-    : undefined;
-
   return {
-    viewer,
-    loading,
+    ...executor,
+    response:
+      executor.response?.viewer && viewerMapper(executor.response.viewer),
   };
 }
 
 /**
- * Hook for sign user up.
+ * Hook for sign a user up.
  */
-export function useSignUp(): [
-  signUp: (input: RegisterInput) => void,
-  result: { loading: boolean; error: ApolloError | undefined },
-] {
-  const [signUpMutation, { loading, error, client }] = useMutation<
-    { register: string },
-    { input: RegisterInput }
-  >(
+export function useSignUpExecutor(
+  options?: TMutationOptions<string, RegisterInput>,
+): IMutationExecutor<string, RegisterInput> {
+  return useMutationExecutor(
     gql`
       mutation SignUp($input: RegisterInput!) {
         register(input: $input)
       }
     `,
     {
-      fetchPolicy: 'network-only',
-      onCompleted: (data) => {
-        accessTokenProvider.set(data.register);
-        void client.resetStore();
+      ...options,
+      onCompleted: (data, clientOptions) => {
+        options?.onCompleted?.(data, clientOptions);
+
+        accessTokenProvider.set(data);
+        void clientOptions?.client?.resetStore();
       },
     },
   );
-
-  return [
-    (input) => signUpMutation({ variables: { input } }),
-    { error, loading },
-  ];
 }
 
 /**
- * Hook for log in user.
+ * Hook for log a user in.
  */
-export function useLogin(): [
-  login: (input: LoginInput) => void,
-  result: { loading: boolean; error: ApolloError | undefined },
-] {
-  const [loginMutation, { loading, error, client }] = useMutation<
-    { login: string },
-    { input: LoginInput }
-  >(
+export function useLoginExecutor(
+  options?: TMutationOptions<string, LoginInput>,
+): IMutationExecutor<string, LoginInput> {
+  return useMutationExecutor(
     gql`
       mutation Login($input: LoginInput!) {
         login(input: $input)
       }
     `,
     {
-      fetchPolicy: 'network-only',
-      onCompleted: (data) => {
-        accessTokenProvider.set(data.login);
-        void client.resetStore();
+      ...options,
+      onCompleted: (data, clientOptions) => {
+        options?.onCompleted?.(data, clientOptions);
+
+        accessTokenProvider.set(data);
+        void clientOptions?.client?.resetStore();
       },
     },
   );
-
-  return [
-    (input) => loginMutation({ variables: { input } }),
-    { loading, error },
-  ];
 }
 
 /**
- * Logs out the viewer.
+ * Logs the viewer out.
  */
 export async function logout(): Promise<void> {
   accessTokenProvider.delete();
   await apiClient.resetStore();
+}
+
+function viewerMapper(dto: UserDto): IViewer {
+  return {
+    ...dto,
+    secondName: dto.secondName || undefined,
+  };
 }

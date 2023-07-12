@@ -10,23 +10,27 @@ import { roomModel, viewerModel } from 'entity';
 export const RoomList: FC = () => {
   const [, setLocation] = useLocation();
 
-  const { rooms, loading } = roomModel.useRooms();
-  const { viewer, loading: viewerLoading } = viewerModel.useViewer();
+  const roomsExecutor = roomModel.useRoomsExecutor();
+  const viewerExecutor = viewerModel.useViewerExecutor();
 
-  if (loading || viewerLoading) {
+  const rooms = roomsExecutor.response;
+
+  if (roomsExecutor.loading || viewerExecutor.loading) {
     return <>Loading...</>;
   }
 
   return (
     <SWrapper>
-      {rooms.map((room, index) => (
+      {rooms?.map((room, index) => (
         <Fragment key={room.id}>
           <SRoomWrapper onClick={() => setLocation(`/rooms/${room.id}`)}>
             {room.members.length === 1 ? (
               <span>Saved messages by {room.members[0]!.firstName}</span>
             ) : (
               room.members
-                .filter((member) => member.userId !== viewer?.id)
+                .filter(
+                  (member) => member.userId !== viewerExecutor.response?.id,
+                )
                 .map((member) => (
                   <span key={member.id}>
                     {member.firstName} {member.lastName}

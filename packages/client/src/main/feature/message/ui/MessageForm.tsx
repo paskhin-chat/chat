@@ -25,8 +25,8 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
     messageShape,
   );
 
-  const [createMessage, { loading }] = messageModel.useCreateMessage(() => {
-    field.reset();
+  const createMessageExecutor = messageModel.useCreateMessageExecutor({
+    onCompleted: () => field.reset(),
   });
 
   const handleSubmit = (event: SyntheticEvent): void => {
@@ -39,7 +39,7 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
       return;
     }
 
-    createMessage({
+    createMessageExecutor.execute({
       content: field.value.content,
       roomId,
     });
@@ -52,8 +52,11 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
       </SFieldWrapper>
 
       <FieldRenderer field={field.at('content')}>
-        {(f) => (
-          <button type='submit' disabled={!f.value || loading}>
+        {(contentField) => (
+          <button
+            type='submit'
+            disabled={!contentField.value || createMessageExecutor.loading}
+          >
             Send
           </button>
         )}

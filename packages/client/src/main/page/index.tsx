@@ -12,13 +12,13 @@ const SignUpPage = lazy(() => import('./sign-up'));
  * Application main router.
  */
 export const Router: FC = () => {
-  const { viewer, loading } = viewerModel.useViewer();
+  const viewerExecutor = viewerModel.useViewerExecutor();
 
-  if (loading) {
+  if (viewerExecutor.loading) {
     return <div>Loading...</div>;
   }
 
-  if (viewer) {
+  if (viewerExecutor.response) {
     return (
       <Suspense fallback='Loading...'>
         <Switch>
