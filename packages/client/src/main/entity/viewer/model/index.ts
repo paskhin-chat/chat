@@ -3,7 +3,6 @@ import { LoginInput, RegisterInput, UserDto } from 'api';
 
 import {
   accessTokenProvider,
-  apiClient,
   IExecutor,
   IMutationExecutor,
   TMutationOptions,
@@ -37,24 +36,24 @@ export interface IViewer {
   secondName?: string;
 }
 
+const VIEWER_QUERY = gql`
+  query Viewer {
+    viewer {
+      id
+      login
+      firstName
+      lastName
+      secondName
+      dob
+    }
+  }
+`;
+
 /**
  * Hook for storing and getting viewer.
  */
 export function useViewerExecutor(): IExecutor<IViewer> {
-  const executor = useQueryExecutor<{ viewer: UserDto | null }>(
-    gql`
-      query Viewer {
-        viewer {
-          id
-          login
-          firstName
-          lastName
-          secondName
-          dob
-        }
-      }
-    `,
-  );
+  const executor = useQueryExecutor<{ viewer: UserDto | null }>(VIEWER_QUERY);
 
   return {
     ...executor,
@@ -112,11 +111,30 @@ export function useLoginExecutor(
 }
 
 /**
- * Logs the viewer out.
+ * Hook for log the viewer out.
  */
-export async function logout(): Promise<void> {
-  accessTokenProvider.delete();
-  await apiClient.resetStore();
+export function useLogoutExecutor(): IMutationExecutor<boolean> {
+  return useMutationExecutor(
+    gql`
+      mutation Logout {
+        logout
+      }
+    `,
+    {
+      onCompleted: (data, clientOptions) => {
+        accessTokenProvider.delete();
+        void clientOptions?.client?.resetStore();
+      },
+      update: (cache) => {
+        cache.writeQuery<{ viewer: UserDto | null }>({
+          query: VIEWER_QUERY,
+          data: {
+            viewer: null,
+          },
+        });
+      },
+    },
+  );
 }
 
 function viewerMapper(dto: UserDto): IViewer {
