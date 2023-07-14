@@ -97,6 +97,7 @@ export interface IMutation {
     register(input: RegisterInput): string | Promise<string>;
     refreshAccessToken(): string | Promise<string>;
     login(input: LoginInput): string | Promise<string>;
+    logout(): boolean | Promise<boolean>;
     createRoom(input: CreateRoomInput): RoomDto | Promise<RoomDto>;
     createMessage(input: CreateMessageInput): MessageDto | Promise<MessageDto>;
 }

@@ -12,11 +12,12 @@ interface IProps {
 
 const RoomsPage: FC<IProps> = ({ params }) => {
   const viewerExecutor = viewerModel.useViewerExecutor();
+  const logoutExecutor = viewerModel.useLogoutExecutor();
 
   const viewer = viewerExecutor.response;
 
   const handleLogout = (): void => {
-    void viewerModel.logout();
+    logoutExecutor.execute();
   };
 
   return (

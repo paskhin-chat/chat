@@ -26,7 +26,7 @@ export type TMutationOptions<
   Input extends TTruthy = TTruthy,
 > = Pick<
   MutationHookOptions<Response, IMutationVariables<Input>>,
-  'onCompleted' | 'onError'
+  'onCompleted' | 'onError' | 'update' | 'refetchQueries'
 >;
 
 interface IMutationVariables<Input extends TTruthy> {

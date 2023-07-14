@@ -57,6 +57,7 @@ type Mutation {
   register(input: RegisterInput!): String!
   refreshAccessToken: String!
   login(input: LoginInput!): String!
+  logout: Boolean!
   createRoom(input: CreateRoomInput!): RoomDto!
   createMessage(input: CreateMessageInput!): MessageDto!
 }

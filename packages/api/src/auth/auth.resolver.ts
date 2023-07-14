@@ -70,4 +70,15 @@ export class AuthResolver {
 
     return accessToken;
   }
+
+  /**
+   * Logs user out and deletes refresh token.
+   */
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  public logout(@Context() context: GqlContext): boolean {
+    context.setRefreshToken('');
+
+    return true;
+  }
 }
