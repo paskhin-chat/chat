@@ -6,8 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build:prod": "npm run clean:dist && ttsc --project tsconfig.build.json && cosmos-export",
-    "build:start": "exit 0",
-    "build:watch": "cosmos",
+    "build:start": "cosmos",
+    "build:watch": "npm run clean:dist && ttsc --watch --project tsconfig.build.json",
     "clean:dist": "rimraf './dist'",
     "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,tsx,js,json}\"",

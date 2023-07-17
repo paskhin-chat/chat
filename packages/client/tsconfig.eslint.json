@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.eslint.json",
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.json", "./.eslintrc.js"],
   "compilerOptions": {
-    "types": ["vite/client"],
+    "types": ["vite/client", "jest"],
     "baseUrl": ".",
     "paths": {
       "*": ["./src/main/*"]
