@@ -5,15 +5,19 @@ export interface IConfig {
   /**
    * Current build mode.
    */
-  mode: 'development' | 'production';
+  mode: 'development' | 'production' | 'test';
   /**
-   * Alias for development mode always the opposite of {@see IConfig.prod}.
+   * Alias for development mode.
    */
   dev: boolean;
   /**
    * Alias for production mode.
    */
   prod: boolean;
+  /**
+   * Alias for testing mode.
+   */
+  test: boolean;
   /**
    * Uri for accessing api.
    */
@@ -28,23 +32,34 @@ export interface IConfig {
  * Application config.
  */
 export const config: IConfig = {
-  get mode(): 'development' | 'production' {
-    return import.meta.env.MODE === 'production' ? 'production' : 'development';
+  get mode() {
+    if (import.meta.env.MODE === 'test') {
+      return 'test';
+    }
+
+    if (import.meta.env.MODE === 'production') {
+      return 'production';
+    }
+
+    return 'development';
   },
-  get dev(): boolean {
-    return import.meta.env.DEV;
+  get dev() {
+    return config.mode === 'development';
   },
-  get prod(): boolean {
-    return import.meta.env.PROD;
+  get prod() {
+    return config.mode === 'production';
   },
-  get apiUri(): string {
-    return config.dev
-      ? 'http://localhost:3002/graphql'
-      : 'https://api.chat.paskhin.me/graphql';
+  get test() {
+    return config.mode === 'test';
   },
-  get apiWsUri(): string {
-    return config.dev
-      ? 'ws://localhost:3002/graphql'
-      : 'wss://api.chat.paskhin.me/graphql';
+  get apiUri() {
+    return config.prod
+      ? 'https://api.chat.paskhin.me/graphql'
+      : 'http://localhost:3002/graphql';
+  },
+  get apiWsUri() {
+    return config.prod
+      ? 'wss://api.chat.paskhin.me/graphql'
+      : 'ws://localhost:3002/graphql';
   },
 };

@@ -1,6 +1,6 @@
-import { FC, SyntheticEvent } from 'react';
+import { FC } from 'react';
 import * as d from 'doubter';
-import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
+import { UiFieldErrorCard, UiTextInputField, useUiField, UiForm } from 'ui';
 import styled from 'styled-components';
 
 import { viewerModel } from 'entity';
@@ -28,9 +28,7 @@ export const LoginForm: FC = () => {
     },
   });
 
-  const handleSubmit = (event: SyntheticEvent): void => {
-    event.preventDefault();
-
+  const handleSubmit = (): void => {
     field.clearErrors();
     field.validate();
 
@@ -61,7 +59,7 @@ export const LoginForm: FC = () => {
   );
 };
 
-const SForm = styled.form`
+const SForm = styled(UiForm)`
   display: flex;
   flex-direction: column;
   row-gap: 10px;

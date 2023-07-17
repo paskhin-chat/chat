@@ -10,7 +10,7 @@
     "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,tsx,js,json}\"",
     "check:lint:fix": "tsc --noEmit && eslint \"{**/*,*}.{ts,tsx,js,json}\" --fix",
-    "check:test": "exit 0",
+    "check:test": "jest",
     "check:all": "npm run check:lint && npm run check:test"
   },
   "dependencies": {
@@ -32,9 +32,17 @@
     "wouter": "^2.11.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.3",
     "@types/js-cookie": "^3.0.3",
     "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "cross-fetch": "^4.0.0",
+    "jest-localstorage-mock": "^2.4.26",
+    "ts-jest-mock-import-meta": "^1.0.0",
     "vite": "^4.0.0"
   }
 }

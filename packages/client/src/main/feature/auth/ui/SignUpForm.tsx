@@ -1,5 +1,5 @@
-import { FC, SyntheticEvent } from 'react';
-import { UiFieldErrorCard, UiTextInputField, useUiField } from 'ui';
+import { FC } from 'react';
+import { UiFieldErrorCard, UiForm, UiTextInputField, useUiField } from 'ui';
 import * as d from 'doubter';
 import styled from 'styled-components';
 
@@ -32,9 +32,7 @@ export const SignUpForm: FC = () => {
     },
   });
 
-  const handleSubmit = (event: SyntheticEvent): void => {
-    event.preventDefault();
-
+  const handleSubmit = (): void => {
     field.clearErrors();
     field.validate();
 
@@ -64,7 +62,7 @@ export const SignUpForm: FC = () => {
   );
 };
 
-const SForm = styled.form`
+const SForm = styled(UiForm)`
   display: flex;
   flex-direction: column;
   row-gap: 10px;

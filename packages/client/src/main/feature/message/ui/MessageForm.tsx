@@ -1,5 +1,5 @@
-import { FC, SyntheticEvent } from 'react';
-import { UiTextInputField, useUiField } from 'ui';
+import { FC } from 'react';
+import { UiForm, UiTextInputField, useUiField } from 'ui';
 import styled from 'styled-components';
 import * as d from 'doubter';
 import { FieldRenderer } from '@roqueform/react';
@@ -29,9 +29,7 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
     onCompleted: () => field.reset(),
   });
 
-  const handleSubmit = (event: SyntheticEvent): void => {
-    event.preventDefault();
-
+  const handleSubmit = (): void => {
     field.clearErrors();
     field.validate();
 
@@ -65,7 +63,7 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
   );
 };
 
-const SMessageForm = styled.form`
+const SMessageForm = styled(UiForm)`
   display: flex;
   align-items: center;
   justify-content: space-between;
