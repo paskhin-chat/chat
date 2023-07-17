@@ -57,7 +57,7 @@ export class AuthService {
     const candidate = await this.usersService.findByLogin(dto.login);
 
     if (!candidate || !(await compare(dto.password, candidate.password))) {
-      throw new AuthenticationError('Incorrect login or password');
+      throw new UserInputError('Incorrect login or password');
     }
 
     return this.generateTokens(candidate);
