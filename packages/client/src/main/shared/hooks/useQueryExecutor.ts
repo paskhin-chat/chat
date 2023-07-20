@@ -6,6 +6,7 @@ import {
   ApolloClient,
   NormalizedCacheObject,
 } from '@apollo/client';
+import noop from 'lodash/noop';
 
 import { IExecutor, TTruthy } from '../types';
 import { apiClient } from '../api';
@@ -40,6 +41,13 @@ export interface IQueryOptions<
     data: Response,
     options: { client: ApolloClient<NormalizedCacheObject> },
   ) => void;
+
+  /**
+   * If the query has a subscription. You can turn it off by this flag.
+   *
+   * @default true
+   */
+  shouldSubscribe?: boolean;
 }
 
 /**
@@ -62,6 +70,8 @@ export function useQueryExecutor<
     },
   });
 
+  const shouldSubscribe = options?.shouldSubscribe ?? true;
+
   return {
     execute: (vars) => {
       void refetch(vars);
@@ -70,6 +80,6 @@ export function useQueryExecutor<
     client,
     response: data,
     loading,
-    subscribeToMore,
+    subscribeToMore: shouldSubscribe ? subscribeToMore : () => noop,
   };
 }

@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import styled from 'styled-components';
 
-import { viewerModel } from 'entity';
+import { viewerModel, messageModel } from 'entity';
 import { MessageUi, RoomsUi, MessagesUi } from 'feature';
+import { queueMacrotask } from 'shared';
 
 interface IProps {
   params: {
@@ -13,6 +14,22 @@ interface IProps {
 const RoomsPage: FC<IProps> = ({ params }) => {
   const viewerExecutor = viewerModel.useViewerExecutor();
   const logoutExecutor = viewerModel.useLogoutExecutor();
+  const ref = useRef<HTMLDivElement>(null);
+  const refChild = useRef<HTMLDivElement>(null);
+
+  messageModel.useMessagesExecutor({
+    variables: {
+      roomId: params.id || '',
+    },
+    onCompleted: () => {
+      queueMacrotask(() => {
+        ref.current?.scrollBy({
+          top: refChild.current?.scrollHeight || 0,
+        });
+      });
+    },
+    shouldSubscribe: false,
+  });
 
   const viewer = viewerExecutor.response;
 
@@ -40,8 +57,8 @@ const RoomsPage: FC<IProps> = ({ params }) => {
         <SRoom>
           {params.id ? (
             <>
-              <SMessageList>
-                <MessagesUi.MessageList roomId={params.id} />
+              <SMessageList ref={ref}>
+                <MessagesUi.MessageList roomId={params.id} ref={refChild} />
               </SMessageList>
 
               <SMessageForm>
