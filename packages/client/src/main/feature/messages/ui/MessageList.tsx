@@ -1,7 +1,9 @@
-import { FC } from 'react';
+import { forwardRef } from 'react';
 import styled from 'styled-components';
+import { UiMessageList } from 'ui';
 
 import { messageModel, viewerModel } from 'entity';
+import { getUserFullName } from 'shared';
 
 interface IProps {
   roomId: string;
@@ -10,38 +12,44 @@ interface IProps {
 /**
  * Feature for listing messages.
  */
-export const MessageList: FC<IProps> = ({ roomId }) => {
-  const messagesExecutor = messageModel.useMessagesExecutor({
-    variables: { roomId },
-  });
-  const viewerExecutor = viewerModel.useViewerExecutor();
+export const MessageList = forwardRef<HTMLDivElement, IProps>(
+  ({ roomId }, ref): JSX.Element => {
+    const messagesExecutor = messageModel.useMessagesExecutor({
+      variables: { roomId },
+    });
+    const viewerExecutor = viewerModel.useViewerExecutor();
 
-  const messages = messagesExecutor.response;
+    const messages = messagesExecutor.response;
 
-  if (messagesExecutor.loading || viewerExecutor.loading) {
-    return <>Loading...</>;
-  }
+    if (messagesExecutor.loading || viewerExecutor.loading) {
+      return <>Loading...</>;
+    }
 
-  if (messages?.length === 0) {
-    return <SEmptyWrapper>There&apos;re no messages yet.</SEmptyWrapper>;
-  }
+    if (messages?.length === 0) {
+      return <SEmptyWrapper>There&apos;re no messages yet.</SEmptyWrapper>;
+    }
 
-  return (
-    <SWrapper>
-      {messages?.map((message) => (
-        <SMessageWrapper key={message.id}>
-          <SMessageContent>{message.content}</SMessageContent>
-
-          <SMessageMember>
-            {viewerExecutor.response?.id === message.member.userId
-              ? 'You'
-              : message.member.firstName}
-          </SMessageMember>
-        </SMessageWrapper>
-      ))}
-    </SWrapper>
-  );
-};
+    return (
+      <SWrapper ref={ref}>
+        <UiMessageList
+          messages={
+            messages?.map((message) => ({
+              time: message.sendTime,
+              author: getUserFullName(message.member),
+              content: message.content,
+              position:
+                viewerExecutor.response?.id === message.member.userId
+                  ? 'right'
+                  : 'left',
+              isAuthorViewer:
+                viewerExecutor.response?.id === message.member.userId,
+            })) || []
+          }
+        />
+      </SWrapper>
+    );
+  },
+);
 
 const SEmptyWrapper = styled.div`
   display: flex;
@@ -53,36 +61,8 @@ const SEmptyWrapper = styled.div`
 const SWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  row-gap: 8px;
+  justify-content: flex-end;
+  flex-grow: 1;
   width: 100%;
   padding: 0 12px;
-`;
-
-const SMessageWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: flex-end;
-  background-color: gray;
-  padding: 5px;
-
-  &:after {
-    content: '';
-    position: absolute;
-    right: -10px;
-    top: 0;
-    width: 0;
-    height: 0;
-    border: 5px solid transparent;
-    border-top-color: gray;
-    border-left-color: gray;
-  }
-`;
-
-const SMessageContent = styled.div``;
-
-const SMessageMember = styled.span`
-  margin-top: 0.15rem;
-  font-size: 0.85rem;
 `;
