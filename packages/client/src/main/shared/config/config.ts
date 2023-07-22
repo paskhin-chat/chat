@@ -1,3 +1,5 @@
+import { urls } from 'constant';
+
 /**
  * Application config.
  */
@@ -53,13 +55,25 @@ export const config: IConfig = {
     return config.mode === 'test';
   },
   get apiUri() {
-    return config.prod
-      ? 'https://api.chat.paskhin.me/graphql'
-      : 'http://localhost:3002/graphql';
+    if (config.prod) {
+      return urls.prod.api;
+    }
+
+    if (config.test) {
+      return urls.test.api;
+    }
+
+    return urls.dev.api;
   },
   get apiWsUri() {
-    return config.prod
-      ? 'wss://api.chat.paskhin.me/graphql'
-      : 'ws://localhost:3002/graphql';
+    if (config.prod) {
+      return urls.prod.ws;
+    }
+
+    if (config.test) {
+      return urls.test.ws;
+    }
+
+    return urls.dev.ws;
   },
 };

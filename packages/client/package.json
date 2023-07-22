@@ -17,7 +17,7 @@
     "@apollo/client": "^3.7.16",
     "@roqueform/react": "^1.0.0",
     "api": "^1.0.0",
-    "config": "^1.0.0",
+    "constant": "^1.0.0",
     "date-fns": "^2.30.0",
     "doubter": "^2.1.0",
     "flatted": "^3.2.7",

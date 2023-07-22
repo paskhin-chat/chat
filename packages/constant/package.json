@@ -1,17 +1,17 @@
 {
-  "name": "config",
+  "name": "constant",
   "version": "1.0.0",
   "author": "Dmitry Paskhin <d.pasxin@gmail.com>",
   "types": "./dist/index.d.ts",
   "exports": {
     "import": "./dist/index.js",
-    "node": "./dist/index.cjs"
+    "require": "./dist/index.cjs"
   },
   "scripts": {
-    "build:prod": "npm run clean:dist && ts-node --project tsconfig.generate.json src/main/bin/generate.ts && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "build:prod": "npm run clean:dist && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
     "build:start": "exit 0",
     "build:watch": "exit 0",
-    "clean:dist": "rimraf './dist' && rimraf './src/main/gen'",
+    "clean:dist": "rimraf './dist'",
     "clean:all": "npm run clean:dist && rimraf './node_modules'",
     "check:lint": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\"",
     "check:lint:fix": "tsc --noEmit && eslint \"{**/*,*}.{ts,js,json}\" --fix",
@@ -19,10 +19,7 @@
     "check:all": "npm run check:lint && npm run check:test"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "dotenv-expand": "^10.0.0",
-    "doubter": "^2.1.0",
-    "lodash": "^4.17.21",
-    "utility-types": "^3.10.0"
+    "ttypescript": "^1.5.15",
+    "rollup": "^3.20.2"
   }
 }

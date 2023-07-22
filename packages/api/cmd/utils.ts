@@ -1,4 +1,8 @@
 import childProcess from 'node:child_process';
+import * as path from 'node:path';
+
+import { loadEnv } from '../src/lib';
+import { envSchema } from '../src/common/env';
 
 /**
  * Spawn a command as child process.
@@ -36,4 +40,17 @@ export function containerRunScriptCreator(
         echo $(docker ps -q -f name=$CONTAINER_NAME)
       fi
     `;
+}
+
+/**
+ * Loads env variables.
+ */
+export function envLoader(): void {
+  loadEnv(envSchema, {
+    corePath: path.resolve(process.cwd(), '../../.env'),
+    defaultsPathsMap: {
+      development: path.resolve(process.cwd(), '../../.env.dev.defaults'),
+      test: path.resolve(process.cwd(), '../../.env.test.defaults'),
+    },
+  });
 }

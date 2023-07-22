@@ -47,7 +47,22 @@ import { DateScalar } from './common/graphql';
         context: contextFactory(authService),
         useGlobalPrefix: true,
         cors: configService.dev
-          ? { origin: configService.clientUrl, credentials: true }
+          ? {
+              origin: (
+                origin: string,
+                callback: (error: Error | null, allowed?: boolean) => void,
+              ) => {
+                if (
+                  configService.allowedCorsClientUrls.includes(origin) ||
+                  !origin
+                ) {
+                  callback(null, true);
+                } else {
+                  callback(new Error('Not allowed by CORS'));
+                }
+              },
+              credentials: true,
+            }
           : false,
         cache: new KeyvAdapter(new Keyv(configService.redisUrl)),
       }),
