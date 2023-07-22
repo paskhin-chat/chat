@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { testConfig, prodConfig, devConfig, IConfig } from 'config';
+import * as process from 'node:process';
+import * as constants from 'constant';
+
+import { IEnv } from '../common/env';
 
 @Injectable()
 export class ConfigService {
@@ -28,77 +31,48 @@ export class ConfigService {
    * Redis host.
    */
   public get redisHost(): string {
-    return this.get('REDIS_HOST');
+    return this.getEnv('REDIS_HOST');
   }
 
   /**
    * Redis port.
    */
   public get redisPort(): number {
-    return this.get('REDIS_PORT');
+    return this.getEnv('REDIS_PORT');
   }
 
   /**
    * Redis URL.
    */
   public get redisUrl(): string {
-    return this.get('REDIS_URL');
+    return this.getEnv('REDIS_URL');
   }
 
   /**
    * JWT secret token.
    */
   public get jwtSecretToken(): string {
-    return this.get('JWT_SECRET_TOKEN');
+    return this.getEnv('JWT_SECRET_TOKEN');
   }
 
   /**
    * Cookies secret token.
    */
   public get cookiesSecretToken(): string {
-    return this.get('COOKIES_SECRET_TOKEN');
+    return this.getEnv('COOKIES_SECRET_TOKEN');
   }
 
   /**
    * Client URL.
    */
-  public get clientUrl(): string {
-    return this.prod ? 'https://chat.paskhin.me' : 'http://localhost:6005';
+  public get allowedCorsClientUrls(): string[] {
+    return [
+      constants.urls.dev.client,
+      `${constants.Protocol.HTTP}://${constants.domains.dev.api}:${constants.ports.dev.api}`,
+    ];
   }
 
-  /**
-   * Retrieve a production configuration based on its name.
-   */
-  public getProd<Name extends keyof IConfig>(name: Name): IConfig[Name] {
-    return prodConfig[name];
-  }
-
-  /**
-   * Retrieve a development configuration based on its name.
-   */
-  public getDev<Name extends keyof IConfig>(name: Name): IConfig[Name] {
-    return devConfig[name];
-  }
-
-  /**
-   * Retrieve a testing configuration based on its name.
-   */
-  public getTest<Name extends keyof IConfig>(name: Name): IConfig[Name] {
-    return testConfig[name];
-  }
-
-  /**
-   * Retrieve a configuration based on its name and the current environment.
-   */
-  public get<Name extends keyof IConfig>(name: Name): IConfig[Name] {
-    if (this.prod) {
-      return this.getProd(name);
-    }
-
-    if (this.test) {
-      return this.getTest(name);
-    }
-
-    return this.getDev(name);
+  private getEnv<Name extends keyof IEnv>(name: Name): IEnv[Name] {
+    return process.env[name];
   }
 }

@@ -1,7 +1,8 @@
-import { devConfig } from 'config';
 import { program } from 'commander';
 
-import { containerRunScriptCreator, spawn } from '../utils';
+import { containerRunScriptCreator, envLoader, spawn } from '../utils';
+
+envLoader();
 
 const opts = program
   .option(
@@ -20,8 +21,8 @@ const opts = program
   await spawn('bash', [
     '-c',
     containerRunScriptCreator('chat-dev-redis', 'redis', [
-      ['-h', devConfig.REDIS_HOST],
-      ['-p', `${devConfig.REDIS_PORT}:6379`],
+      ['-h', process.env.REDIS_HOST],
+      ['-p', `${process.env.REDIS_PORT}:6379`],
       ['--rm'],
       ['-d'],
     ]),
@@ -30,17 +31,15 @@ const opts = program
   await spawn('bash', [
     '-c',
     containerRunScriptCreator('chat-dev-db', 'postgres', [
-      ['-e', `POSTGRES_DB=${devConfig.DATABASE_NAME}`],
-      ['-e', `POSTGRES_USER=${devConfig.DATABASE_USER}`],
-      ['-e', `POSTGRES_PASSWORD=${devConfig.DATABASE_PASSWORD}`],
-      ['-p', `${devConfig.DATABASE_PORT}:5432`],
+      ['-e', `POSTGRES_DB=${process.env.DATABASE_NAME}`],
+      ['-e', `POSTGRES_USER=${process.env.DATABASE_USER}`],
+      ['-e', `POSTGRES_PASSWORD=${process.env.DATABASE_PASSWORD}`],
+      ['-p', `${process.env.DATABASE_PORT}:5432`],
       ['-v', 'pgdata-dev:/var/lib/postgresql/data'],
       ['--rm'],
       ['-d'],
     ]),
   ]);
-
-  process.env.DATABASE_URL = devConfig.DATABASE_URL;
 
   await (opts.m
     ? spawn('npm', ['exec', '-c', 'prisma migrate dev'])

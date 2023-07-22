@@ -1,7 +1,7 @@
-/* eslint-disable unicorn/prefer-module */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
+import { ports } from 'constant';
 
 /**
  * Vite config.
@@ -13,18 +13,16 @@ export default defineConfig(() => ({
   },
   plugins: [react()],
   server: {
-    port: 6_005,
+    port: ports.dev.client,
   },
   resolve: {
     alias: {
-      app: path.resolve(__dirname, './src/main/app'),
-      page: path.resolve(__dirname, './src/main/page'),
-      widget: path.resolve(__dirname, './src/main/widget'),
-      feature: path.resolve(__dirname, './src/main/feature'),
-      entity: path.resolve(__dirname, './src/main/entity'),
-      shared: path.resolve(__dirname, './src/main/shared'),
+      app: path.resolve(process.cwd(), './src/main/app'),
+      page: path.resolve(process.cwd(), './src/main/page'),
+      widget: path.resolve(process.cwd(), './src/main/widget'),
+      feature: path.resolve(process.cwd(), './src/main/feature'),
+      entity: path.resolve(process.cwd(), './src/main/entity'),
+      shared: path.resolve(process.cwd(), './src/main/shared'),
     },
   },
 }));
-
-/* eslint-enable */

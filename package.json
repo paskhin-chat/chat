@@ -14,7 +14,7 @@
     "check:all": "eslint \"*.{js,json}\" && npm run check:all --workspaces"
   },
   "workspaces": [
-    "./packages/config",
+    "./packages/constant",
     "./packages/ui",
     "./packages/api",
     "./packages/client"
