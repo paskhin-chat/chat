@@ -72,6 +72,25 @@ export class ConfigService {
     ];
   }
 
+  /**
+   * Gets expires in property of JWT tokens.
+   */
+  public get jwtTokensDuration(): {
+    /**
+     * Access token.
+     */
+    at: string;
+    /**
+     * Refresh token.
+     */
+    rt: string;
+  } {
+    return {
+      at: '30m',
+      rt: '30d',
+    };
+  }
+
   private getEnv<Name extends keyof IEnv>(name: Name): IEnv[Name] {
     return process.env[name];
   }

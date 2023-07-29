@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { faker } from '@faker-js/faker';
 import { isUUID } from 'class-validator';
+import { ports } from 'constant';
 
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
@@ -16,8 +17,7 @@ import { CreateRoomInput, RoomDto } from '../schema';
 import { AuthService } from '../auth/auth.service';
 
 describe('Room integration', () => {
-  const port = 4_000;
-  const request = requestCreator(`http://localhost:${port}`);
+  const request = requestCreator();
 
   let app: INestApplication;
 
@@ -38,7 +38,7 @@ describe('Room integration', () => {
     prismaService = module.get(PrismaService);
     authService = module.get(AuthService);
 
-    await app.listen(port);
+    await app.listen(ports.test.api);
   });
 
   afterEach(async () => {

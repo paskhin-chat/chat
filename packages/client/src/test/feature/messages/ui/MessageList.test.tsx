@@ -1,18 +1,18 @@
 import 'cross-fetch/polyfill';
-import { render, waitFor } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { gql } from '@apollo/client';
 import { MessageDto, UserDto } from 'api';
 import { faker } from '@faker-js/faker';
+import { render, waitFor } from '@testing-library/react';
 
 import { MessagesUi } from 'feature';
 
 const roomId = faker.string.uuid();
-const messageText = 'message-content';
+const messageText = faker.word.words();
 
 describe('Messages list feature', () => {
   it('should load data and render message list', async () => {
-    const { getByText } = render(
+    const { getAllByText } = render(
       <MockedProvider
         mocks={[
           messagesQueryMock,
@@ -27,9 +27,10 @@ describe('Messages list feature', () => {
     );
 
     await waitFor(() => {
-      const message = getByText(messageText);
+      const messages = getAllByText(messageText);
 
-      expect(message).toBeTruthy();
+      expect(messages).toBeTruthy();
+      expect(messages.length).toBe(2);
     });
   });
 });
@@ -62,23 +63,24 @@ const messagesQueryMock: MockedResponse<
     data: {
       messages: [
         {
-          id: '1',
+          id: faker.string.uuid(),
           content: messageText,
-          sendTime: new Date(),
+          sendTime: faker.date.past(),
           roomId,
           room: {
-            id: '111',
+            id: faker.string.uuid(),
             members: [],
           },
-          memberId: '123',
+          memberId: faker.string.uuid(),
           member: {
-            id: '123',
-            joinDate: new Date(),
+            id: faker.string.uuid(),
+            joinDate: faker.date.past(),
             user: {
-              id: '11',
-              login: 'login',
-              lastName: 'lastName',
-              firstName: 'firstName',
+              id: faker.string.uuid(),
+              login: faker.internet.userName(),
+              lastName: faker.person.lastName(),
+              firstName: faker.person.firstName(),
+              secondName: faker.person.middleName(),
             },
           },
         },
@@ -105,12 +107,12 @@ const viewerQueryMock: MockedResponse<{ viewer: UserDto }> = {
   result: {
     data: {
       viewer: {
-        id: '1',
-        login: 'login',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        secondName: 'secondName',
-        dob: new Date(),
+        id: faker.string.uuid(),
+        login: faker.internet.userName(),
+        lastName: faker.person.lastName(),
+        firstName: faker.person.firstName(),
+        secondName: faker.person.middleName(),
+        dob: faker.date.past(),
       },
     },
   },
@@ -143,23 +145,24 @@ const messageCreatedSubscriptionMock: MockedResponse<
   result: {
     data: {
       messageCreated: {
-        id: '1',
+        id: faker.string.uuid(),
         content: messageText,
-        sendTime: new Date(),
+        sendTime: faker.date.past(),
         roomId,
         room: {
-          id: '111',
+          id: faker.string.uuid(),
           members: [],
         },
-        memberId: '123',
+        memberId: faker.string.uuid(),
         member: {
-          id: '123',
-          joinDate: new Date(),
+          id: faker.string.uuid(),
+          joinDate: faker.date.past(),
           user: {
-            id: '11',
-            login: 'login',
-            lastName: 'lastName',
-            firstName: 'firstName',
+            id: faker.string.uuid(),
+            login: faker.internet.userName(),
+            lastName: faker.person.lastName(),
+            firstName: faker.person.firstName(),
+            secondName: faker.person.middleName(),
           },
         },
       },

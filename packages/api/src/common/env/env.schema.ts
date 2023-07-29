@@ -2,10 +2,6 @@ import * as d from 'doubter';
 
 /**
  * .env shape for validating.
- *
- * It's the temporary approach until the
- * [@doubter/json-schema]{@link https://github.com/smikhalevski/doubter-json-schema}
- * lib will have a fromJSONSchema.
  */
 export const envSchema = d.object({
   DATABASE_USER: d.string(),
