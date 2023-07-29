@@ -1,7 +1,7 @@
 import childProcess from 'node:child_process';
 import * as path from 'node:path';
+import { loadEnv } from 'exdenv';
 
-import { loadEnv } from '../src/lib';
 import { envSchema } from '../src/common/env';
 
 /**

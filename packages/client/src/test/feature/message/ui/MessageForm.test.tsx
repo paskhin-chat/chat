@@ -9,7 +9,7 @@ import { CreateMessageInput, MessageDto } from 'api';
 import { MessageUi } from 'feature';
 
 const roomId = faker.string.uuid();
-const content = 'message-content';
+const content = faker.word.words();
 
 describe('Message form feature', () => {
   it('should render message form and create a message', async () => {
@@ -65,23 +65,24 @@ const createMessageMutationMock: MockedResponse<
   result: {
     data: {
       createMessage: {
-        id: '1',
+        id: faker.string.uuid(),
         content,
-        sendTime: new Date(),
+        sendTime: faker.date.past(),
         roomId,
         room: {
-          id: '111',
+          id: faker.string.uuid(),
           members: [],
         },
-        memberId: '123',
+        memberId: faker.string.uuid(),
         member: {
-          id: '123',
-          joinDate: new Date(),
+          id: faker.string.uuid(),
+          joinDate: faker.date.past(),
           user: {
-            id: '11',
-            login: 'login',
-            lastName: 'lastName',
-            firstName: 'firstName',
+            id: faker.string.uuid(),
+            login: faker.internet.userName(),
+            lastName: faker.person.lastName(),
+            firstName: faker.person.firstName(),
+            secondName: faker.person.middleName(),
           },
         },
       },

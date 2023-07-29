@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { urls } from 'constant';
 
 import { CookiesName } from '../context';
 
@@ -25,7 +26,7 @@ interface ISession {
  * Request function factory.
  */
 export function requestCreator(
-  url: string,
+  url = urls.test.api,
 ): <Data, Variables = unknown>(
   query: string,
   variables?: Variables,
@@ -34,7 +35,7 @@ export function requestCreator(
   return async (query, variables, session) => {
     try {
       return await axios.post(
-        `${url}/graphql`,
+        url,
         {
           query,
           variables,

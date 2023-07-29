@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import setCookieParser from 'set-cookie-parser';
 import { faker } from '@faker-js/faker';
 import { keys } from 'lodash';
+import { ports } from 'constant';
 
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
@@ -18,8 +19,7 @@ import { LoginInput, RegisterInput, UserDto } from '../schema';
 import { AuthService } from './auth.service';
 
 describe('Auth integration', () => {
-  const port = 4_000;
-  const request = requestCreator(`http://localhost:${port}`);
+  const request = requestCreator();
 
   let app: INestApplication;
 
@@ -38,7 +38,7 @@ describe('Auth integration', () => {
     redisService = module.get(RedisService);
     authService = module.get(AuthService);
 
-    await app.listen(port);
+    await app.listen(ports.test.api);
   });
 
   afterEach(async () => {

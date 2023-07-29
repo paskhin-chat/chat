@@ -23,7 +23,7 @@ describe('Users list feature', () => {
     );
 
     await waitFor(async () => {
-      const user = getByText('1First | 1Last');
+      const user = getByText('Akkakii | Akkakievich');
       const createRoomButton = getByRole('button');
 
       expect(user).toBeTruthy();
@@ -56,11 +56,11 @@ const usersQueryMock: MockedResponse<{ users: UserDto[] }> = {
       users: [
         {
           id: userId,
-          login: 'login',
-          lastName: '1Last',
-          firstName: '1First',
-          secondName: '',
-          dob: new Date(),
+          login: faker.internet.userName(),
+          lastName: 'Akkakievich',
+          firstName: 'Akkakii',
+          dob: faker.date.past(),
+          secondName: faker.person.middleName(),
         },
       ],
     },

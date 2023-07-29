@@ -6,6 +6,7 @@ import { pick } from 'lodash';
 import { UserInputError, AuthenticationError } from 'apollo-server';
 
 import { UserService } from '../user/user.service';
+import { ConfigService } from '../config/config.service';
 
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
@@ -24,14 +25,12 @@ export interface IViewerData {
   login: string;
 }
 
-const ACCESS_TOKEN_EXPIRES_IN = '30m';
-const REFRESH_TOKEN_EXPIRES_IN = '30d';
-
 @Injectable()
 export class AuthService {
   public constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -83,14 +82,14 @@ export class AuthService {
   public async refreshAccessToken(refreshToken: string): Promise<string> {
     return this.generateToken(
       await this.verifyToken(refreshToken),
-      ACCESS_TOKEN_EXPIRES_IN,
+      this.configService.jwtTokensDuration.at,
     );
   }
 
   private async generateTokens(user: User): Promise<[string, string]> {
     return Promise.all([
-      this.generateToken(user, ACCESS_TOKEN_EXPIRES_IN),
-      this.generateToken(user, REFRESH_TOKEN_EXPIRES_IN),
+      this.generateToken(user, this.configService.jwtTokensDuration.at),
+      this.generateToken(user, this.configService.jwtTokensDuration.rt),
     ]);
   }
 

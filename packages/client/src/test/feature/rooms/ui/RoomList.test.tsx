@@ -9,7 +9,7 @@ import { RoomsUi } from 'feature';
 
 const roomId = faker.string.uuid();
 const viewerId = faker.string.uuid();
-const roomName = '2First 2Last';
+const roomName = 'Akkakii Akkakievich';
 
 describe('Rooms list feature', () => {
   it('should load data and render room list', async () => {
@@ -56,31 +56,31 @@ const roomsQueryMock: MockedResponse<{ rooms: RoomDto[] }> = {
       rooms: [
         {
           id: roomId,
-          name: 'Room name',
+          name: faker.lorem.word(),
           creationDate: null,
           members: [
             {
               id: viewerId,
-              joinDate: new Date(),
+              joinDate: faker.date.past(),
               user: {
                 id: faker.string.uuid(),
-                login: 'login',
-                lastName: '1Last',
-                firstName: '1First',
-                secondName: '',
-                dob: new Date(),
+                login: faker.internet.userName(),
+                lastName: faker.person.lastName(),
+                firstName: faker.person.firstName(),
+                secondName: faker.person.middleName(),
+                dob: faker.date.past(),
               },
             },
             {
               id: faker.string.uuid(),
-              joinDate: new Date(),
+              joinDate: faker.date.past(),
               user: {
                 id: faker.string.uuid(),
-                login: 'login',
-                lastName: '2Last',
-                firstName: '2First',
-                secondName: '',
-                dob: new Date(),
+                login: faker.internet.userName(),
+                lastName: 'Akkakievich',
+                firstName: 'Akkakii',
+                secondName: faker.person.middleName(),
+                dob: faker.date.past(),
               },
             },
           ],
@@ -109,11 +109,11 @@ const viewerQueryMock: MockedResponse<{ viewer: UserDto }> = {
     data: {
       viewer: {
         id: viewerId,
-        login: 'login',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        secondName: 'secondName',
-        dob: new Date(),
+        login: faker.internet.userName(),
+        lastName: faker.person.lastName(),
+        firstName: faker.person.firstName(),
+        secondName: faker.person.middleName(),
+        dob: faker.date.past(),
       },
     },
   },

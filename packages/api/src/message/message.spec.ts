@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import { ports } from 'constant';
 
 import { RedisService } from '../redis/redis.service';
 import { createModule, resetDatabase } from '../common/test';
@@ -8,7 +9,6 @@ import { ConfigService } from '../config/config.service';
 import { MessageResolver } from './message.resolver';
 
 describe('Message integration', () => {
-  const port = 4_000;
   let resolver: MessageResolver;
 
   let app: INestApplication;
@@ -28,7 +28,7 @@ describe('Message integration', () => {
 
     redisService = module.get(RedisService);
 
-    await app.listen(port);
+    await app.listen(ports.test.api);
   });
 
   afterEach(async () => {
