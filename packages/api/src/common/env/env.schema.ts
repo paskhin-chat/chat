@@ -17,7 +17,7 @@ export const envSchema = d.object({
 
   HTTP_AUTH_PASSWORD: d.string(),
 
-  JWT_SECRET_TOKEN: d.string(),
+  JWT_SECRET: d.string(),
   COOKIES_SECRET_TOKEN: d.string(),
 });
 
