@@ -51,8 +51,8 @@ export class ConfigService {
   /**
    * JWT secret token.
    */
-  public get jwtSecretToken(): string {
-    return this.getEnv('JWT_SECRET_TOKEN');
+  public get jwtSecret(): string {
+    return this.getEnv('JWT_SECRET');
   }
 
   /**

@@ -15,7 +15,7 @@ import { AuthResolver } from './auth.resolver';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         global: true,
-        secret: configService.jwtSecretToken,
+        secret: configService.jwtSecret,
       }),
       inject: [ConfigService],
     }),
