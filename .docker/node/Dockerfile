@@ -7,7 +7,7 @@ COPY ./packages/constant/ /app/packages/constant/
 COPY ./node_modules/ /app/node_modules/
 COPY ./package.json /app/
 
-COPY ./.docker/node/pm2.config.json ./.docker/node/init.sh /app/
+COPY ./.docker/node/pm2.config.json ./.docker/node/init.sh ./.env /app/
 
 ENTRYPOINT ["/app/init.sh"]
 
