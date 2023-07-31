@@ -3,7 +3,8 @@ import { faker } from '@faker-js/faker';
 import { FC } from 'react';
 import { parseISO } from 'date-fns';
 
-import { UiMessage } from './UiMessage';
+import { UiMessage } from 'shared';
+
 import { getMessageContent, getUserName } from './__mock';
 
 const defaultContent = getMessageContent();

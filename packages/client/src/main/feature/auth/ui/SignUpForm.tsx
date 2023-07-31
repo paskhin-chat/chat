@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { UiFieldErrorCard, UiForm, UiTextInputField, useUiField } from 'ui';
 import * as d from 'doubter';
 import styled from 'styled-components';
 
+import { UiFieldErrorCard, UiForm, UiTextInputField, useUiField } from 'shared';
 import { viewerModel } from 'entity';
 
 const signUpShape = d.object({

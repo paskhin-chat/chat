@@ -1,4 +1,4 @@
-import { config as appConfig } from 'shared/config/config';
+import { appConfig } from 'shared/config';
 
 describe('Config', () => {
   it('should be test mode', () => {

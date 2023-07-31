@@ -7,6 +7,6 @@ interface IProps {
 /**
  * Ui button component.
  */
-export const Button: FC<IProps> = ({ children }) => (
+export const UiButton: FC<IProps> = ({ children }) => (
   <button type='button'>{children}</button>
 );

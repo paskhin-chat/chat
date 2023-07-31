@@ -1,4 +1,4 @@
-import { localStorageAdapter } from 'shared/lib/localStorageAdapter';
+import { localStorageAdapter } from 'shared/lib';
 
 describe('Localstorage adapter', () => {
   it('should set and get a value', () => {

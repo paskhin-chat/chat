@@ -15,22 +15,14 @@
   },
   "workspaces": [
     "./packages/constant",
-    "./packages/ui",
     "./packages/api",
     "./packages/client"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.18.6",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.2.4",
     "@types/lodash": "^4.14.191",
-    "@types/react": "^18.0.26",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
-    "babel-loader": "^9.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.29.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -49,7 +41,6 @@
     "eslint-plugin-styled-components-varname": "^1.0.1",
     "eslint-plugin-unicorn": "^45.0.1",
     "jest": "^29.3.1",
-    "jest-environment-jsdom": "^29.3.1",
     "prettier": "2.8.0",
     "prettier-plugin-jsdoc": "^0.4.2",
     "ts-jest": "^29.0.3",
@@ -58,18 +49,9 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@roqueform/doubter-plugin": "^2.0.0",
-    "@roqueform/react": "^1.0.0",
-    "@roqueform/ref-plugin": "^4.0.0",
-    "@roqueform/reset-plugin": "^3.0.0",
     "doubter": "^2.1.0",
     "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "rimraf": "^5.0.0",
-    "rollup": "^3.20.2",
-    "roqueform": "^4.0.0",
-    "styled-components": "^5.3.11",
     "utility-types": "^3.10.0"
   },
   "config": {

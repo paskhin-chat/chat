@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-import { cookiesStorageAdapter } from 'shared/lib/cookiesStorageAdapter';
+import { cookiesStorageAdapter } from 'shared/lib';
 
 describe('Cookies storage adapter', () => {
   it('should set and get a value', () => {

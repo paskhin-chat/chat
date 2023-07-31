@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { UiForm, UiTextInputField, useUiField } from 'ui';
 import styled from 'styled-components';
 import * as d from 'doubter';
 import { FieldRenderer } from '@roqueform/react';
 
+import { UiForm, UiTextInputField, useUiField } from 'shared';
 import { messageModel } from 'entity';
 
 const messageShape = d.object({
