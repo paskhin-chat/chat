@@ -1,7 +1,7 @@
 import { faker, SexType } from '@faker-js/faker';
 import { random } from 'lodash';
 
-import { UiUserNameUtils } from '../user';
+import { formatUserName } from 'shared';
 
 /**
  * 50%/50% false/true.
@@ -21,13 +21,9 @@ export function getUserName(): string {
   const isAnonymous = getRandomBool();
   const sexType = getRandomSexType();
 
-  return UiUserNameUtils.getUserFullName(
-    isAnonymous
-      ? faker.person.firstName(sexType)
-      : UiUserNameUtils.DEFAULT_FIRST_NAME,
-    isAnonymous
-      ? faker.person.lastName(sexType)
-      : UiUserNameUtils.DEFAULT_LAST_NAME,
+  return formatUserName(
+    isAnonymous ? faker.person.firstName(sexType) : undefined,
+    isAnonymous ? faker.person.lastName(sexType) : undefined,
     getRandomBool() ? faker.person.middleName(sexType) : undefined,
   );
 }

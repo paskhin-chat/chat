@@ -25,7 +25,10 @@ module.exports = {
   testRegex: ['.test.tsx?$'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'cjs'],
   resetMocks: false,
-  setupFiles: ['jest-localstorage-mock'],
+  setupFilesAfterEnv: [
+    'jest-localstorage-mock',
+    '@testing-library/jest-dom/extend-expect',
+  ],
   moduleNameMapper: {
     '^app$': `${process.cwd()}/src/main/app`,
     '^app/(.*)': `${process.cwd()}/src/main/app/$1`,

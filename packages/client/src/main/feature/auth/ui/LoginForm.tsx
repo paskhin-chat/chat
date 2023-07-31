@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import * as d from 'doubter';
-import { UiFieldErrorCard, UiTextInputField, useUiField, UiForm } from 'ui';
 import styled from 'styled-components';
 
+import { UiFieldErrorCard, UiTextInputField, useUiField, UiForm } from 'shared';
 import { viewerModel } from 'entity';
 
 const loginShape = d.object({

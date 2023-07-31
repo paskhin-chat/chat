@@ -1,7 +1,6 @@
 {
   "port": 6006,
-  "exportPath": "./dist/__build__",
-  "publicUrl": "./",
+  "exportPath": "./dist/cosmos",
   "webpack": {
     "overridePath": "./webpack.cosmos.js"
   }

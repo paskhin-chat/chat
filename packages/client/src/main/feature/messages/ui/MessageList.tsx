@@ -1,9 +1,8 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
-import { UiMessageList } from 'ui';
 
+import { UiMessageList, formatUserName } from 'shared';
 import { messageModel, viewerModel } from 'entity';
-import { getUserFullName } from 'shared';
 
 interface IProps {
   roomId: string;
@@ -35,7 +34,7 @@ export const MessageList = forwardRef<HTMLDivElement, IProps>(
           messages={
             messages?.map((message) => ({
               time: message.sendTime,
-              author: getUserFullName(message.member),
+              author: formatUserName(message.member),
               content: message.content,
               position:
                 viewerExecutor.response?.id === message.member.userId

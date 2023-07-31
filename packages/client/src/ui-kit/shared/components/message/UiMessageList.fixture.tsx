@@ -4,8 +4,9 @@ import { compareAsc } from 'date-fns';
 import { FC, useMemo } from 'react';
 import { useValue } from 'react-cosmos/fixture';
 
-import { UiMessageList } from './UiMessageList';
-import { IUiMessageProps } from './UiMessage';
+import { UiMessageList } from 'shared/components/message/UiMessageList';
+import { IUiMessageProps } from 'shared/components/message/UiMessage';
+
 import { getMessageContent, getUserName, getRandomBool } from './__mock';
 
 const getMessages = (count: number): IUiMessageProps[] =>
