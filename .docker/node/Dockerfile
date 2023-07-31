@@ -3,7 +3,7 @@ FROM node
 WORKDIR /app
 
 COPY ./packages/api/ /app/packages/api/
-COPY ./packages/config/ /app/packages/config/
+COPY ./packages/constant/ /app/packages/constant/
 COPY ./node_modules/ /app/node_modules/
 COPY ./package.json /app/
 
