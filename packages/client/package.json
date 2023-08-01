@@ -59,6 +59,7 @@
     "react-cosmos": "^5.7.2",
     "style-loader": "^3.3.3",
     "ts-jest-mock-import-meta": "^1.0.0",
-    "vite": "^4.0.0"
+    "vite": "^4.0.0",
+    "webpack": "^5.88.2"
   }
 }
