@@ -1,4 +1,5 @@
 const path = require('node:path');
+const webpack = require('webpack');
 
 module.exports = (webpackConfig) => ({
   ...webpackConfig,
@@ -13,4 +14,9 @@ module.exports = (webpackConfig) => ({
       shared: path.resolve(process.cwd(), './src/main/shared'),
     },
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'import.meta.env': JSON.stringify({ MODE: process.env.NODE_ENV }),
+    }),
+  ],
 });
