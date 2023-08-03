@@ -19,11 +19,13 @@
     "./packages/client"
   ],
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/jest": "^29.2.4",
     "@types/lodash": "^4.14.191",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "cz-conventional-changelog": "^3.3.0",
+    "enforce-unique": "^1.1.1",
     "eslint": "^8.29.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",

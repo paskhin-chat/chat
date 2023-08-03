@@ -4,6 +4,7 @@ module.exports = {
   },
   ignorePatterns: ['src/schema'],
   rules: {
+    '@typescript-eslint/unbound-method': 'off',
     'unicorn/filename-case': [
       'error',
       {

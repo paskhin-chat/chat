@@ -1,5 +1,8 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { UniqueEnforcer } from 'enforce-unique';
+
+const uniqueEnforcer = new UniqueEnforcer();
 
 const prisma = new PrismaClient();
 
@@ -21,11 +24,7 @@ async function seed(): Promise<void> {
                 joinDate: faker.date.past(),
                 user: {
                   create: {
-                    /**
-                     * TODO: have to be solved in
-                     * {@link https://github.com/dPaskhin/chat/issues/17}.
-                     */
-                    login: faker.string.uuid(),
+                    login: uniqueEnforcer.enforce(faker.internet.userName),
                     password: faker.internet.password(),
                     email: faker.internet.email({ lastName, firstName }),
                     lastName,
