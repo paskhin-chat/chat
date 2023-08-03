@@ -7,9 +7,8 @@ import { ports } from 'constant';
  * Vite config.
  */
 export default defineConfig(() => ({
-  root: './src/main',
   build: {
-    outDir: '../../dist',
+    outDir: './dist',
   },
   plugins: [react()],
   server: {

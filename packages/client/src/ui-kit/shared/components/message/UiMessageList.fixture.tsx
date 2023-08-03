@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { range } from 'lodash';
 import { compareAsc } from 'date-fns';
 import { FC, useMemo } from 'react';
-import { useValue } from 'react-cosmos/fixture';
+import { useValue } from 'react-cosmos/client';
 
 import { UiMessageList } from 'shared/components/message/UiMessageList';
 import { IUiMessageProps } from 'shared/components/message/UiMessage';

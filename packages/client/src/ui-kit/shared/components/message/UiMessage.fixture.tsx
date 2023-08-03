@@ -1,4 +1,4 @@
-import { useSelect, useValue } from 'react-cosmos/fixture';
+import { useSelect, useValue } from 'react-cosmos/client';
 import { faker } from '@faker-js/faker';
 import { FC } from 'react';
 import { parseISO } from 'date-fns';

@@ -1,7 +1,10 @@
 {
+  "$schema": "http://json.schemastore.org/cosmos-config",
   "port": 6006,
+  "publicUrl": "./",
   "exportPath": "./dist/cosmos",
-  "webpack": {
-    "overridePath": "./webpack.cosmos.js"
+  "plugins": ["react-cosmos-plugin-vite"],
+  "vite": {
+    "indexPath": "./src/main/index.ts"
   }
 }
