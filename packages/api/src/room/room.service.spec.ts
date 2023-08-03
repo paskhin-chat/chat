@@ -1,11 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { isDate, isUUID } from 'class-validator';
+import { UniqueEnforcer } from 'enforce-unique';
 
 import { createModule, resetDatabase } from '../common/test';
 import { RedisService } from '../redis/redis.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 import { RoomService } from './room.service';
+
+const uniqueEnforcer = new UniqueEnforcer();
 
 describe('RoomService', () => {
   let service: RoomService;
@@ -35,7 +38,7 @@ describe('RoomService', () => {
       Array.from({ length: 3 }).map(() =>
         prismaService.user.create({
           data: {
-            login: faker.internet.userName(),
+            login: uniqueEnforcer.enforce(faker.internet.userName),
             password: faker.internet.password(),
             email: faker.internet.email(),
             firstName: faker.person.firstName(),
@@ -63,7 +66,7 @@ describe('RoomService', () => {
       Array.from({ length: 3 }).map(() =>
         prismaService.user.create({
           data: {
-            login: faker.internet.userName(),
+            login: uniqueEnforcer.enforce(faker.internet.userName),
             password: faker.internet.password(),
             email: faker.internet.email(),
             firstName: faker.person.firstName(),

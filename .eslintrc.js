@@ -41,6 +41,7 @@ module.exports = {
     'unicorn/expiring-todo-comments': 'off',
     'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/unbound-method': 'off',
     'import/no-unresolved': 'error',
     'prettier/prettier': [
       'error',
