@@ -15,9 +15,11 @@ export const UiTextInputField: FC<IProps> = (props) => (
   <UiField {...props}>
     {(field) => (
       <UiTextInput
+        helperText={field.error?.message as string}
         {...props}
         ref={field.refCallback.bind(field)}
         value={field.value}
+        error={!!field.error}
         onChange={(event) => field.setValue(event.target.value)}
       />
     )}

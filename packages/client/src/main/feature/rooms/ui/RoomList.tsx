@@ -1,13 +1,18 @@
 import { FC, Fragment } from 'react';
-import styled from 'styled-components';
 import { useLocation } from 'wouter';
+import { Divider, List, ListItemButton, ListItemText } from '@mui/material';
 
 import { roomModel, viewerModel } from 'entity';
+import { formatUserName } from 'shared';
+
+interface IProps {
+  roomId?: string;
+}
 
 /**
  * Feature for listing rooms.
  */
-export const RoomList: FC = () => {
+export const RoomList: FC<IProps> = ({ roomId }) => {
   const [, setLocation] = useLocation();
 
   const roomsExecutor = roomModel.useRoomsExecutor();
@@ -20,48 +25,32 @@ export const RoomList: FC = () => {
   }
 
   return (
-    <SWrapper>
+    <List>
       {rooms?.map((room, index) => (
         <Fragment key={room.id}>
-          <SRoomWrapper onClick={() => setLocation(`/rooms/${room.id}`)}>
+          <ListItemButton
+            onClick={() => setLocation(`/rooms/${room.id}`)}
+            selected={room.id === roomId}
+          >
             {room.members.length === 1 ? (
-              <span>Saved messages by {room.members[0]!.firstName}</span>
+              <ListItemText primary='Saved messages' />
             ) : (
               room.members
                 .filter(
                   (member) => member.userId !== viewerExecutor.response?.id,
                 )
                 .map((member) => (
-                  <span key={member.id}>
-                    {member.firstName} {member.lastName}
-                  </span>
+                  <ListItemText
+                    primary={formatUserName(member)}
+                    key={member.id}
+                  />
                 ))
             )}
-          </SRoomWrapper>
+          </ListItemButton>
 
-          {rooms.length - 1 !== index && <SDelimiter />}
+          {rooms.length - 1 !== index && <Divider />}
         </Fragment>
       ))}
-    </SWrapper>
+    </List>
   );
 };
-
-const SWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  padding: 16px 12px;
-  width: 100%;
-`;
-
-const SRoomWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-`;
-
-const SDelimiter = styled.span`
-  height: 2px;
-  background-color: black;
-  flex-shrink: 0;
-`;

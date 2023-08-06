@@ -6,12 +6,12 @@ import { ApolloServerErrorCode } from '@apollo/server/errors';
 @Scalar('Date', () => Date)
 export class DateScalar implements CustomScalar<string, Date> {
   /**
-   * {@see CustomScalar.description}.
+   * Scalar description {@see CustomScalar.description}.
    */
   public readonly description = 'Date custom scalar type';
 
   /**
-   * {@see CustomScalar.parseValue}.
+   * Scalar parser {@see CustomScalar.parseValue}.
    */
   public parseValue(value: unknown): Date {
     if (typeof value !== 'string') {
@@ -22,7 +22,7 @@ export class DateScalar implements CustomScalar<string, Date> {
   }
 
   /**
-   * {@see CustomScalar.serialize}.
+   * Scalar serializer {@see CustomScalar.serialize}.
    */
   public serialize(value: unknown): string {
     if (typeof value === 'string') {
@@ -40,7 +40,7 @@ export class DateScalar implements CustomScalar<string, Date> {
   }
 
   /**
-   * {@see CustomScalar.parseLiteral}.
+   * Scalar literal parser {@see CustomScalar.parseLiteral}.
    */
   public parseLiteral(ast: ValueNode): Date {
     if (ast.kind !== Kind.STRING) {

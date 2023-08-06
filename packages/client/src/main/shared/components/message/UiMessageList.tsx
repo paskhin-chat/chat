@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import styled, { css } from 'styled-components';
 import { formatISO, formatRFC3339, parseISO, startOfDay } from 'date-fns';
+import { Box, List, ListItem, ListSubheader } from '@mui/material';
+import { css, styled } from '@mui/material/styles';
 
 import { UiDate } from '../date';
 
@@ -17,63 +18,54 @@ export const UiMessageList: FC<IProps> = ({ messages }) => {
   const groupedMessages = groupByDate(messages);
 
   return (
-    <SWrapper>
+    <>
       {groupedMessages.map((group) => (
-        <SGroup key={formatRFC3339(group[0])}>
-          <SGroupTitle>
-            <UiDate date={group[0]} />
-          </SGroupTitle>
-
-          <SMessagesWrapper>
-            {group[1].map((message, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <SMessageWrapper key={index} $isLeft={!message.isAuthorViewer}>
+        <List
+          subheader={
+            <SHeader>
+              <UiDate date={group[0]} />
+            </SHeader>
+          }
+          key={formatRFC3339(group[0])}
+        >
+          {group[1].map((message) => (
+            <SMessageRow key={message.id} isLeft={!message.isAuthorViewer}>
+              <SMessageWrapper
+                key={message.id}
+                isLeft={!message.isAuthorViewer}
+              >
                 <UiMessage
                   position={message.isAuthorViewer ? 'right' : 'left'}
                   {...message}
                 />
               </SMessageWrapper>
-            ))}
-          </SMessagesWrapper>
-        </SGroup>
+            </SMessageRow>
+          ))}
+        </List>
       ))}
-    </SWrapper>
+    </>
   );
 };
 
-const SWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  row-gap: 8px;
-`;
+const SHeader = styled(ListSubheader)(css`
+  text-align: center;
+`);
 
-const SGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
+const SMessageRow = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'isLeft',
+})<{ isLeft: boolean }>(
+  ({ isLeft }) => css`
+    justify-content: ${isLeft ? 'flex-start' : 'flex-end'};
+  `,
+);
 
-const SGroupTitle = styled.h4`
-  margin-block: 1rem;
-`;
-
-const SMessagesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  width: 100%;
-`;
-
-const SMessageWrapper = styled.div<{ $isLeft: boolean }>(
-  (props) => css`
+const SMessageWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isLeft',
+})<{ isLeft: boolean }>(
+  ({ isLeft }) => css`
     display: flex;
-    justify-content: ${props.$isLeft ? 'flex-start' : 'flex-end'};
-    align-self: ${props.$isLeft ? 'flex-start' : 'flex-end'};
-    width: 35%;
-    min-width: 150px;
+    width: max(40%, 350px);
+    justify-content: ${isLeft ? 'flex-start' : 'flex-end'};
   `,
 );
 

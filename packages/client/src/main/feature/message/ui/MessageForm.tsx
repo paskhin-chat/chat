@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import styled from 'styled-components';
 import * as d from 'doubter';
-import { FieldRenderer } from '@roqueform/react';
+import { IconButton } from '@mui/material';
+import { Send } from '@mui/icons-material';
+import { css, styled } from '@mui/material/styles';
 
 import { UiForm, UiTextInputField, useUiField } from 'shared';
 import { messageModel } from 'entity';
@@ -45,30 +46,26 @@ export const MessageForm: FC<IProps> = ({ roomId }) => {
 
   return (
     <SMessageForm onSubmit={handleSubmit}>
-      <SFieldWrapper>
-        <UiTextInputField field={field.at('content')} />
-      </SFieldWrapper>
+      <UiTextInputField
+        field={field.at('content')}
+        fullWidth={true}
+        placeholder='Write a message...'
+        autoComplete='off'
+      />
 
-      <FieldRenderer field={field.at('content')}>
-        {(contentField) => (
-          <button
-            type='submit'
-            disabled={!contentField.value || createMessageExecutor.loading}
-          >
-            Send
-          </button>
-        )}
-      </FieldRenderer>
+      <IconButton type='submit' focusRipple={true}>
+        <Send />
+      </IconButton>
     </SMessageForm>
   );
 };
 
-const SMessageForm = styled(UiForm)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const SFieldWrapper = styled.div`
-  width: 100%;
-`;
+const SMessageForm = styled(UiForm)(
+  ({ theme }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    column-gap: ${theme.spacing(1)};
+  `,
+);

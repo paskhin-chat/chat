@@ -31,6 +31,7 @@ const UiMessageFixture: FC = () => {
 
   return (
     <UiMessage
+      id={faker.string.uuid()}
       time={parseISO(time)}
       content={content}
       author={author}

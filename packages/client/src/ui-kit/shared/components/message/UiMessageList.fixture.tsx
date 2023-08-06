@@ -12,6 +12,7 @@ import { getMessageContent, getUserName, getRandomBool } from './__mock';
 const getMessages = (count: number): IUiMessageProps[] =>
   range(0, count)
     .map<IUiMessageProps>(() => ({
+      id: faker.string.uuid(),
       time: faker.date.past(),
       content: getMessageContent(),
       author: getUserName(),

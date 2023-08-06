@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import { act, render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { gql } from '@apollo/client';
 import userEvent from '@testing-library/user-event';
@@ -27,7 +27,7 @@ describe('Message form feature', () => {
     expect(messageContentInput).toBeTruthy();
     expect(submitButton).toBeTruthy();
 
-    await act(async () => {
+    await waitFor(async () => {
       await userEvent.click(messageContentInput);
       await userEvent.keyboard(content);
 

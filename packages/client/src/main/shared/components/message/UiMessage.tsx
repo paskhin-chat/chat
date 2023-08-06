@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import styled, { css } from 'styled-components';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 import { UiTime } from '../date';
 
@@ -7,6 +8,11 @@ import { UiTime } from '../date';
  * Message component properties.
  */
 export interface IUiMessageProps {
+  /**
+   * Message's id.
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  id: string;
   /**
    * Content of user's message.
    */
@@ -44,62 +50,47 @@ export const UiMessage: FC<IUiMessageProps> = ({
   isAuthorViewer,
   position = 'right',
 }) => (
-  <SMessage $isLeft={position === 'left'}>
-    <SMessageContent>
-      <SMember>{isAuthorViewer ? 'You' : author}</SMember>
+  <SMessage isLeft={position === 'left'}>
+    <Box
+      display='flex'
+      flexDirection='column'
+      alignItems='flex-end'
+      overflow='hidden'
+    >
+      <Typography variant='caption' alignSelf='start'>
+        {isAuthorViewer ? 'You' : author}
+      </Typography>
 
-      <SContent>{content}</SContent>
+      <Typography component='p'>{content}</Typography>
 
-      <STimeContent>
-        <UiTime time={time} />
-      </STimeContent>
-    </SMessageContent>
+      <UiTime time={time} />
+    </Box>
   </SMessage>
 );
 
-const SMessage = styled.div<{ $isLeft: boolean }>(
-  (props) => css`
-    display: inline-flex;
-    color: white;
-    position: relative;
-    background-color: gray;
-    padding: 0.5rem;
+const SMessage = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isLeft',
+})<{ isLeft: boolean }>(({ isLeft, theme }) => ({
+  display: 'inline-flex',
+  position: 'relative',
+  color: theme.palette.primary.contrastText,
+  backgroundColor: theme.palette.primary.light,
+  padding: theme.spacing(1),
+  borderRadius: theme.spacing(0.5),
+  borderTopRightRadius: isLeft ? theme.spacing(0.5) : 0,
+  borderTopLeftRadius: isLeft ? 0 : theme.spacing(0.5),
 
-    &:after {
-      content: '';
-      position: absolute;
-      right: ${props.$isLeft ? undefined : '-10px'};
-      left: ${props.$isLeft ? '-10px' : undefined};
-      top: 0;
-      width: 0;
-      height: 0;
-      border: 5px solid transparent;
-      border-top-color: gray;
-      border-left-color: ${props.$isLeft ? undefined : 'gray'};
-      border-right-color: ${props.$isLeft ? 'gray' : undefined};
-    }
-  `,
-);
-
-const SMessageContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  overflow: hidden;
-  font-size: 1.1rem;
-`;
-
-const SContent = styled.p`
-  margin: 0;
-  margin-block: 0.5rem;
-  overflow: hidden;
-`;
-
-const SMember = styled.span`
-  align-self: start;
-  font-size: 0.85rem;
-`;
-
-const STimeContent = styled.i`
-  font-size: 0.8rem;
-`;
+  ':after': {
+    content: '""',
+    position: 'absolute',
+    right: isLeft ? undefined : theme.spacing(-1),
+    left: isLeft ? theme.spacing(-1) : undefined,
+    top: 0,
+    width: 0,
+    height: 0,
+    border: `${theme.spacing(0.5)} solid transparent`,
+    borderTopColor: theme.palette.primary.light,
+    borderLeftColor: isLeft ? undefined : theme.palette.primary.light,
+    borderRightColor: isLeft ? theme.palette.primary.light : undefined,
+  },
+}));

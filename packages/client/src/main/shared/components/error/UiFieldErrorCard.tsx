@@ -1,6 +1,6 @@
 import React from 'react';
 import { FieldRenderer } from '@roqueform/react';
-import styled from 'styled-components';
+import { Alert } from '@mui/material';
 
 import type { IUiField } from '../field';
 
@@ -13,12 +13,6 @@ interface IProps {
  */
 export const UiFieldErrorCard: React.VFC<IProps> = ({ field }) => (
   <FieldRenderer field={field}>
-    {() => field.error && <SCard>{field.error.message}</SCard>}
+    {() => field.error && <Alert severity='error'>{field.error.message}</Alert>}
   </FieldRenderer>
 );
-
-const SCard = styled.div`
-  background-color: red;
-  padding: 0.5rem;
-  color: white;
-`;

@@ -1,8 +1,14 @@
 import { FC } from 'react';
 import * as d from 'doubter';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
-import { UiFieldErrorCard, UiForm, UiTextInputField, useUiField } from 'shared';
+import {
+  UiButton,
+  UiFieldErrorCard,
+  UiForm,
+  UiTextInputField,
+  useUiField,
+} from 'shared';
 import { viewerModel } from 'entity';
 
 const signUpShape = d.object({
@@ -55,9 +61,9 @@ export const SignUpForm: FC = () => {
 
       <UiFieldErrorCard field={field} />
 
-      <button type='submit'>
-        {signUpExecutor.loading ? 'Disabled' : 'Confirm'}
-      </button>
+      <UiButton type='submit' pending={signUpExecutor.loading}>
+        Confirm
+      </UiButton>
     </SForm>
   );
 };

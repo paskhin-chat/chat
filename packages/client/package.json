@@ -15,6 +15,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.16",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.3",
     "@roqueform/doubter-plugin": "^2.0.0",
     "@roqueform/react": "^1.0.0",
     "@roqueform/ref-plugin": "^4.0.0",
@@ -32,8 +36,6 @@
     "react-dom": "^18.2.0",
     "react-hookers": "^5.1.0",
     "roqueform": "^4.0.0",
-    "styled-components": "^5.3.11",
-    "styled-normalize": "^8.0.7",
     "wouter": "^2.11.0"
   },
   "devDependencies": {
@@ -43,7 +45,6 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.3",
     "@types/js-cookie": "^3.0.3",
-    "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "commander": "^11.0.0",
     "cross-fetch": "^4.0.0",

@@ -4,7 +4,7 @@
   "author": "Dmitry Paskhin <d.pasxin@gmail.com>",
   "types": "./dist/schema/index.d.ts",
   "scripts": {
-    "build:prod": "npm run clean:dist && prisma generate && ttsc --project tsconfig.build.json",
+    "build:prod": "npm run clean:dist && prisma generate && tsc --project tsconfig.build.json",
     "build:start": "NODE_ENV=production node ./dist/index.js",
     "build:watch": "NODE_ENV=development ts-node --transpile-only ./cmd/build/watch.ts",
     "clean:dist": "rimraf './dist'",
@@ -22,7 +22,7 @@
     "@types/set-cookie-parser": "^2.4.2",
     "@types/supertest": "^2.0.12",
     "axios": "^1.4.0",
-    "commander": "^10.0.1",
+    "commander": "^11.0.0",
     "enforce-unique": "^1.1.1",
     "graphql-tag": "^2.12.6",
     "node-fetch": "^3.3.1",
@@ -63,7 +63,8 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "pm2": "^5.3.0",
-    "set-cookie-parser": "^2.6.0"
+    "set-cookie-parser": "^2.6.0",
+    "ts-morph": "^17.0.1"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

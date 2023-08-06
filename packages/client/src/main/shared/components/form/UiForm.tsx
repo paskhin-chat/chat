@@ -1,5 +1,5 @@
 import { HTMLAttributes, FC, ReactNode, SyntheticEvent } from 'react';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
 interface IProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit?: () => void;
@@ -22,4 +22,4 @@ export const UiForm: FC<IProps> = ({ onSubmit, children, ...props }) => {
   );
 };
 
-const SUiForm = styled.form``;
+const SUiForm = styled('form')``;

@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FieldRenderer } from '@roqueform/react';
 import { ReactElement, ReactNode } from 'react';
-import styled from 'styled-components';
-
-import { UiFieldErrorHelper } from '../error';
 
 import { IUiField } from './useUiField';
 
@@ -35,20 +32,9 @@ export const UiField = <F extends IUiField<any>>(
 
   return (
     <FieldRenderer field={field} onChange={onChange}>
-      {(f) => (
-        <SWrapper>
-          {children(f)}
-          <UiFieldErrorHelper field={f} />
-        </SWrapper>
-      )}
+      {children}
     </FieldRenderer>
   );
 };
-
-const SWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 2px;
-`;
 
 /* eslint-enable */

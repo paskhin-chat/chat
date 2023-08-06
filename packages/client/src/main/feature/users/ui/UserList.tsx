@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react';
-import styled from 'styled-components';
 import { useLocation } from 'wouter';
+import { styled } from '@mui/material/styles';
 
 import { userModel, roomModel } from 'entity';
 
@@ -52,18 +52,18 @@ export const UserList: FC = () => {
   );
 };
 
-const SWrapper = styled.div`
+const SWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   row-gap: 8px;
 `;
 
-const SUserWrapper = styled.div`
+const SUserWrapper = styled('div')`
   display: flex;
   justify-content: space-between;
 `;
 
-const SDelimiter = styled.span`
+const SDelimiter = styled('span')`
   height: 2px;
   background-color: black;
 `;

@@ -1,27 +1,19 @@
-import { createGlobalStyle } from 'styled-components';
-import { Normalize } from 'styled-normalize';
+import { CssBaseline, GlobalStyles as GlobalStylesCore } from '@mui/material';
 import { FC } from 'react';
-
-const GlobalStylesBase = createGlobalStyle`
-  *:not(button,input,a) {
-    color: white;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    min-height: 100vh;
-    background: #ccc;
-  }
-`;
+import { css } from '@mui/material/styles';
 
 /**
  * Styles for all application.
  */
 export const GlobalStyles: FC = () => (
   <>
-    <Normalize />
-    <GlobalStylesBase />
+    <CssBaseline />
+    <GlobalStylesCore
+      styles={css`
+        body {
+          overscroll-behavior: none;
+        }
+      `}
+    />
   </>
 );

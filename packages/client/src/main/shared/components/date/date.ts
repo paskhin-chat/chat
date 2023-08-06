@@ -4,8 +4,8 @@ import { format as baseFormat, isSameYear, startOfToday } from 'date-fns';
  * Formats for dates.
  */
 export enum UiDateFormat {
-  FULL,
-  DIGITS,
+  FULL = 'full',
+  DIGITS = 'digits',
 }
 
 const withYearFormats: Record<UiDateFormat, string> = {

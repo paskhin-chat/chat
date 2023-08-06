@@ -1,8 +1,14 @@
 import { FC } from 'react';
 import * as d from 'doubter';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
-import { UiFieldErrorCard, UiTextInputField, useUiField, UiForm } from 'shared';
+import {
+  UiFieldErrorCard,
+  UiTextInputField,
+  useUiField,
+  UiForm,
+  UiButton,
+} from 'shared';
 import { viewerModel } from 'entity';
 
 const loginShape = d.object({
@@ -52,9 +58,9 @@ export const LoginForm: FC = () => {
 
       <UiFieldErrorCard field={field} />
 
-      <button type='submit'>
-        {loginExecutor.loading ? 'Disabled' : 'Confirm'}
-      </button>
+      <UiButton type='submit' pending={loginExecutor.loading}>
+        Confirm
+      </UiButton>
     </SForm>
   );
 };

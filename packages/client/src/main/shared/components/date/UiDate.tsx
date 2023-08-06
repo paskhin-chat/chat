@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { formatISO } from 'date-fns';
+import { Typography } from '@mui/material';
 
 import { format as dateFormat, IDateFormatOptions, UiDateFormat } from './date';
 
@@ -17,10 +18,11 @@ export const UiDate: FC<IProps> = ({
   format = UiDateFormat.FULL,
   options,
 }) => (
-  <time
+  <Typography
+    component='time'
     title={formatISO(date)}
     dateTime={dateFormat(date, UiDateFormat.DIGITS)}
   >
     {dateFormat(date, format, options)}
-  </time>
+  </Typography>
 );

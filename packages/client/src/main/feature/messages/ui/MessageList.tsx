@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
 import { UiMessageList, formatUserName } from 'shared';
 import { messageModel, viewerModel } from 'entity';
@@ -33,6 +33,7 @@ export const MessageList = forwardRef<HTMLDivElement, IProps>(
         <UiMessageList
           messages={
             messages?.map((message) => ({
+              id: message.id,
               time: message.sendTime,
               author: formatUserName(message.member),
               content: message.content,
@@ -50,18 +51,17 @@ export const MessageList = forwardRef<HTMLDivElement, IProps>(
   },
 );
 
-const SEmptyWrapper = styled.div`
+const SEmptyWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
 `;
 
-const SWrapper = styled.div`
+const SWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   flex-grow: 1;
   width: 100%;
-  padding: 0 12px;
 `;

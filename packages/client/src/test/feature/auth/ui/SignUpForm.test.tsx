@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { gql } from '@apollo/client';
 import userEvent from '@testing-library/user-event';
@@ -40,7 +40,7 @@ describe('Sign up form feature', () => {
     expect(passwordInput).toBeTruthy();
     expect(submitButton).toBeTruthy();
 
-    await act(async () => {
+    await waitFor(async () => {
       await userEvent.click(loginInput);
       await userEvent.keyboard(login);
       await userEvent.click(firstNameInput);

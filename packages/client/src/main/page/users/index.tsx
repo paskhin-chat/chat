@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
 import { UsersUi } from 'feature';
 
@@ -16,7 +16,7 @@ const UsersPage: FC = () => (
  */
 export default UsersPage;
 
-const SPageWrapper = styled.div`
+const SPageWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   background-color: gray;
@@ -24,4 +24,4 @@ const SPageWrapper = styled.div`
   padding: 20px;
 `;
 
-const STitle = styled.h2``;
+const STitle = styled('h2')``;
