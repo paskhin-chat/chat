@@ -2,6 +2,7 @@ import React, { FC, lazy, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'wouter';
 
 import { viewerModel } from 'entity';
+import { UiCirclePending, UiFlexCentered } from 'shared';
 
 const UsersPage = lazy(() => import('./users'));
 const LoginPage = lazy(() => import('./login'));
@@ -15,12 +16,22 @@ export const Router: FC = () => {
   const viewerExecutor = viewerModel.useViewerExecutor();
 
   if (viewerExecutor.loading) {
-    return <div>Loading...</div>;
+    return (
+      <UiFlexCentered viewportHeight={true}>
+        <UiCirclePending />
+      </UiFlexCentered>
+    );
   }
 
   if (viewerExecutor.response) {
     return (
-      <Suspense fallback='Loading...'>
+      <Suspense
+        fallback={
+          <UiFlexCentered viewportHeight={true}>
+            <UiCirclePending />
+          </UiFlexCentered>
+        }
+      >
         <Switch>
           <Route<{ id?: string }> path='/rooms/:id?' component={RoomsPage} />
           <Route path='/users' component={UsersPage} />
@@ -31,7 +42,13 @@ export const Router: FC = () => {
   }
 
   return (
-    <Suspense fallback='Loading...'>
+    <Suspense
+      fallback={
+        <UiFlexCentered viewportHeight={true}>
+          <UiCirclePending />
+        </UiFlexCentered>
+      }
+    >
       <Switch>
         <Route path='/login' component={LoginPage} />
         <Route path='/sign-up' component={SignUpPage} />

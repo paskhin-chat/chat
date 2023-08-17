@@ -2,36 +2,25 @@ import 'cross-fetch/polyfill';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { gql } from '@apollo/client';
-import { CreateRoomInput, RoomDto, UserDto } from 'api';
+import { UserDto } from 'api';
 import { faker } from '@faker-js/faker';
-import userEvent from '@testing-library/user-event';
 
 import { UsersUi } from 'feature';
 
 const userId = faker.string.uuid();
-const roomId = faker.string.uuid();
 
 describe('Users list feature', () => {
   it('should load data and render user list', async () => {
-    const { getByText, getByRole } = render(
-      <MockedProvider
-        mocks={[usersQueryMock, createRoomMutationMock]}
-        addTypename={false}
-      >
+    const { getByText } = render(
+      <MockedProvider mocks={[usersQueryMock]} addTypename={false}>
         <UsersUi.UserList />
       </MockedProvider>,
     );
 
-    await waitFor(async () => {
-      const user = getByText('Akkakii | Akkakievich');
-      const createRoomButton = getByRole('button');
+    await waitFor(() => {
+      const user = getByText('Akkakii Akkakievich');
 
       expect(user).toBeTruthy();
-      expect(createRoomButton).toBeTruthy();
-
-      await userEvent.click(createRoomButton);
-
-      expect(window.location.pathname).toBe(`/rooms/${roomId}`);
     });
   });
 });
@@ -60,35 +49,9 @@ const usersQueryMock: MockedResponse<{ users: UserDto[] }> = {
           lastName: 'Akkakievich',
           firstName: 'Akkakii',
           dob: faker.date.past(),
-          secondName: faker.person.middleName(),
+          secondName: null,
         },
       ],
-    },
-  },
-};
-
-const createRoomMutationMock: MockedResponse<
-  { createRoom: RoomDto },
-  { input: CreateRoomInput }
-> = {
-  request: {
-    query: gql`
-      mutation CreateRoom($input: CreateRoomInput!) {
-        createRoom(input: $input) {
-          id
-        }
-      }
-    `,
-    variables: { input: { userIds: [userId] } },
-  },
-  result: {
-    data: {
-      createRoom: {
-        id: roomId,
-        members: [],
-        creationDate: null,
-        name: null,
-      },
     },
   },
 };

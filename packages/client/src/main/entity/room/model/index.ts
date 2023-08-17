@@ -29,6 +29,10 @@ export interface IRoomMember {
    * Member's last name.
    */
   lastName: string;
+  /**
+   * Member's second name.
+   */
+  secondName?: string;
 }
 
 /**
@@ -117,6 +121,7 @@ function roomMapper(dto: RoomDto): IRoom {
       userId: member.user.id,
       firstName: member.user.firstName,
       lastName: member.user.lastName,
+      secondName: member.user.secondName || undefined,
     })),
   };
 }

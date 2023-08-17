@@ -9,7 +9,7 @@ import { RoomsUi } from 'feature';
 
 const roomId = faker.string.uuid();
 const viewerId = faker.string.uuid();
-const roomName = 'Akkakii Akkakievich';
+const roomName = 'Лаврентий Палыч, Akkakii Akkakievich';
 
 describe('Rooms list feature', () => {
   it('should load data and render room list', async () => {
@@ -56,7 +56,7 @@ const roomsQueryMock: MockedResponse<{ rooms: RoomDto[] }> = {
       rooms: [
         {
           id: roomId,
-          name: faker.lorem.word(),
+          name: null,
           creationDate: null,
           members: [
             {
@@ -65,8 +65,8 @@ const roomsQueryMock: MockedResponse<{ rooms: RoomDto[] }> = {
               user: {
                 id: faker.string.uuid(),
                 login: faker.internet.userName(),
-                lastName: faker.person.lastName(),
-                firstName: faker.person.firstName(),
+                lastName: 'Палыч',
+                firstName: 'Лаврентий',
                 secondName: faker.person.middleName(),
                 dob: faker.date.past(),
               },

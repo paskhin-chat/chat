@@ -5,7 +5,7 @@ import { MessageDto, UserDto } from 'api';
 import { faker } from '@faker-js/faker';
 import { render, waitFor } from '@testing-library/react';
 
-import { MessagesUi } from 'feature';
+import { MessageUi } from 'feature';
 
 const roomId = faker.string.uuid();
 const messageText = faker.word.words();
@@ -22,7 +22,7 @@ describe('Messages list feature', () => {
         ]}
         addTypename={false}
       >
-        <MessagesUi.MessageList roomId={roomId} />
+        <MessageUi.MessageList roomId={roomId} />
       </MockedProvider>,
     );
 

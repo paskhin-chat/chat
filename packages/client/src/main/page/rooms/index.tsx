@@ -1,11 +1,16 @@
 import { FC, useRef } from 'react';
-import { css, styled } from '@mui/material/styles';
-import { Typography, useMediaQuery } from '@mui/material';
-import { Theme } from '@mui/material/styles/createTheme';
+import {
+  Typography,
+  useMediaQuery,
+  Theme,
+  css,
+  styled,
+  Stack,
+} from '@mui/material';
 
 import { messageModel } from 'entity';
-import { MessagesUi, MessageUi, RoomsUi } from 'feature';
-import { queueMacrotask } from 'shared';
+import { MessageUi, RoomsUi } from 'feature';
+import { queueMacrotask, UiBasePageLayout, UiFlexCentered } from 'shared';
 
 interface IProps {
   params: {
@@ -36,43 +41,33 @@ const RoomsPage: FC<IProps> = ({ params }) => {
   const roomContainerShown = smUpper || !!params.id;
 
   return (
-    <SContent>
-      {roomListShown && (
-        <SRoomListAside fullWidth={!smUpper}>
-          <SRoomListHeader>
-            <Typography>Here is a room header</Typography>
-          </SRoomListHeader>
+    <UiBasePageLayout
+      aside={
+        roomListShown ? <RoomsUi.RoomList roomId={params.id} /> : undefined
+      }
+      asideHeader={<Typography>Here is a room header</Typography>}
+      contentHeader={
+        <Typography>Here is member&apos;s name or room&apos;s name</Typography>
+      }
+    >
+      {roomContainerShown ? (
+        params.id ? (
+          <SRoom spacing={1}>
+            <SMessageList ref={ref}>
+              <MessageUi.MessageList roomId={params.id} ref={refChild} />
+            </SMessageList>
 
-          <SRoomList>
-            <RoomsUi.RoomList roomId={params.id} />
-          </SRoomList>
-        </SRoomListAside>
-      )}
-
-      {roomContainerShown && (
-        <SRoom>
-          {params.id ? (
-            <>
-              <SRoomHeader>
-                <Typography>
-                  Here is member&apos;s name or room&apos;s name
-                </Typography>
-              </SRoomHeader>
-
-              <SMessageList ref={ref}>
-                <MessagesUi.MessageList roomId={params.id} ref={refChild} />
-              </SMessageList>
-
-              <SMessageForm>
-                <MessageUi.MessageForm roomId={params.id} />
-              </SMessageForm>
-            </>
-          ) : (
+            <SMessageForm>
+              <MessageUi.CreateMessage roomId={params.id} />
+            </SMessageForm>
+          </SRoom>
+        ) : (
+          <UiFlexCentered>
             <Typography>Choose a room</Typography>
-          )}
-        </SRoom>
-      )}
-    </SContent>
+          </UiFlexCentered>
+        )
+      ) : null}
+    </UiBasePageLayout>
   );
 };
 
@@ -81,64 +76,15 @@ const RoomsPage: FC<IProps> = ({ params }) => {
  */
 export default RoomsPage;
 
-const SContent = styled('main')`
-  display: flex;
+const SRoom = styled(Stack)`
   overflow-y: scroll;
-  height: 100dvh;
+  flex-grow: 1;
 `;
-
-const SRoomListHeader = styled('header')(
-  ({ theme }) => css`
-    border-bottom: ${theme.palette.divider} 1px solid;
-    display: flex;
-    align-items: center;
-    padding-inline: ${theme.spacing(2)};
-  `,
-);
-
-const SRoomListAside = styled('aside', {
-  shouldForwardProp: (prop) => prop !== 'fullWidth',
-})<{ fullWidth: boolean }>(
-  ({ fullWidth, theme }) => css`
-    display: grid;
-    grid-template-rows: ${theme.spacing(6)} auto;
-    grid-template-columns: 1fr;
-    width: ${fullWidth ? '100%' : 'max(35%, 400px)'};
-    border-right: ${theme.palette.divider} 1px solid;
-  `,
-);
-
-const SRoomList = styled('div')`
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-`;
-
-const SRoom = styled('div')(
-  ({ theme }) => css`
-    display: grid;
-    grid-template-rows: ${theme.spacing(6)} auto min-content;
-    grid-template-columns: 1fr;
-    flex-grow: 1;
-    row-gap: ${theme.spacing(1)};
-    width: 100%;
-  `,
-);
-
-const SRoomHeader = styled('header')(
-  ({ theme }) => css`
-    border-bottom: ${theme.palette.divider} 1px solid;
-    display: flex;
-    align-items: center;
-    padding-inline: ${theme.spacing(2)};
-  `,
-);
 
 const SMessageList = styled('div')`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   overflow-y: scroll;
+  flex-grow: 1;
 `;
 
 const SMessageForm = styled('div')(

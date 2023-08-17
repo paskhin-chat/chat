@@ -18,17 +18,17 @@ const accessToken = 'access-token';
 
 describe('Login form feature', () => {
   it('should render login form and log user in', async () => {
-    const { getByRole, findAllByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <MockedProvider mocks={[loginMutationMock]} addTypename={false}>
-        <AuthUi.LoginForm />
+        <AuthUi.Login />
       </MockedProvider>,
     );
 
     const form = getByRole('form') as HTMLFormElement;
-    const [loginInput, passwordInput] = (await findAllByRole('textbox')) as [
-      HTMLInputElement,
-      HTMLInputElement,
-    ];
+    const [loginInput, passwordInput] = (await Promise.all([
+      getByLabelText('Login'),
+      getByLabelText('Password'),
+    ])) as [HTMLInputElement, HTMLInputElement];
     const submitButton = getByRole('button');
 
     expect(form).toBeTruthy();

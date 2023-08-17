@@ -15,7 +15,7 @@ describe('Message form feature', () => {
   it('should render message form and create a message', async () => {
     const { getByRole } = render(
       <MockedProvider mocks={[createMessageMutationMock]} addTypename={false}>
-        <MessageUi.MessageForm roomId={roomId} />
+        <MessageUi.CreateMessage roomId={roomId} />
       </MockedProvider>,
     );
 

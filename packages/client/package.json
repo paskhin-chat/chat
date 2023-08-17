@@ -48,6 +48,7 @@
     "@vitejs/plugin-react-swc": "^3.3.2",
     "commander": "^11.0.0",
     "cross-fetch": "^4.0.0",
+    "enforce-unique": "^1.1.1",
     "jest-environment-jsdom": "^29.6.2",
     "jest-localstorage-mock": "^2.4.26",
     "react-cosmos": "^6.0.0-beta.6",

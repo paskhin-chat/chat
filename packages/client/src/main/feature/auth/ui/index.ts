@@ -1,2 +1,2 @@
-export * from './LoginForm';
-export * from './SignUpForm';
+export * from './Login';
+export * from './SignUpProvider';

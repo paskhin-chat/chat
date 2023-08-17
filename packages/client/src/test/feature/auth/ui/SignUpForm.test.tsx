@@ -17,15 +17,20 @@ const accessToken = 'access-token';
 
 describe('Sign up form feature', () => {
   it('should render sign up form and sign user up', async () => {
-    const { getByRole, findAllByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <MockedProvider mocks={[signUpMutationMock]} addTypename={false}>
-        <AuthUi.SignUpForm />
+        <AuthUi.SignUp />
       </MockedProvider>,
     );
 
     const form = getByRole('form') as HTMLFormElement;
     const [loginInput, firstNameInput, lastNameInput, passwordInput] =
-      (await findAllByRole('textbox')) as [
+      (await Promise.all([
+        getByLabelText('Login'),
+        getByLabelText('First name'),
+        getByLabelText('Last name'),
+        getByLabelText('Password'),
+      ])) as [
         HTMLInputElement,
         HTMLInputElement,
         HTMLInputElement,
