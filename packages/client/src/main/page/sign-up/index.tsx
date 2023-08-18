@@ -1,23 +1,15 @@
 import { FC } from 'react';
-import { styled } from '@mui/material/styles';
 
 import { AuthUi } from 'feature';
+import { UiCenteredPageLayout } from 'shared';
 
 const SignUpPage: FC = () => (
-  <SPageWrapper>
+  <UiCenteredPageLayout>
     <AuthUi.SignUp />
-  </SPageWrapper>
+  </UiCenteredPageLayout>
 );
 
 /**
  * Sign up page.
  */
 export default SignUpPage;
-
-const SPageWrapper = styled('div')`
-  display: grid;
-  grid-template-rows: 2fr 5fr 2fr;
-  grid-template-columns: 2fr 5fr 2fr;
-  justify-content: center;
-  height: 100dvh;
-`;

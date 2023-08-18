@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import * as d from 'doubter';
-import { Stack, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Stack } from '@mui/material';
 
 import {
   IUiField,
@@ -36,44 +36,51 @@ export type TSignUpFormValue = d.Input<typeof signUpFormShape>;
  * Component for sign up feature.
  */
 export const SignUpForm: FC<IProps> = ({ field, pending, handleSubmit }) => (
-  <Stack spacing={3}>
-    <Typography variant='h5'>
-      Sign up or <UiTextLink href='/login'>login</UiTextLink>
-    </Typography>
+  <Card variant='outlined'>
+    <CardHeader
+      title='Sign up'
+      subheader={
+        <>
+          or <UiTextLink href='/login'>login</UiTextLink>
+        </>
+      }
+    />
 
-    <UiForm onSubmit={handleSubmit}>
-      <Stack spacing={2}>
-        <UiTextInputField
-          label='Login'
-          disabled={pending}
-          field={field.at('login')}
-        />
+    <CardContent>
+      <UiForm onSubmit={handleSubmit}>
+        <Stack spacing={2}>
+          <UiTextInputField
+            label='Login'
+            disabled={pending}
+            field={field.at('login')}
+          />
 
-        <UiTextInputField
-          label='First name'
-          disabled={pending}
-          field={field.at('firstName')}
-        />
+          <UiTextInputField
+            label='First name'
+            disabled={pending}
+            field={field.at('firstName')}
+          />
 
-        <UiTextInputField
-          label='Last name'
-          disabled={pending}
-          field={field.at('lastName')}
-        />
+          <UiTextInputField
+            label='Last name'
+            disabled={pending}
+            field={field.at('lastName')}
+          />
 
-        <UiTextInputField
-          label='Password'
-          disabled={pending}
-          type='password'
-          field={field.at('password')}
-        />
+          <UiTextInputField
+            label='Password'
+            disabled={pending}
+            type='password'
+            field={field.at('password')}
+          />
 
-        <UiButton type='submit' pending={pending}>
-          Confirm
-        </UiButton>
+          <UiButton type='submit' pending={pending}>
+            Confirm
+          </UiButton>
 
-        <UiFieldErrorCard field={field} />
-      </Stack>
-    </UiForm>
-  </Stack>
+          <UiFieldErrorCard field={field} />
+        </Stack>
+      </UiForm>
+    </CardContent>
+  </Card>
 );
