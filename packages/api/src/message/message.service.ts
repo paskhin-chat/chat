@@ -24,7 +24,7 @@ export class MessageService {
   ): Promise<Message[] | null> {
     return this.prismaService.room
       .findFirst({ where: { id: roomId, members: { some: { userId } } } })
-      .messages();
+      .messages({ orderBy: { sendTime: 'asc' } });
   }
 
   /**

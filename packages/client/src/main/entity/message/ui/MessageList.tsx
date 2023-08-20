@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { FC } from 'react';
 import { List, ListItem, ListSubheader } from '@mui/material';
 import { formatISO, formatRFC3339, parseISO, startOfDay } from 'date-fns';
 import { css, styled } from '@mui/material/styles';
@@ -16,48 +16,46 @@ interface IProps {
 /**
  * Messages listing.
  */
-export const MessageList = forwardRef<HTMLDivElement, IProps>(
-  ({ messages, viewerId }, ref) => {
-    const groupedMessages = groupByDate(messages);
+export const MessageList: FC<IProps> = ({ messages, viewerId }) => {
+  const groupedMessages = groupByDate(messages);
 
-    if (messages.length === 0) {
-      return <UiFlexCentered>There&apos;re no messages yet.</UiFlexCentered>;
-    }
+  if (messages.length === 0) {
+    return <UiFlexCentered>There&apos;re no messages yet.</UiFlexCentered>;
+  }
 
-    return (
-      <div ref={ref}>
-        {groupedMessages.map((group) => (
-          <List
-            subheader={
-              <SHeader>
-                <UiDate date={group[0]} />
-              </SHeader>
-            }
-            key={formatRFC3339(group[0])}
-          >
-            {group[1].map((message) => {
-              const isAuthorViewer = message.member.userId === viewerId;
+  return (
+    <>
+      {groupedMessages.map((group) => (
+        <List
+          subheader={
+            <SHeader>
+              <UiDate date={group[0]} />
+            </SHeader>
+          }
+          key={formatRFC3339(group[0])}
+        >
+          {group[1].map((message) => {
+            const isAuthorViewer = message.member.userId === viewerId;
 
-              return (
-                <SMessageRow key={message.id} isLeft={!isAuthorViewer}>
-                  <SMessageWrapper isLeft={!isAuthorViewer}>
-                    <Message
-                      position={isAuthorViewer ? 'right' : 'left'}
-                      title={
-                        isAuthorViewer ? 'You' : formatUserName(message.member)
-                      }
-                      message={message}
-                    />
-                  </SMessageWrapper>
-                </SMessageRow>
-              );
-            })}
-          </List>
-        ))}
-      </div>
-    );
-  },
-);
+            return (
+              <SMessageRow key={message.id} isLeft={!isAuthorViewer}>
+                <SMessageWrapper isLeft={!isAuthorViewer}>
+                  <Message
+                    position={isAuthorViewer ? 'right' : 'left'}
+                    title={
+                      isAuthorViewer ? 'You' : formatUserName(message.member)
+                    }
+                    message={message}
+                  />
+                </SMessageWrapper>
+              </SMessageRow>
+            );
+          })}
+        </List>
+      ))}
+    </>
+  );
+};
 
 const SHeader = styled(ListSubheader)`
   text-align: center;

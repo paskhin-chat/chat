@@ -18,7 +18,6 @@ describe('Messages list feature', () => {
           messagesQueryMock,
           viewerQueryMock,
           messageCreatedSubscriptionMock,
-          messageCreatedSubscriptionMock,
         ]}
         addTypename={false}
       >
@@ -118,10 +117,9 @@ const viewerQueryMock: MockedResponse<{ viewer: UserDto }> = {
   },
 };
 
-const messageCreatedSubscriptionMock: MockedResponse<
-  { messageCreated: MessageDto },
-  { roomId: string }
-> = {
+const messageCreatedSubscriptionMock: MockedResponse<{
+  messageCreated: MessageDto;
+}> = {
   request: {
     query: gql`
       subscription MessageCreated {
@@ -140,7 +138,7 @@ const messageCreatedSubscriptionMock: MockedResponse<
         }
       }
     `,
-    variables: { roomId },
+    variables: {},
   },
   result: {
     data: {

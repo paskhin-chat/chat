@@ -34,7 +34,7 @@ export const Router: FC = () => {
       >
         <Switch>
           <Route<{ id?: string }> path='/rooms/:id?' component={RoomsPage} />
-          <Route path='/users' component={UsersPage} />
+          <Route<{ id?: string }> path='/users/:id?' component={UsersPage} />
           <Redirect to='/rooms' />
         </Switch>
       </Suspense>

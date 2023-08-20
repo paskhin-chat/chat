@@ -40,7 +40,7 @@ export class MessageResolver {
   ) {}
 
   /**
-   * Finds the viewer's rooms.
+   * Finds the messages by the room id.
    */
   @UseGuards(AuthGuard)
   @Query(() => [MessageDto], { name: 'messages' })

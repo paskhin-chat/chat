@@ -1,4 +1,5 @@
-import { forwardRef, JSX } from 'react';
+import { FC, useRef } from 'react';
+import { Box } from '@mui/material';
 
 import { messageModel, MessageUi, viewerModel } from 'entity';
 import { UiCirclePending, UiFlexCentered } from 'shared';
@@ -10,30 +11,38 @@ interface IProps {
 /**
  * Feature for listing messages.
  */
-export const MessageList = forwardRef<HTMLDivElement, IProps>(
-  ({ roomId }, ref): JSX.Element => {
-    const messagesExecutor = messageModel.useMessagesExecutor({
-      variables: { roomId },
-    });
-    const viewerExecutor = viewerModel.useViewerExecutor();
+export const MessageList: FC<IProps> = ({ roomId }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const refChild = useRef<HTMLDivElement>(null);
 
-    const messages = messagesExecutor.response;
-    const viewer = viewerExecutor.response;
+  const viewerExecutor = viewerModel.useViewerExecutor();
+  const messagesExecutor = messageModel.useMessagesExecutor({
+    variables: { roomId },
+    initialFetchPolicy: 'network-only',
+    onCompleted: () => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      ref.current?.scrollBy?.({
+        top: refChild.current?.scrollHeight || 0,
+      });
+    },
+  });
 
-    if (messagesExecutor.loading || viewerExecutor.loading) {
-      return (
-        <UiFlexCentered>
-          <UiCirclePending />
-        </UiFlexCentered>
-      );
-    }
+  const messages = messagesExecutor.response;
+  const viewer = viewerExecutor.response;
 
+  if (messagesExecutor.loading || viewerExecutor.loading) {
     return (
-      <MessageUi.MessageList
-        ref={ref}
-        messages={messages!}
-        viewerId={viewer!.id}
-      />
+      <UiFlexCentered>
+        <UiCirclePending />
+      </UiFlexCentered>
     );
-  },
-);
+  }
+
+  return (
+    <Box sx={{ overflowY: 'scroll' }} ref={ref}>
+      <Box ref={refChild}>
+        <MessageUi.MessageList messages={messages!} viewerId={viewer!.id} />
+      </Box>
+    </Box>
+  );
+};

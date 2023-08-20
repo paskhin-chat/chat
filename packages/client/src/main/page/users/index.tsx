@@ -1,27 +1,51 @@
 import { FC } from 'react';
-import { styled } from '@mui/material/styles';
+import { Typography } from '@mui/material';
+import { useLocation } from 'wouter';
 
 import { UsersUi } from 'feature';
+import { roomModel } from 'entity';
+import { Navbar, UiBasePageLayout, UiButton, UiFlexCentered } from 'shared';
 
-const UsersPage: FC = () => (
-  <SPageWrapper>
-    <STitle>Users</STitle>
+interface IProps {
+  params: {
+    id?: string;
+  };
+}
 
-    <UsersUi.UserList />
-  </SPageWrapper>
-);
+const UsersPage: FC<IProps> = ({ params }) => {
+  const [, setLocation] = useLocation();
+
+  const createRoomExecutor = roomModel.useCreateRoomExecutor({
+    onCompleted: (data) => {
+      setLocation(`/rooms/${data.id}`);
+    },
+  });
+
+  const handleCreateRoom = (userId: string): void => {
+    createRoomExecutor.execute({ userIds: [userId] });
+  };
+
+  return (
+    <UiBasePageLayout
+      aside={<UsersUi.UserList userId={params.id} />}
+      asideHeader={<Typography>Here is a user header</Typography>}
+      asideFooter={<Navbar selected={params.id ? undefined : 'users'} />}
+      contentHeader={<Typography>Here is a user header</Typography>}
+    >
+      <UiFlexCentered>
+        {params.id ? (
+          <UiButton onClick={() => handleCreateRoom(params.id!)}>
+            Create a room
+          </UiButton>
+        ) : (
+          <Typography>Choose a user</Typography>
+        )}
+      </UiFlexCentered>
+    </UiBasePageLayout>
+  );
+};
 
 /**
  * Users page.
  */
 export default UsersPage;
-
-const SPageWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-  background-color: gray;
-  min-height: 100vh;
-  padding: 20px;
-`;
-
-const STitle = styled('h2')``;

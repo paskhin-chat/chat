@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { Box } from '@mui/material';
 
-import { UiFlexCentered } from 'shared';
+import { UiFlexCentered } from './UiFlexCentered';
 
 interface IProps {
   children: ReactNode;

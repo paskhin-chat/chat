@@ -1,5 +1,6 @@
 import { DocumentNode, useMutation, MutationHookOptions } from '@apollo/client';
 import { useEffect } from 'react';
+import { useSemanticMemo } from 'react-hookers';
 
 import { TTruthy, IExecutor } from '../types';
 import { findTopLevelField, getTopLevelFieldsCount } from '../lib';
@@ -80,15 +81,18 @@ export function useMutationExecutor<
     return value && (value[topLevelField] as Response);
   };
 
-  return {
-    execute: (input) => {
-      void execute({
-        variables: input && { input },
-      });
-    },
-    loading,
-    response: deriveResponse(data),
-    client,
-    error,
-  };
+  return useSemanticMemo(
+    () => ({
+      execute: (input) => {
+        void execute({
+          variables: input && { input },
+        });
+      },
+      loading,
+      response: deriveResponse(data),
+      client,
+      error,
+    }),
+    [data, mutation, error, loading],
+  );
 }

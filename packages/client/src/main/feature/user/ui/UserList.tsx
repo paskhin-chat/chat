@@ -30,7 +30,7 @@ export const UserList: FC<IProps> = ({ userId }) => {
     <UserUi.UserList
       users={users || []}
       selectedUserId={userId}
-      onUserSelect={() => setLocation(`/users/${userId}`)}
+      onUserSelect={(id) => setLocation(`/users/${id}`)}
     />
   );
 };

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { CreateMessageInput, MessageDto } from 'api';
-import { useEffect } from 'react';
+import { useEffectOnce } from 'react-hookers';
 
 import {
   IExecutor,
@@ -9,6 +9,7 @@ import {
   IQueryOptions,
   useMutationExecutor,
   useQueryExecutor,
+  apiClient,
 } from 'shared';
 
 /**
@@ -64,9 +65,8 @@ export function useMessagesExecutor(
     options,
   );
 
-  useEffect(() => {
+  useEffectOnce(() =>
     executor.subscribeToMore<{ messageCreated: MessageDto }>({
-      variables: options.variables,
       document: gql`
         subscription MessageCreated {
           messageCreated {
@@ -87,6 +87,10 @@ export function useMessagesExecutor(
       updateQuery: (previousQueryResult, opt) => {
         const newMessage = opt.subscriptionData.data.messageCreated;
 
+        if (opt.variables?.roomId !== newMessage.roomId) {
+          return previousQueryResult;
+        }
+
         const exists = previousQueryResult.messages.find(
           ({ id }) => id === newMessage.id,
         );
@@ -95,12 +99,16 @@ export function useMessagesExecutor(
           return previousQueryResult;
         }
 
+        const messages = [...previousQueryResult.messages, newMessage];
+
+        options.onCompleted?.({ messages }, { client: apiClient });
+
         return {
-          messages: [...previousQueryResult.messages, newMessage],
+          messages,
         };
       },
-    });
-  }, [executor, options.variables]);
+    }),
+  );
 
   return {
     ...executor,
