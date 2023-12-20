@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useRef } from "react";
+import { FC, ReactNode, useEffect, useRef } from 'react';
 
 interface IProps {
   onIntersect: () => void;
@@ -6,30 +6,29 @@ interface IProps {
   children: ReactNode;
 }
 
-export const IntersectionSpy: FC<IProps> = ({
-  children,
-  onIntersect,
-  target,
-}) => {
+export const IntersectionSpy: FC<IProps> = ({ children, onIntersect, target }) => {
   const targetRef = useRef<HTMLDivElement>(null);
 
   const onIntersectRef = useRef<() => void>();
+
   onIntersectRef.current = onIntersect;
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
       if (entries[0]?.isIntersecting) {
         onIntersectRef.current?.();
       }
     });
 
-    if (targetRef.current) {
-      observer.observe(targetRef.current);
+    const targetSnapshot = targetRef.current;
+
+    if (targetSnapshot) {
+      observer.observe(targetSnapshot);
     }
 
     return () => {
-      if (targetRef.current) {
-        observer.unobserve(targetRef.current);
+      if (targetSnapshot) {
+        observer.unobserve(targetSnapshot);
       }
     };
   }, []);

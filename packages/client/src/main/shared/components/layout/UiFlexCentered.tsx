@@ -11,9 +11,7 @@ interface IProps {
  * Renders children in centered flex container.
  */
 export const UiFlexCentered: FC<IProps> = ({ children, viewportHeight }) => (
-  <SRoot sx={{ height: viewportHeight ? '100dvh' : undefined }}>
-    {children}
-  </SRoot>
+  <SRoot sx={{ height: viewportHeight ? '100dvh' : undefined }}>{children}</SRoot>
 );
 
 const SRoot = styled(Box)`

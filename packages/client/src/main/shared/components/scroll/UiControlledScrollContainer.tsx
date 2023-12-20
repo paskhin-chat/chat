@@ -1,15 +1,6 @@
-import {
-  FC,
-  ReactNode,
-  Ref,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { styled } from "@mui/material";
-import { SxProps, Theme } from "@mui/system";
+import { FC, ReactNode, Ref, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/system';
 
 export interface IUiControlledScrollContainerRefHandler {
   scrollToBottom: () => void;
@@ -25,16 +16,11 @@ interface IProps {
   sx?: SxProps<Theme>;
 }
 
-export const UiControlledScrollContainer: FC<IProps> = ({
-  refHandler,
-  children,
-  sx,
-}) => {
+export const UiControlledScrollContainer: FC<IProps> = ({ refHandler, children, sx }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [needsToScrollToBottom, setNeedsToScrollToBottom] = useState(false);
-  const [needsToRestoreScrollPosition, setNeedsToRestoreScrollPosition] =
-    useState(false);
+  const [needsToRestoreScrollPosition, setNeedsToRestoreScrollPosition] = useState(false);
 
   const prevScrollHeightRef = useRef<number | null>();
 
@@ -44,10 +30,8 @@ export const UiControlledScrollContainer: FC<IProps> = ({
       scrollToBottom: () => {
         ref.current?.scrollTo({ top: ref.current.scrollHeight });
       },
-      getScrollHeight: () => {
-        return ref.current?.scrollHeight || 0;
-      },
-      scrollTo: (top) => {
+      getScrollHeight: () => ref.current?.scrollHeight || 0,
+      scrollTo: top => {
         ref.current?.scrollTo({ top });
       },
       needsToScrollToBottom: () => {
@@ -57,7 +41,7 @@ export const UiControlledScrollContainer: FC<IProps> = ({
         setNeedsToRestoreScrollPosition(true);
       },
     }),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -89,12 +73,12 @@ export const UiControlledScrollContainer: FC<IProps> = ({
   );
 };
 
-const SParent = styled("div")`
+const SParent = styled('div')`
   overflow-y: scroll;
   flex-grow: 1;
 `;
 
-const SChild = styled("div")`
+const SChild = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

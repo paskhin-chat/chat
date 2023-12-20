@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { UniqueEnforcer } from 'enforce-unique';
 

@@ -16,14 +16,7 @@ export const UiForm: FC<IProps> = ({ onSubmit, children, ...props }) => {
   };
 
   return (
-    <Box
-      flexGrow={1}
-      {...props}
-      role='form'
-      noValidate={true}
-      component='form'
-      onSubmit={handleSubmit}
-    >
+    <Box flexGrow={1} {...props} role='form' noValidate={true} component='form' onSubmit={handleSubmit}>
       {children}
     </Box>
   );

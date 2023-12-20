@@ -9,8 +9,6 @@ export type IUiTextInputProps = TextFieldProps;
 /**
  * Ui text input component.
  */
-export const UiTextInput = forwardRef<HTMLInputElement, TextFieldProps>(
-  (props, ref) => (
-    <TextField ref={ref} size='small' fullWidth={true} {...props} />
-  ),
-);
+export const UiTextInput = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => (
+  <TextField ref={ref} size='small' fullWidth={true} {...props} />
+));

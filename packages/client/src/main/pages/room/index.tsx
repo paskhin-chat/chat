@@ -1,8 +1,9 @@
-import { FC } from "react";
-import { Navbar, UiBasePageLayout, UiBasePageLayoutAside } from "../../shared";
-import { Typography } from "@mui/material";
-import { RoomsUi } from "../../features";
-import { RoomWidgetUi } from "../../widgets";
+import { FC } from 'react';
+import { Typography } from '@mui/material';
+
+import { Navbar, UiBasePageLayout, UiBasePageLayoutAside } from '../../shared';
+import { RoomsUi } from '../../features';
+import { RoomWidgetUi } from '../../widgets';
 
 interface IProps {
   params: {
@@ -18,11 +19,11 @@ const RoomPage: FC<IProps> = ({ params }) => {
 
   return (
     <UiBasePageLayout
-      mobilePriorityPart={roomId ? "content" : "aside"}
+      mobilePriorityPart={roomId ? 'content' : 'aside'}
       aside={
         <UiBasePageLayoutAside
           header={<Typography>Here is a room header</Typography>}
-          footer={<Navbar selected={roomId ? undefined : "rooms"} />}
+          footer={<Navbar selected={roomId ? undefined : 'rooms'} />}
         >
           <RoomsUi.RoomList roomId={roomId} />
         </UiBasePageLayoutAside>

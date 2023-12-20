@@ -1,6 +1,5 @@
-import { createContext } from "react";
-import { IRequestManager } from "./createRequestManager";
+import { createContext } from 'react';
 
-export const RequestManagerContext = createContext<IRequestManager | null>(
-  null
-);
+import type { IRequestManager } from './createRequestManager';
+
+export const RequestManagerContext = createContext<IRequestManager | null>(null);

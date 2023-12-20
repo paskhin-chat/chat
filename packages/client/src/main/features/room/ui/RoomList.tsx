@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import { FC, useState } from 'react';
+import { useLocation } from 'wouter';
 
-import { roomModel, RoomUi, viewerModel } from "../../../entities";
-import { UiCirclePending, UiFlexCentered } from "../../../shared";
-import { RoomDto } from "../../../gen/api-types";
+import { roomModel, RoomUi, viewerModel } from '../../../entities';
+import { UiCirclePending, UiFlexCentered, useEffectOnce } from '../../../shared';
+import { RoomDto } from '../../../gen/api-types';
 
 interface IProps {
   roomId?: string;
@@ -18,7 +18,7 @@ export const RoomList: FC<IProps> = ({ roomId }) => {
   const [rooms, setRooms] = useState<RoomDto[]>([]);
 
   const roomsExecutor = roomModel.useRoomsExecutor({
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data?.rooms) {
         setRooms(data.rooms);
       }
@@ -26,9 +26,9 @@ export const RoomList: FC<IProps> = ({ roomId }) => {
   });
   const viewerStore = viewerModel.useViewerStore();
 
-  useEffect(() => {
+  useEffectOnce(() => {
     roomsExecutor.execute();
-  }, []);
+  });
 
   if (roomsExecutor.pending || !viewerStore.state) {
     return (
@@ -40,7 +40,7 @@ export const RoomList: FC<IProps> = ({ roomId }) => {
 
   return (
     <RoomUi.RoomList
-      onRoomSelect={(id) => setLocation(`/rooms/${id}`)}
+      onRoomSelect={id => setLocation(`/rooms/${id}`)}
       rooms={rooms}
       selectedRoomId={roomId}
       viewerId={viewerStore.state.id}

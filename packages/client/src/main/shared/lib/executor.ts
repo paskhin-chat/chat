@@ -1,31 +1,38 @@
-import { EventBus } from "./eventBus";
+import { EventBus } from './eventBus';
 
 export class Executor {
   public fulfilled = false;
+
   public rejected = false;
 
   private _promise: Promise<void> | null = null;
-  private _eventBus: EventBus = new EventBus();
+
+  private readonly _eventBus: EventBus = new EventBus();
+
   private _abortController: AbortController | null = null;
 
-  get settled() {
+  public get settled(): boolean {
     return this.fulfilled || this.rejected;
   }
 
-  get pending() {
+  public get pending(): boolean {
     return this._promise !== null;
   }
 
-  execute(cb: (signal: AbortSignal) => Promise<void>): Promise<void> {
+  public execute(cb: (signal: AbortSignal) => Promise<void>): Promise<void> {
     this._abortController?.abort();
 
     const abortController = new AbortController();
+
     this._abortController = abortController;
 
+    // eslint-disable-next-line promise/prefer-await-to-then
     const promise = cb(abortController.signal).then(
       () => {
+        // eslint-disable-next-line promise/always-return
         if (this._abortController === abortController) {
-          this._abortController = this._promise = null;
+          this._abortController = null;
+          this._promise = null;
           this.fulfilled = true;
           this.rejected = false;
           this._eventBus.emit();
@@ -33,12 +40,13 @@ export class Executor {
       },
       () => {
         if (this._abortController === abortController) {
-          this._abortController = this._promise = null;
+          this._abortController = null;
+          this._promise = null;
           this.fulfilled = false;
           this.rejected = true;
           this._eventBus.emit();
         }
-      }
+      },
     );
 
     if (this._abortController === abortController) {
@@ -49,16 +57,18 @@ export class Executor {
     return promise;
   }
 
-  abort(): this {
+  public abort(): this {
     if (this._abortController) {
       this._abortController.abort();
-      this._abortController = this._promise = null;
+      this._abortController = null;
+      this._promise = null;
       this._eventBus.emit();
     }
+
     return this;
   }
 
-  subscribe(listener: () => void): () => void {
+  public subscribe(listener: () => void): () => void {
     return this._eventBus.on(listener);
   }
 }

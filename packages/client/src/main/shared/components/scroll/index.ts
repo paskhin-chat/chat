@@ -1,1 +1,1 @@
-export * from "./UiControlledScrollContainer";
+export * from './UiControlledScrollContainer';

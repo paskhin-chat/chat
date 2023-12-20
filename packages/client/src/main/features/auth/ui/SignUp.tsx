@@ -1,7 +1,7 @@
-import { authModel, AuthUi } from "../../../entities";
-import { FC } from "react";
+import { FC } from 'react';
 
-import { useUiField } from "../../../shared";
+import { authModel, AuthUi } from '../../../entities';
+import { useUiField } from '../../../shared';
 
 /**
  * Component for sign up feature.
@@ -9,17 +9,17 @@ import { useUiField } from "../../../shared";
 export const SignUp: FC = () => {
   const field = useUiField(
     {
-      login: "",
-      firstName: "",
-      lastName: "",
-      password: "",
+      login: '',
+      firstName: '',
+      lastName: '',
+      password: '',
     },
-    AuthUi.signUpFormShape
+    AuthUi.signUpFormShape,
   );
 
   const registerMutation = authModel.useRegisterExecutor({
-    onError: (error) => {
-      field.setError(error[0]?.message || "Unknown error");
+    onError: error => {
+      field.setError(error[0]?.message || 'Unknown error');
     },
   });
 
@@ -34,11 +34,5 @@ export const SignUp: FC = () => {
     registerMutation.execute({ input: field.value });
   };
 
-  return (
-    <AuthUi.SignUpForm
-      field={field}
-      handleSubmit={handleSubmit}
-      pending={registerMutation.pending}
-    />
-  );
+  return <AuthUi.SignUpForm field={field} handleSubmit={handleSubmit} pending={registerMutation.pending} />;
 };

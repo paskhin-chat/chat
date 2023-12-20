@@ -1,9 +1,10 @@
-import { EventBus } from "@smikhalevski/event-bus";
-import { IStorageAdapter, IValueAccessor } from "./types";
+import { EventBus } from '../lib';
+
+import { IStorageAdapter, IValueAccessor } from './types';
 
 export function createValueAccessor<Value, Key extends string = string>(
   storageAdapter: IStorageAdapter<Value, Key>,
-  key: Key
+  key: Key,
 ): IValueAccessor<Value> {
   const eventBus = new EventBus();
 
@@ -13,14 +14,14 @@ export function createValueAccessor<Value, Key extends string = string>(
     },
     set(value) {
       storageAdapter.set(key, value);
-      eventBus.publish();
+      eventBus.emit();
     },
     delete() {
       storageAdapter.delete(key);
-      eventBus.publish();
+      eventBus.emit();
     },
     subscribe(listener) {
-      eventBus.subscribe(listener);
+      eventBus.on(listener);
     },
   };
 }

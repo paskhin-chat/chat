@@ -1,13 +1,13 @@
-import React, { FC, lazy, Suspense, useEffect } from "react";
-import { Redirect, Route, Switch } from "wouter";
+import React, { FC, lazy, Suspense, useEffect } from 'react';
+import { Redirect, Route, Switch } from 'wouter';
 
-import { UiCirclePending, UiFlexCentered, useAuthManager } from "../shared";
-import { viewerModel } from "../entities";
+import { UiCirclePending, UiFlexCentered, useAuthManager } from '../shared';
+import { viewerModel } from '../entities';
 
-const UserPage = lazy(() => import("./user"));
-const LoginPage = lazy(() => import("./login"));
-const RoomPage = lazy(() => import("./room"));
-const SignUpPage = lazy(() => import("./sign-up"));
+const UserPage = lazy(() => import('./user'));
+const LoginPage = lazy(() => import('./login'));
+const RoomPage = lazy(() => import('./room'));
+const SignUpPage = lazy(() => import('./sign-up'));
 
 /**
  * Application main router.
@@ -17,7 +17,7 @@ export const Router: FC = () => {
 
   const viewerStore = viewerModel.useViewerStore();
   const viewerExecutor = viewerModel.useViewerExecutor({
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data?.viewer) {
         viewerStore.set(data.viewer);
       }
@@ -28,6 +28,7 @@ export const Router: FC = () => {
     if (authManager.loggedIn) {
       viewerExecutor.execute();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authManager.loggedIn]);
 
   if (authManager.loggedIn) {
@@ -40,9 +41,9 @@ export const Router: FC = () => {
         }
       >
         <Switch>
-          <Route path="/rooms/:id?" component={RoomPage} />
-          <Route path="/users/:id?" component={UserPage} />
-          <Redirect to="/rooms" />
+          <Route path='/rooms/:id?' component={RoomPage} />
+          <Route path='/users/:id?' component={UserPage} />
+          <Redirect to='/rooms' />
         </Switch>
       </Suspense>
     );
@@ -57,9 +58,9 @@ export const Router: FC = () => {
       }
     >
       <Switch>
-        <Route path="/login" component={LoginPage} />
-        <Route path="/sign-up" component={SignUpPage} />
-        <Redirect to="/login" />
+        <Route path='/login' component={LoginPage} />
+        <Route path='/sign-up' component={SignUpPage} />
+        <Redirect to='/login' />
       </Switch>
     </Suspense>
   );

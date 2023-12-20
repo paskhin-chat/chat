@@ -1,24 +1,14 @@
-import {
-  gql,
-  IGqlExecutor,
-  IGqlExecutorOptions,
-  useAuthManager,
-  useGqlExecutor,
-} from "../../../shared";
-import {
-  MutationLoginArgs,
-  MutationRegisterArgs,
-  Mutation,
-} from "../../../gen/api-types";
+import { gql, IGqlExecutor, IGqlExecutorOptions, useAuthManager, useGqlExecutor } from '../../../shared';
+import { Mutation, MutationLoginArgs, MutationRegisterArgs } from '../../../gen/api-types';
 
 export function useLoginExecutor(
-  options?: IGqlExecutorOptions<Pick<Mutation, "login">, MutationLoginArgs>
-): IGqlExecutor<Pick<Mutation, "login">, MutationLoginArgs> {
+  options?: IGqlExecutorOptions<Pick<Mutation, 'login'>, MutationLoginArgs>,
+): IGqlExecutor<MutationLoginArgs> {
   const authManager = useAuthManager();
 
-  return useGqlExecutor(loginMutation, {
+  return useGqlExecutor<Pick<Mutation, 'login'>, MutationLoginArgs>(loginMutation, {
     ...options,
-    onSuccess: (data) => {
+    onSuccess: data => {
       options?.onSuccess?.(data);
 
       if (data?.login) {
@@ -29,16 +19,13 @@ export function useLoginExecutor(
 }
 
 export function useRegisterExecutor(
-  options?: IGqlExecutorOptions<
-    Pick<Mutation, "register">,
-    MutationRegisterArgs
-  >
-): IGqlExecutor<Pick<Mutation, "register">, MutationRegisterArgs> {
+  options?: IGqlExecutorOptions<Pick<Mutation, 'register'>, MutationRegisterArgs>,
+): IGqlExecutor<MutationRegisterArgs> {
   const authManager = useAuthManager();
 
-  return useGqlExecutor(registerMutation, {
+  return useGqlExecutor<Pick<Mutation, 'register'>, MutationRegisterArgs>(registerMutation, {
     ...options,
-    onSuccess: (data) => {
+    onSuccess: data => {
       options?.onSuccess?.(data);
 
       if (data?.register) {

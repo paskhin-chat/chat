@@ -1,6 +1,7 @@
-import { FC } from "react";
-import { useUiField } from "../../../shared";
-import { authModel, AuthUi } from "../../../entities";
+import { FC } from 'react';
+
+import { useUiField } from '../../../shared';
+import { authModel, AuthUi } from '../../../entities';
 
 /**
  * Component for log in feature.
@@ -8,15 +9,15 @@ import { authModel, AuthUi } from "../../../entities";
 export const Login: FC = () => {
   const field = useUiField(
     {
-      login: "",
-      password: "",
+      login: '',
+      password: '',
     },
-    AuthUi.loginFormShape
+    AuthUi.loginFormShape,
   );
 
   const loginExecutor = authModel.useLoginExecutor({
-    onError: (err) => {
-      field.setError(err?.[0]?.message || "Unknown error");
+    onError: err => {
+      field.setError(err[0]?.message || 'Unknown error');
     },
   });
 
@@ -31,11 +32,5 @@ export const Login: FC = () => {
     loginExecutor.execute({ input: field.value });
   };
 
-  return (
-    <AuthUi.LoginForm
-      field={field}
-      handleSubmit={handleSubmit}
-      pending={loginExecutor.pending}
-    />
-  );
+  return <AuthUi.LoginForm field={field} handleSubmit={handleSubmit} pending={loginExecutor.pending} />;
 };

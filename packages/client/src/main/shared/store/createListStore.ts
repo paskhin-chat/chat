@@ -1,23 +1,22 @@
-import { Many } from "../types";
-import { EventBus } from "../lib";
-import { IStore } from "./types";
+import { Many } from '../types';
+import { EventBus } from '../lib';
+
+import { IStore } from './types';
 
 export interface IListStore<Item> extends IStore<Item[]> {
-  replace(items: Many<Item>): void;
+  replace: (items: Many<Item>) => void;
 
-  prepend(items: Many<Item>): void;
+  prepend: (items: Many<Item>) => void;
 
-  append(items: Many<Item>): void;
+  append: (items: Many<Item>) => void;
 
-  modify(
-    predicate: (item: Item, index: number, array: Item[]) => boolean,
-    item: Partial<Item>
-  ): void;
+  modify: (predicate: (item: Item, index: number, array: Item[]) => boolean, item: Partial<Item>) => void;
 }
 
-export function createListStore<Item>(
-  initialState: Item[] = []
-): IListStore<Item> {
+/**
+ * @param initialState
+ */
+export function createListStore<Item>(initialState: Item[] = []): IListStore<Item> {
   let state = initialState;
   const eventBus = new EventBus<Item[]>();
 
@@ -27,30 +26,18 @@ export function createListStore<Item>(
     },
 
     replace(items) {
-      if (Array.isArray(items)) {
-        state = items;
-      } else {
-        state = [items];
-      }
+      state = Array.isArray(items) ? items : [items];
       eventBus.emit(state);
     },
 
     prepend(items) {
-      if (Array.isArray(items)) {
-        state = items.concat(...state);
-      } else {
-        state = [items].concat(...state);
-      }
+      state = Array.isArray(items) ? items.concat(...state) : [items].concat(...state);
 
       eventBus.emit(state);
     },
 
     append(items) {
-      if (Array.isArray(items)) {
-        state = state.concat(...items);
-      } else {
-        state = state.concat(items);
-      }
+      state = Array.isArray(items) ? state.concat(...items) : state.concat(items);
 
       eventBus.emit(state);
     },
@@ -58,6 +45,7 @@ export function createListStore<Item>(
     modify(predicate, item) {
       const copy = state.slice();
 
+      // eslint-disable-next-line unicorn/no-array-callback-reference
       Object.assign(copy.find(predicate) || {}, item);
 
       state = copy;

@@ -1,4 +1,4 @@
-import { Scalar, CustomScalar } from '@nestjs/graphql';
+import { CustomScalar, Scalar } from '@nestjs/graphql';
 import { Kind, ValueNode } from 'graphql';
 import { ApolloError, ValidationError } from 'apollo-server';
 import { ApolloServerErrorCode } from '@apollo/server/errors';

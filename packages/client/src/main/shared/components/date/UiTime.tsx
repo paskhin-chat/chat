@@ -1,9 +1,9 @@
-import { FC } from "react";
-import { formatISO, parseJSON } from "date-fns";
-import { Typography } from "@mui/material";
+import { FC } from 'react';
+import { formatISO, parseJSON } from 'date-fns';
+import { Typography } from '@mui/material';
 
-import { formatTime } from "./time";
-import { DateLike } from "./types";
+import { formatTime } from './time';
+import { DateLike } from './types';
 
 interface IProps {
   time: DateLike;
@@ -14,8 +14,8 @@ interface IProps {
  */
 export const UiTime: FC<IProps> = ({ time }) => (
   <Typography
-    variant="caption"
-    component="time"
+    variant='caption'
+    component='time'
     title={formatISO(parseJSON(time))}
     dateTime={formatTime(parseJSON(time))}
   >

@@ -1,14 +1,12 @@
-import { parse, stringify } from "flatted";
-import Cookies from "js-cookie";
-import { IStorageAdapter } from "./types";
+import { parse, stringify } from 'flatted';
+import Cookies from 'js-cookie';
+
+import { IStorageAdapter } from './types';
 
 /**
  * Adapter for using cookies storage.
  */
-export function createCookiesStorageAdapter<
-  Value,
-  Key extends string = string
->(): IStorageAdapter<Value, Key> {
+export function createCookiesStorageAdapter<Value, Key extends string = string>(): IStorageAdapter<Value, Key> {
   return {
     get(key) {
       const storedValue = Cookies.get(key);
@@ -17,11 +15,11 @@ export function createCookiesStorageAdapter<
         try {
           return parse(storedValue) as Value;
         } catch {
-          return undefined;
+          return null;
         }
       }
 
-      return undefined;
+      return null;
     },
 
     set(key, value) {

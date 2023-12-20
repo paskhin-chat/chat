@@ -1,17 +1,16 @@
-import { EventBus } from "../lib";
-import { IStore } from "./types";
+import { EventBus } from '../lib';
+
+import { IStore } from './types';
 
 export interface IMapStore<Key, Value> extends IStore<ReadonlyMap<Key, Value>> {
-  get(key: Key): Value | undefined;
+  get: (key: Key) => Value | undefined;
 
-  set(key: Key, item: Value): void;
+  set: (key: Key, item: Value) => void;
 
-  delete(key: Key): void;
+  delete: (key: Key) => void;
 }
 
-export function createMapStore<Key, Value>(
-  initialState = new Map<Key, Value>()
-): IMapStore<Key, Value> {
+export function createMapStore<Key, Value>(initialState = new Map<Key, Value>()): IMapStore<Key, Value> {
   const state = initialState;
   const eventBus = new EventBus<Map<Key, Value>>();
 

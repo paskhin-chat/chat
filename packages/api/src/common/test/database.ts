@@ -14,8 +14,8 @@ export async function resetDatabase(): Promise<void> {
 
   const tables = tablenames
     .map(({ tablename }) => tablename)
-    .filter((name) => name !== '_prisma_migrations')
-    .map((name) => `"public"."${name}"`)
+    .filter(name => name !== '_prisma_migrations')
+    .map(name => `"public"."${name}"`)
     .join(', ');
 
   try {

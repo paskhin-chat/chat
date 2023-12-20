@@ -1,8 +1,8 @@
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { faker } from "@faker-js/faker";
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { faker } from '@faker-js/faker';
 
-import { AuthUi } from "../../../../main/features";
+import { AuthUi } from '../../../../main/features';
 import {
   AuthManagerContext,
   config,
@@ -12,23 +12,23 @@ import {
   createValueAccessor,
   LocalStorageKey,
   RequestManagerContext,
-} from "../../../../main/shared";
+} from '../../../../main/shared';
 
 const login = faker.internet.userName({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
 });
 const password = faker.internet.password({ length: 6 });
-const accessToken = "access-token";
+const accessToken = 'access-token';
 
-global.fetch = jest.fn() as jest.Mock;
+global.fetch = jest.fn();
 
-describe("Login form feature", () => {
+describe('Login form feature', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should render login form and log user in", async () => {
+  it('should render login form and log user in', async () => {
     (fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
         json: () => ({
@@ -36,15 +36,12 @@ describe("Login form feature", () => {
             login: accessToken,
           },
         }),
-      })
+      }),
     );
 
     const authManager = createAuthManager({
       apiGqlUri: config.apiGqlUri,
-      accessTokenAccessor: createValueAccessor(
-        createLocalStorageAdapter(),
-        LocalStorageKey.ACCESS_TOKEN
-      ),
+      accessTokenAccessor: createValueAccessor(createLocalStorageAdapter(), LocalStorageKey.ACCESS_TOKEN),
     });
     const requestManager = createRequestManager({
       authManager,
@@ -56,15 +53,15 @@ describe("Login form feature", () => {
         <RequestManagerContext.Provider value={requestManager}>
           <AuthUi.Login />
         </RequestManagerContext.Provider>
-      </AuthManagerContext.Provider>
+      </AuthManagerContext.Provider>,
     );
 
-    const form = getByRole("form") as HTMLFormElement;
-    const [loginInput, passwordInput] = (await Promise.all([
-      getByLabelText("Login"),
-      getByLabelText("Password"),
-    ])) as [HTMLInputElement, HTMLInputElement];
-    const submitButton = getByRole("button");
+    const form = getByRole('form') as HTMLFormElement;
+    const [loginInput, passwordInput] = (await Promise.all([getByLabelText('Login'), getByLabelText('Password')])) as [
+      HTMLInputElement,
+      HTMLInputElement,
+    ];
+    const submitButton = getByRole('button');
 
     expect(form).toBeTruthy();
     expect(loginInput).toBeTruthy();

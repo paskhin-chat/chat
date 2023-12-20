@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import { AuthUi } from "../../features";
-import { UiCenteredPageLayout } from "../../shared";
+import { AuthUi } from '../../features';
+import { UiCenteredPageLayout } from '../../shared';
 
 const SignUpPage: FC = () => (
   <UiCenteredPageLayout>

@@ -1,15 +1,8 @@
-import { FC } from "react";
-import * as d from "doubter";
-import { Card, CardContent, CardHeader, Stack } from "@mui/material";
+import { FC } from 'react';
+import * as d from 'doubter';
+import { Card, CardContent, CardHeader, Stack } from '@mui/material';
 
-import {
-  IUiField,
-  UiButton,
-  UiFieldErrorCard,
-  UiForm,
-  UiTextInputField,
-  UiTextLink,
-} from "../../../shared";
+import { IUiField, UiButton, UiFieldErrorCard, UiForm, UiTextInputField, UiTextLink } from '../../../shared';
 
 interface IProps {
   field: IUiField<TSignUpFormValue>;
@@ -34,14 +27,19 @@ export type TSignUpFormValue = d.Input<typeof signUpFormShape>;
 
 /**
  * Component for sign up feature.
+ *
+ * @param root0
+ * @param root0.field
+ * @param root0.pending
+ * @param root0.handleSubmit
  */
 export const SignUpForm: FC<IProps> = ({ field, pending, handleSubmit }) => (
-  <Card variant="outlined">
+  <Card variant='outlined'>
     <CardHeader
-      title="Sign up"
+      title='Sign up'
       subheader={
         <>
-          or <UiTextLink href="/login">login</UiTextLink>
+          or <UiTextLink href='/login'>login</UiTextLink>
         </>
       }
     />
@@ -49,32 +47,15 @@ export const SignUpForm: FC<IProps> = ({ field, pending, handleSubmit }) => (
     <CardContent>
       <UiForm onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <UiTextInputField
-            label="Login"
-            disabled={pending}
-            field={field.at("login")}
-          />
+          <UiTextInputField label='Login' disabled={pending} field={field.at('login')} />
 
-          <UiTextInputField
-            label="First name"
-            disabled={pending}
-            field={field.at("firstName")}
-          />
+          <UiTextInputField label='First name' disabled={pending} field={field.at('firstName')} />
 
-          <UiTextInputField
-            label="Last name"
-            disabled={pending}
-            field={field.at("lastName")}
-          />
+          <UiTextInputField label='Last name' disabled={pending} field={field.at('lastName')} />
 
-          <UiTextInputField
-            label="Password"
-            disabled={pending}
-            type="password"
-            field={field.at("password")}
-          />
+          <UiTextInputField label='Password' disabled={pending} type='password' field={field.at('password')} />
 
-          <UiButton type="submit" pending={pending}>
+          <UiButton type='submit' pending={pending}>
             Confirm
           </UiButton>
 

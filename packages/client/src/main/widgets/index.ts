@@ -1,1 +1,1 @@
-export * as RoomWidgetUi from "./room/ui";
+export * as RoomWidgetUi from './room/ui';

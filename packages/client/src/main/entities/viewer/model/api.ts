@@ -1,14 +1,7 @@
-import {
-  gql,
-  IGqlExecutor,
-  IGqlExecutorOptions,
-  useGqlExecutor,
-} from "../../../shared";
-import { Query } from "../../../gen/api-types";
+import { gql, IGqlExecutor, IGqlExecutorOptions, useGqlExecutor } from '../../../shared';
+import { Query } from '../../../gen/api-types';
 
-export function useViewerExecutor(
-  options?: IGqlExecutorOptions<Pick<Query, "viewer">>
-): IGqlExecutor<Pick<Query, "viewer">> {
+export function useViewerExecutor(options?: IGqlExecutorOptions<Pick<Query, 'viewer'>>): IGqlExecutor {
   return useGqlExecutor(viewerQuery, options);
 }
 

@@ -1,6 +1,7 @@
-import { useRerender } from "../hooks";
-import { Executor } from "../lib";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
+
+import { useRerender } from '../hooks';
+import { Executor } from '../lib';
 
 // TODO: inline it to useGqlExecutor
 export function useExecutor(): Executor {
@@ -12,7 +13,7 @@ export function useExecutor(): Executor {
     executorRef.current.subscribe(() => {
       rerender();
     });
-  }, []);
+  }, [rerender]);
 
   return executorRef.current;
 }

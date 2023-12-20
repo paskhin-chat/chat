@@ -1,16 +1,12 @@
-import { FC } from "react";
-import { Box, List, ListItem, ListSubheader } from "@mui/material";
-import { formatISO, formatRFC3339, parseISO, startOfDay } from "date-fns";
-import { css, styled } from "@mui/material/styles";
-import { MessageDto } from "../../../gen/api-types";
+import { FC } from 'react';
+import { Box, List, ListItem, ListSubheader } from '@mui/material';
+import { formatISO, formatRFC3339, parseISO, startOfDay } from 'date-fns';
+import { css, styled } from '@mui/material/styles';
 
-import { Message } from "./Message";
-import {
-  formatUserName,
-  UiCirclePending,
-  UiDate,
-  UiFlexCentered,
-} from "../../../shared";
+import { MessageDto } from '../../../gen/api-types';
+import { formatUserName, UiCirclePending, UiDate, UiFlexCentered } from '../../../shared';
+
+import { Message } from './Message';
 
 interface IProps {
   messages: MessageDto[];
@@ -57,21 +53,15 @@ export const MessageList: FC<IProps> = ({ messages, viewerId, pending }) => {
             </Box>
           )}
 
-          {group[1].map((message) => {
+          {group[1].map(message => {
             const isAuthorViewer = message.user.id === viewerId;
 
             return (
-              <SMessageRow
-                id={message.id}
-                key={message.id}
-                isLeft={!isAuthorViewer}
-              >
+              <SMessageRow id={message.id} key={message.id} isLeft={!isAuthorViewer}>
                 <SMessageWrapper isLeft={!isAuthorViewer}>
                   <Message
-                    position={isAuthorViewer ? "right" : "left"}
-                    title={
-                      isAuthorViewer ? "You" : formatUserName(message.user)
-                    }
+                    position={isAuthorViewer ? 'right' : 'left'}
+                    title={isAuthorViewer ? 'You' : formatUserName(message.user)}
                     message={message}
                   />
                 </SMessageWrapper>
@@ -89,23 +79,26 @@ const SHeader = styled(ListSubheader)`
 `;
 
 const SMessageRow = styled(ListItem, {
-  shouldForwardProp: (prop) => prop !== "isLeft",
+  shouldForwardProp: prop => prop !== 'isLeft',
 })<{ isLeft: boolean }>(
   ({ isLeft }) => css`
-    justify-content: ${isLeft ? "flex-start" : "flex-end"};
-  `
+    justify-content: ${isLeft ? 'flex-start' : 'flex-end'};
+  `,
 );
 
-const SMessageWrapper = styled("div", {
-  shouldForwardProp: (prop) => prop !== "isLeft",
+const SMessageWrapper = styled('div', {
+  shouldForwardProp: prop => prop !== 'isLeft',
 })<{ isLeft: boolean }>(
   ({ isLeft }) => css`
     display: flex;
     width: max(40%, 350px);
-    justify-content: ${isLeft ? "flex-start" : "flex-end"};
-  `
+    justify-content: ${isLeft ? 'flex-start' : 'flex-end'};
+  `,
 );
 
+/**
+ * @param messages
+ */
 function groupByDate(messages: MessageDto[]): Array<[Date, MessageDto[]]> {
   const map: Map<string, MessageDto[]> = new Map();
 
@@ -119,5 +112,5 @@ function groupByDate(messages: MessageDto[]): Array<[Date, MessageDto[]]> {
     }
   }
 
-  return [...map.entries()].map((entry) => [parseISO(entry[0]), entry[1]]);
+  return [...map.entries()].map(entry => [parseISO(entry[0]), entry[1]]);
 }

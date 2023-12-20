@@ -1,9 +1,9 @@
 module.exports = {
-  rootDir: "./src/test",
-  preset: "ts-jest",
+  rootDir: './src/test',
+  preset: 'ts-jest',
   transform: {
-    "^.+\\.[t|j]sx?$": [
-      "ts-jest",
+    '^.+\\.[t|j]sx?$': [
+      'ts-jest',
       {
         diagnostics: {
           ignoreCodes: [1_343],
@@ -11,9 +11,9 @@ module.exports = {
         astTransformers: {
           before: [
             {
-              path: "ts-jest-mock-import-meta",
+              path: 'ts-jest-mock-import-meta',
               options: {
-                metaObjectReplacement: { env: { MODE: "test" } },
+                metaObjectReplacement: { env: { MODE: 'test' } },
               },
             },
           ],
@@ -21,9 +21,9 @@ module.exports = {
       },
     ],
   },
-  testEnvironment: "jsdom",
-  testRegex: [".test.tsx?$"],
-  moduleFileExtensions: ["ts", "tsx", "js", "cjs"],
+  testEnvironment: 'jsdom',
+  testRegex: ['.test.tsx?$'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'cjs'],
   resetMocks: false,
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
 };

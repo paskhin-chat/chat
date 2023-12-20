@@ -1,9 +1,9 @@
-import { render, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { faker } from "@faker-js/faker";
-import { MessageDto } from "../../../../main/gen/api-types";
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { faker } from '@faker-js/faker';
 
-import { MessageUi } from "../../../../main/features";
+import { MessageDto } from '../../../../main/gen/api-types';
+import { MessageUi } from '../../../../main/features';
 import {
   config,
   createAuthManager,
@@ -13,31 +13,28 @@ import {
   IGqlResponse,
   LocalStorageKey,
   RequestManagerContext,
-} from "../../../../main/shared";
+} from '../../../../main/shared';
 
 const roomId = faker.string.uuid();
 const content = faker.word.words();
 
-global.fetch = jest.fn() as jest.Mock;
+global.fetch = jest.fn();
 
-describe("Message form feature", () => {
+describe('Message form feature', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should render message form and create a message", async () => {
+  it('should render message form and create a message', async () => {
     (fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
         json: () => mockResponse,
-      })
+      }),
     );
 
     const authManager = createAuthManager({
       apiGqlUri: config.apiGqlUri,
-      accessTokenAccessor: createValueAccessor(
-        createLocalStorageAdapter(),
-        LocalStorageKey.ACCESS_TOKEN
-      ),
+      accessTokenAccessor: createValueAccessor(createLocalStorageAdapter(), LocalStorageKey.ACCESS_TOKEN),
     });
     const requestManager = createRequestManager({
       authManager,
@@ -48,16 +45,13 @@ describe("Message form feature", () => {
 
     const { getByRole } = render(
       <RequestManagerContext.Provider value={requestManager}>
-        <MessageUi.CreateMessage
-          roomId={roomId}
-          onSubmitted={handleSubmittedMock}
-        />
-      </RequestManagerContext.Provider>
+        <MessageUi.CreateMessage roomId={roomId} onSubmitted={handleSubmittedMock} />
+      </RequestManagerContext.Provider>,
     );
 
-    const form = getByRole("form") as HTMLFormElement;
-    const messageContentInput = getByRole("textbox") as HTMLInputElement;
-    const submitButton = getByRole("button");
+    const form = getByRole('form') as HTMLFormElement;
+    const messageContentInput = getByRole('textbox') as HTMLInputElement;
+    const submitButton = getByRole('button');
 
     expect(form).toBeTruthy();
     expect(messageContentInput).toBeTruthy();
@@ -79,13 +73,13 @@ describe("Message form feature", () => {
 const mockResponse: IGqlResponse<{ createMessage: MessageDto }> = {
   data: {
     createMessage: {
-      __typename: "MessageDto",
+      __typename: 'MessageDto',
       id: faker.string.uuid(),
       content,
       sendTime: faker.date.past().toISOString(),
       roomId,
       user: {
-        __typename: "UserDto",
+        __typename: 'UserDto',
         id: faker.string.uuid(),
         login: faker.internet.userName(),
         lastName: faker.person.lastName(),

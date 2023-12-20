@@ -1,11 +1,4 @@
-import {
-  Args,
-  Mutation,
-  Query,
-  Resolver,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Member, Room } from '@prisma/client';
 
@@ -21,19 +14,14 @@ import { RoomDto } from './dto/room.dto';
 
 @Resolver(() => RoomDto)
 export class RoomResolver {
-  public constructor(
-    private readonly roomService: RoomService,
-    private readonly memberService: MemberService,
-  ) {}
+  public constructor(private readonly roomService: RoomService, private readonly memberService: MemberService) {}
 
   /**
    * Finds the viewer's rooms.
    */
   @UseGuards(AuthGuard)
   @Query(() => [RoomDto], { name: 'rooms' })
-  public findAll(
-    @ViewerDataDecorator() viewerData: IViewerData,
-  ): Promise<Room[]> {
+  public findAll(@ViewerDataDecorator() viewerData: IViewerData): Promise<Room[]> {
     return this.roomService.findRoomsByUserId(viewerData.id);
   }
 

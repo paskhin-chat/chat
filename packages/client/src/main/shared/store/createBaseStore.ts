@@ -1,29 +1,29 @@
-import { EventBus } from "../lib";
-import { IStore } from "./types";
+import { EventBus } from '../lib';
+
+import { IStore } from './types';
 
 export interface IBaseStore<State> extends IStore<State | null> {
-  set(state: State): void;
+  set: (state: State) => void;
 }
 
-export function createBaseStore<State>(
-  initialState?: State
-): IBaseStore<State> {
-  let _state = initialState || null;
+export function createBaseStore<State>(initialState?: State): IBaseStore<State> {
+  // eslint-disable-next-line unicorn/prefer-default-parameters
+  let internalState = initialState || null;
   const eventBus = new EventBus<State | null>();
 
   return {
     get state() {
-      return _state;
+      return internalState;
     },
 
     set(state) {
-      _state = state || null;
-      eventBus.emit(state);
+      internalState = state || null;
+      eventBus.emit(internalState);
     },
 
     reset() {
-      _state = null;
-      eventBus.emit(_state);
+      internalState = null;
+      eventBus.emit(internalState);
     },
 
     subscribe(callback) {

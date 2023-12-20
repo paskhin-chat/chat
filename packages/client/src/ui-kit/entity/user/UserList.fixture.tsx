@@ -1,19 +1,19 @@
-import { faker } from "@faker-js/faker";
-import { range } from "lodash";
-import { FC, useMemo, useState } from "react";
-import { useValue } from "react-cosmos/client";
-import { UniqueEnforcer } from "enforce-unique";
+import { faker } from '@faker-js/faker';
+import { range } from 'lodash';
+import { FC, useMemo, useState } from 'react';
+import { useValue } from 'react-cosmos/client';
+import { UniqueEnforcer } from 'enforce-unique';
 
-import { UserUi } from "../../../main/entities";
-import { withGlobalStyles } from "../../__utils__";
-import { getUserName } from "../../__mock__";
-import { UserDto } from "../../../main/gen/api-types";
+import { UserUi } from '../../../main/entities';
+import { withGlobalStyles } from '../../__utils__';
+import { getUserName } from '../../__mock__';
+import { UserDto } from '../../../main/gen/api-types';
 
 const unq = new UniqueEnforcer();
 
 const getUsers = (count: number): UserDto[] =>
   range(count).map<UserDto>(() => ({
-    __typename: "UserDto",
+    __typename: 'UserDto',
     ...getUserName(),
     id: faker.string.uuid(),
     dob: faker.date.past().toISOString(),
@@ -26,13 +26,7 @@ const RoomListFixture: FC = () => {
 
   const users = useMemo(() => getUsers(count), [count]);
 
-  return (
-    <UserUi.UserList
-      users={users}
-      onUserSelect={setSelectedUserId}
-      selectedUserId={selectedUserId}
-    />
-  );
+  return <UserUi.UserList users={users} onUserSelect={setSelectedUserId} selectedUserId={selectedUserId} />;
 };
 
 export default withGlobalStyles(RoomListFixture);

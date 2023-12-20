@@ -1,4 +1,4 @@
-import { random, isFunction } from "lodash";
+import { isFunction, random } from 'lodash';
 
 /**
  * 50%/50% false/true.
@@ -37,8 +37,6 @@ export function findRandomIndex(array: unknown[]): number {
 /**
  * Find random element of array.
  */
-export function findRandomElement<Element>(
-  array: Element[]
-): Element | undefined {
+export function findRandomElement<Element>(array: Element[]): Element | undefined {
   return array[findRandomIndex(array)];
 }

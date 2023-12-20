@@ -25,9 +25,7 @@ interface IProps<F extends IUiField<any>> extends IUiFieldBaseProps<F> {
 /**
  * Component of base field.
  */
-export const UiField = <F extends IUiField<any>>(
-  props: IProps<F>,
-): ReactElement => {
+export const UiField = <F extends IUiField<any>>(props: IProps<F>): ReactElement => {
   const { field, onChange, children } = props;
 
   return (

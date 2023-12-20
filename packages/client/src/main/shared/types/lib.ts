@@ -18,8 +18,4 @@ export type Many<T> = T | T[];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/naming-convention
 export type AnyFunction = (...args: any) => any;
 
-export type ExcludeNullish<T> = T extends null
-  ? never
-  : T extends undefined
-  ? never
-  : T;
+export type ExcludeNullish<T> = T extends null ? never : T extends undefined ? never : T;

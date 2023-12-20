@@ -12,8 +12,6 @@ interface IProps {
  */
 export const UiCenteredPageLayout: FC<IProps> = ({ children }) => (
   <UiFlexCentered>
-    <Box sx={{ paddingBlock: '100px', width: 'max(40%, 300px)' }}>
-      {children}
-    </Box>
+    <Box sx={{ paddingBlock: '100px', width: 'max(40%, 300px)' }}>{children}</Box>
   </UiFlexCentered>
 );

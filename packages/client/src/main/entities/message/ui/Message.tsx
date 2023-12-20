@@ -1,12 +1,13 @@
-import { FC } from "react";
-import { Box, Stack, Typography } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
-import { UiTime } from "../../../shared";
-import { MessageDto } from "../../../gen/api-types";
+import { FC } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
+import { css, styled } from '@mui/material/styles';
+
+import { UiTime } from '../../../shared';
+import { MessageDto } from '../../../gen/api-types';
 
 interface IProps {
   message: MessageDto;
-  position: "left" | "right";
+  position: 'left' | 'right';
   title: string;
 }
 
@@ -14,13 +15,13 @@ interface IProps {
  * Message cloud component.
  */
 export const Message: FC<IProps> = ({ message, position, title }) => (
-  <SMessage isLeft={position === "left"}>
-    <Stack overflow="hidden" spacing={1}>
-      <Typography variant="caption" alignSelf="start">
+  <SMessage isLeft={position === 'left'}>
+    <Stack overflow='hidden' spacing={1}>
+      <Typography variant='caption' alignSelf='start'>
         {title}
       </Typography>
 
-      <Typography component="p">{message.content}</Typography>
+      <Typography component='p'>{message.content}</Typography>
 
       <UiTime time={message.sendTime} />
     </Stack>
@@ -28,7 +29,7 @@ export const Message: FC<IProps> = ({ message, position, title }) => (
 );
 
 const SMessage = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isLeft",
+  shouldForwardProp: prop => prop !== 'isLeft',
 })<{ isLeft: boolean }>(
   ({ isLeft, theme }) => css`
     display: inline-flex;
@@ -41,7 +42,7 @@ const SMessage = styled(Box, {
     border-top-left-radius: ${isLeft ? 0 : theme.spacing(0.5)};
 
     :after {
-      content: "";
+      content: '';
       position: absolute;
       right: ${isLeft ? undefined : theme.spacing(-1)};
       left: ${isLeft ? theme.spacing(-1) : undefined};
@@ -53,5 +54,5 @@ const SMessage = styled(Box, {
       border-left-color: ${isLeft ? undefined : theme.palette.primary.light};
       border-right-color: ${isLeft ? theme.palette.primary.light : undefined};
     }
-  `
+  `,
 );

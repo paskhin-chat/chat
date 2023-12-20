@@ -1,18 +1,16 @@
-import { Client, createClient } from "graphql-ws";
+import { Client, createClient } from 'graphql-ws';
 
 export interface IWsManagerOptions {
   url: string;
-  accessTokenAccessor: () => string | undefined;
+  accessToken: string | null;
 }
 
 export function createWsManager(options: IWsManagerOptions): Client {
   return createClient({
     url: options.url,
     connectionParams: {
-      authorization: options.accessTokenAccessor(),
+      authorization: options.accessToken,
     },
-    shouldRetry: () => {
-      return options.accessTokenAccessor() !== undefined;
-    },
+    shouldRetry: () => options.accessToken !== null,
   });
 }

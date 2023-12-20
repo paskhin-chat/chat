@@ -5,6 +5,7 @@
  */
 
 /* tslint:disable */
+
 /* eslint-disable */
 
 export interface UpdateUserInput {
@@ -81,29 +82,42 @@ export interface MessageDto {
 
 export interface IQuery {
   viewer(): Nullable<UserDto> | Promise<Nullable<UserDto>>;
+
   user(id: string): Nullable<UserDto> | Promise<Nullable<UserDto>>;
+
   users(): UserDto[] | Promise<UserDto[]>;
+
   rooms(): RoomDto[] | Promise<RoomDto[]>;
+
   messages(
     roomId: string,
-    cursor?: Nullable<string>
+    cursor?: Nullable<string>,
   ): MessageDto[] | Promise<MessageDto[]>;
 }
 
 export interface IMutation {
   updateUser(input: UpdateUserInput): UserDto | Promise<UserDto>;
+
   removeUser(id: string): UserDto | Promise<UserDto>;
+
   createUser(input: CreateUserInput): UserDto | Promise<UserDto>;
+
   register(input: RegisterInput): string | Promise<string>;
+
   login(input: LoginInput): string | Promise<string>;
+
   refreshAccessToken(): string | Promise<string>;
+
   logout(): boolean | Promise<boolean>;
+
   createRoom(input: CreateRoomInput): RoomDto | Promise<RoomDto>;
+
   createMessage(input: CreateMessageInput): MessageDto | Promise<MessageDto>;
 }
 
 export interface ISubscription {
   userCreated(): UserDto | Promise<UserDto>;
+
   messageCreated(): MessageDto | Promise<MessageDto>;
 }
 

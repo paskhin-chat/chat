@@ -30,7 +30,7 @@ export function createModule(): Promise<TestingModule> {
           autoSchemaFile: true,
           subscriptions: {
             'graphql-ws': {
-              onConnect: (ctx) => !!ctx.connectionParams?.authorization,
+              onConnect: ctx => !!ctx.connectionParams?.authorization,
             },
             'subscriptions-transport-ws': false,
           },

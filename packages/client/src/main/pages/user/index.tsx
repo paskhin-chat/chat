@@ -1,9 +1,9 @@
-import { FC } from "react";
-import { Typography } from "@mui/material";
-import { useLocation } from "wouter";
+import { FC } from 'react';
+import { Typography } from '@mui/material';
+import { useLocation } from 'wouter';
 
-import { UsersUi } from "../../features";
-import { roomModel } from "../../entities";
+import { UsersUi } from '../../features';
+import { roomModel } from '../../entities';
 import {
   Navbar,
   UiBasePageLayout,
@@ -11,7 +11,7 @@ import {
   UiBasePageLayoutContent,
   UiButton,
   UiFlexCentered,
-} from "../../shared";
+} from '../../shared';
 
 interface IProps {
   params: {
@@ -25,7 +25,7 @@ const UserPage: FC<IProps> = ({ params }) => {
   const userId = params.id;
 
   const createRoomExecutor = roomModel.useCreateRoomExecutor({
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data?.createRoom) {
         setLocation(`/rooms/${data.createRoom.id}`);
       }
@@ -38,24 +38,20 @@ const UserPage: FC<IProps> = ({ params }) => {
 
   return (
     <UiBasePageLayout
-      mobilePriorityPart={userId ? "content" : "aside"}
+      mobilePriorityPart={userId ? 'content' : 'aside'}
       aside={
         <UiBasePageLayoutAside
           header={<Typography>Here is a user header</Typography>}
-          footer={<Navbar selected={userId ? undefined : "users"} />}
+          footer={<Navbar selected={userId ? undefined : 'users'} />}
         >
           <UsersUi.UserList userId={userId} />
         </UiBasePageLayoutAside>
       }
       content={
-        <UiBasePageLayoutContent
-          header={<Typography>Here is a user header</Typography>}
-        >
+        <UiBasePageLayoutContent header={<Typography>Here is a user header</Typography>}>
           <UiFlexCentered>
             {userId ? (
-              <UiButton onClick={() => handleCreateRoom(userId)}>
-                Create a room
-              </UiButton>
+              <UiButton onClick={() => handleCreateRoom(userId)}>Create a room</UiButton>
             ) : (
               <Typography>Choose a user</Typography>
             )}

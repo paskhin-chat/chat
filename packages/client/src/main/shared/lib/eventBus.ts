@@ -1,11 +1,9 @@
-interface Listener<Event> {
-  (event: Event): void;
-}
+type Listener<Event> = (event: Event) => void;
 
 export class EventBus<Event = void> {
-  private _listeners: Listener<Event>[] = [];
+  private readonly _listeners: Array<Listener<Event>> = [];
 
-  on(listener: Listener<Event>): () => void {
+  public on(listener: Listener<Event>): () => void {
     this._listeners.push(listener);
 
     return () => {
@@ -17,7 +15,9 @@ export class EventBus<Event = void> {
     };
   }
 
-  emit(event: Event): void {
-    this._listeners.forEach((listener) => listener(event));
+  public emit(event: Event): void {
+    for (const listener of this._listeners) {
+      listener(event);
+    }
   }
 }

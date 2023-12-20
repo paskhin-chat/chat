@@ -22,9 +22,7 @@ describe('Message integration', () => {
 
     app = module.createNestApplication();
 
-    app.use(
-      cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken),
-    );
+    app.use(cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken));
 
     redisService = module.get(RedisService);
 

@@ -11,21 +11,13 @@ interface IProps extends ButtonProps {
 /**
  * Ui button component.
  */
-export const UiButton: FC<IProps> = ({
-  disabled,
-  pending,
-  startIcon,
-  size = 'medium',
-  ...props
-}) => (
+export const UiButton: FC<IProps> = ({ disabled, pending, startIcon, size = 'medium', ...props }) => (
   <Button
     variant='contained'
     fullWidth={true}
     {...props}
     disabled={disabled || pending}
     size={size}
-    startIcon={
-      pending ? <UiCirclePending size={size} showingDelay={0} /> : startIcon
-    }
+    startIcon={pending ? <UiCirclePending size={size} showingDelay={0} /> : startIcon}
   />
 );

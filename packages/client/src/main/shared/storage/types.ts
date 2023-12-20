@@ -1,19 +1,17 @@
-import { parse, stringify } from "flatted";
-
 export interface IStorageAdapter<Value, Key extends string = string> {
-  get(key: Key): Value | undefined;
+  get: (key: Key) => Value | null;
 
-  set(key: Key, value: Value): void;
+  set: (key: Key, value: Value) => void;
 
-  delete(key: Key): void;
+  delete: (key: Key) => void;
 }
 
 export interface IValueAccessor<Value> {
-  get(): Value | undefined;
+  get: () => Value | null;
 
-  set(value: Value): void;
+  set: (value: Value) => void;
 
-  delete(): void;
+  delete: () => void;
 
-  subscribe(listener: () => void): void;
+  subscribe: (listener: () => void) => void;
 }

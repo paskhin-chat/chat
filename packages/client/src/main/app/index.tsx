@@ -1,5 +1,6 @@
-import React, { FC } from "react";
-import { ThemeProvider } from "@mui/material";
+import React, { FC } from 'react';
+import { ThemeProvider } from '@mui/material';
+
 import {
   AuthManagerContext,
   config,
@@ -14,8 +15,8 @@ import {
   RequestManagerContext,
   theme,
   WsManagerContext,
-} from "../shared";
-import { Router } from "../pages";
+} from '../shared';
+import { Router } from '../pages';
 
 /**
  * App root.
@@ -23,10 +24,7 @@ import { Router } from "../pages";
 export const App: FC = () => {
   const authManager = createAuthManager({
     apiGqlUri: config.apiGqlUri,
-    accessTokenAccessor: createValueAccessor(
-      createLocalStorageAdapter(),
-      LocalStorageKey.ACCESS_TOKEN
-    ),
+    accessTokenAccessor: createValueAccessor(createLocalStorageAdapter(), LocalStorageKey.ACCESS_TOKEN),
   });
   const requestManager = createRequestManager({
     authManager,
@@ -34,7 +32,7 @@ export const App: FC = () => {
   });
   const wsManager = createWsManager({
     url: config.apiWsGqlUri,
-    accessTokenAccessor: () => authManager.accessToken,
+    accessToken: authManager.accessToken,
   });
 
   return (

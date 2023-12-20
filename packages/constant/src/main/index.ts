@@ -8,10 +8,10 @@ interface IEnvironmental<T> {
  * Available protocols.
  */
 export enum Protocol {
-  HTTPS = "https",
-  HTTP = "http",
-  WS = "ws",
-  WSS = "wss",
+  HTTPS = 'https',
+  HTTP = 'http',
+  WS = 'ws',
+  WSS = 'wss',
 }
 
 interface IPorts {
@@ -39,19 +39,19 @@ interface IUrls {
  */
 export const domains: IEnvironmental<IDomains> = {
   prod: {
-    api: "api.chat.paskhin.me",
-    client: "chat.paskhin.me",
-    ui: "ui.chat.paskhin.me",
+    api: 'api.chat.paskhin.me',
+    client: 'chat.paskhin.me',
+    ui: 'ui.chat.paskhin.me',
   },
   dev: {
-    api: "localhost",
-    client: "localhost",
-    ui: "localhost",
+    api: 'localhost',
+    client: 'localhost',
+    ui: 'localhost',
   },
   test: {
-    api: "localhost",
-    client: "localhost",
-    ui: "localhost",
+    api: 'localhost',
+    client: 'localhost',
+    ui: 'localhost',
   },
 };
 

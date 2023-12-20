@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import { useUiField } from "../../../shared";
-import { messageModel, MessageUi, viewerModel } from "../../../entities";
+import { useUiField } from '../../../shared';
+import { messageModel, MessageUi, viewerModel } from '../../../entities';
 
 interface IProps {
   roomId: string;
@@ -12,7 +12,7 @@ interface IProps {
  * @feature
  */
 export const CreateMessage: FC<IProps> = ({ roomId, onSubmitted }) => {
-  const field = useUiField({ content: "" }, MessageUi.messageFormShape);
+  const field = useUiField({ content: '' }, MessageUi.messageFormShape);
 
   const viewerStore = viewerModel.useViewerStore();
 
@@ -22,7 +22,7 @@ export const CreateMessage: FC<IProps> = ({ roomId, onSubmitted }) => {
       const tempId = `temp-${Date.now()}`;
 
       messagesStore.append({
-        __typename: "MessageDto",
+        __typename: 'MessageDto',
         id: tempId,
         content: field.value.content,
         sendTime: new Date().toISOString(),
@@ -43,10 +43,7 @@ export const CreateMessage: FC<IProps> = ({ roomId, onSubmitted }) => {
         return;
       }
 
-      messagesStore.modify(
-        (message) => message.id === optimisticData.id,
-        data.createMessage
-      );
+      messagesStore.modify(message => message.id === optimisticData.id, data.createMessage);
     },
   });
 
@@ -70,7 +67,5 @@ export const CreateMessage: FC<IProps> = ({ roomId, onSubmitted }) => {
     });
   };
 
-  return (
-    <MessageUi.CreateMessageForm field={field} handleSubmit={handleSubmit} />
-  );
+  return <MessageUi.CreateMessageForm field={field} handleSubmit={handleSubmit} />;
 };

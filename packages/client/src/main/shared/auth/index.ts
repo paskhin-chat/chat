@@ -1,2 +1,2 @@
-export * from "./createAuthManager";
-export * from "./useAuthManager";
+export * from './createAuthManager';
+export * from './useAuthManager';

@@ -8,10 +8,7 @@ import { RefMixin, refPlugin } from '@roqueform/ref-plugin';
 /**
  * Base field type.
  */
-export type IUiField<T> = Field<T, DoubterMixin & ResetMixin & RefMixin> &
-  DoubterMixin &
-  ResetMixin &
-  RefMixin;
+export type IUiField<T> = Field<T, DoubterMixin & ResetMixin & RefMixin> & DoubterMixin & ResetMixin & RefMixin;
 
 /**
  * Hook for getting base field.

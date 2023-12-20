@@ -8,12 +8,7 @@ import { ports } from 'constant';
 
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
-import {
-  createModule,
-  gql,
-  requestCreator,
-  resetDatabase,
-} from '../common/test';
+import { createModule, gql, requestCreator, resetDatabase } from '../common/test';
 import { LoginInput, RegisterInput, UserDto } from '../schema';
 
 import { AuthService } from './auth.service';
@@ -31,9 +26,7 @@ describe('Auth integration', () => {
 
     app = module.createNestApplication();
 
-    app.use(
-      cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken),
-    );
+    app.use(cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken));
 
     redisService = module.get(RedisService);
     authService = module.get(AuthService);
@@ -48,10 +41,7 @@ describe('Auth integration', () => {
   });
 
   it('should register', async () => {
-    const response = await request<
-      { register: string },
-      { input: RegisterInput }
-    >(
+    const response = await request<{ register: string }, { input: RegisterInput }>(
       gql`
         mutation Register($input: RegisterInput!) {
           register(input: $input)
@@ -67,9 +57,7 @@ describe('Auth integration', () => {
       },
     );
 
-    const [cookie] = setCookieParser.parse(
-      response.headers['set-cookie'] || [],
-    );
+    const [cookie] = setCookieParser.parse(response.headers['set-cookie'] || []);
 
     expect(isJWT(cookie?.value)).toEqual(true);
     expect(cookie?.httpOnly).toEqual(true);
@@ -103,9 +91,7 @@ describe('Auth integration', () => {
       },
     );
 
-    const [cookie] = setCookieParser.parse(
-      response.headers['set-cookie'] || [],
-    );
+    const [cookie] = setCookieParser.parse(response.headers['set-cookie'] || []);
 
     expect(isJWT(cookie?.value)).toEqual(true);
     expect(cookie?.httpOnly).toEqual(true);

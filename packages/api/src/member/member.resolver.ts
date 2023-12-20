@@ -23,10 +23,7 @@ export class MemberResolver {
     const user = await this.userService.findUserByMemberId(member.id);
 
     if (!user) {
-      throw new ApolloError(
-        'User not found',
-        ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE,
-      );
+      throw new ApolloError('User not found', ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE);
     }
 
     return user;

@@ -6,12 +6,7 @@ import { ports } from 'constant';
 
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
-import {
-  createModule,
-  gql,
-  requestCreator,
-  resetDatabase,
-} from '../common/test';
+import { createModule, gql, requestCreator, resetDatabase } from '../common/test';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRoomInput, RoomDto } from '../schema';
 import { AuthService } from '../auth/auth.service';
@@ -30,9 +25,7 @@ describe('Room integration', () => {
 
     app = module.createNestApplication();
 
-    app.use(
-      cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken),
-    );
+    app.use(cookieParser(module.get<ConfigService>(ConfigService).cookiesSecretToken));
 
     redisService = module.get(RedisService);
     prismaService = module.get(PrismaService);
@@ -101,9 +94,7 @@ describe('Room integration', () => {
 
     expect(response.data.data.rooms.length).toEqual(2);
     expect(isUUID(response.data.data.rooms[0]?.id)).toEqual(true);
-    expect(response.data.data.rooms[0]?.members[0]?.user.login).toEqual(
-      mainUserLogin,
-    );
+    expect(response.data.data.rooms[0]?.members[0]?.user.login).toEqual(mainUserLogin);
   });
 
   it('should create a room', async () => {
@@ -122,10 +113,7 @@ describe('Room integration', () => {
       },
     });
 
-    const response = await request<
-      { createRoom: RoomDto },
-      { input: CreateRoomInput }
-    >(
+    const response = await request<{ createRoom: RoomDto }, { input: CreateRoomInput }>(
       gql`
         mutation CreateRoom($input: CreateRoomInput!) {
           createRoom(input: $input) {

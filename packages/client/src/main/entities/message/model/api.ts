@@ -5,35 +5,26 @@ import {
   ISubscriptionOptions,
   useGqlExecutor,
   useSubscription,
-} from "../../../shared";
-import {
-  Mutation,
-  MutationCreateMessageArgs,
-  Query,
-  QueryMessagesArgs,
-  Subscription,
-} from "../../../gen/api-types";
+} from '../../../shared';
+import { Mutation, MutationCreateMessageArgs, Query, QueryMessagesArgs, Subscription } from '../../../gen/api-types';
 
 export function useMessagesExecutor(
-  options?: IGqlExecutorOptions<Pick<Query, "messages">, QueryMessagesArgs>
-): IGqlExecutor<Pick<Query, "messages">, QueryMessagesArgs> {
-  return useGqlExecutor(messagesQuery, options);
+  options?: IGqlExecutorOptions<Pick<Query, 'messages'>, QueryMessagesArgs>,
+): IGqlExecutor<QueryMessagesArgs> {
+  return useGqlExecutor<Pick<Query, 'messages'>, QueryMessagesArgs>(messagesQuery, options);
 }
 
 export function useCreateMessageExecutor(
-  options?: IGqlExecutorOptions<
-    Pick<Mutation, "createMessage">,
-    MutationCreateMessageArgs,
-    {
-      id: string;
-    }
-  >
-): IGqlExecutor<Pick<Mutation, "createMessage">, MutationCreateMessageArgs> {
-  return useGqlExecutor(createMessageMutation, options);
+  options?: IGqlExecutorOptions<Pick<Mutation, 'createMessage'>, MutationCreateMessageArgs, { id: string }>,
+): IGqlExecutor<MutationCreateMessageArgs> {
+  return useGqlExecutor<Pick<Mutation, 'createMessage'>, MutationCreateMessageArgs, { id: string }>(
+    createMessageMutation,
+    options,
+  );
 }
 
 export function useMessageCreatedSubscription(
-  options: ISubscriptionOptions<Pick<Subscription, "messageCreated">>
+  options: ISubscriptionOptions<Pick<Subscription, 'messageCreated'>>,
 ): void {
   return useSubscription(messageCreatedSubscription, undefined, options);
 }

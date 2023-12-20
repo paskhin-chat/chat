@@ -1,12 +1,13 @@
-import { IValueAccessor } from "../storage";
-import { gql, makeGqlRequest } from "../api";
-import { Mutation } from "../../gen/api-types";
-import { EventBus } from "../lib";
+import { IValueAccessor } from '../storage';
+import { gql } from '../api/gql';
+import { makeGqlRequest } from '../api/makeGqlRequest';
+import { Mutation } from '../../gen/api-types';
+import { EventBus } from '../lib';
 
 export interface IAuthManager {
   readonly loggedIn: boolean;
 
-  readonly accessToken: string | undefined;
+  readonly accessToken: string | null;
 
   refreshAccessToken: () => Promise<boolean>;
 
@@ -31,7 +32,7 @@ export function createAuthManager(options: IOptions): IAuthManager {
 
   const authManager: IAuthManager = {
     get loggedIn() {
-      return accessTokenAccessor.get() != null;
+      return accessTokenAccessor.get() !== null;
     },
 
     get accessToken() {
@@ -51,35 +52,35 @@ export function createAuthManager(options: IOptions): IAuthManager {
           mutation Logout {
             logout
           }
-        `
+        `,
       );
     },
 
-    refreshAccessToken() {
-      return makeGqlRequest<Pick<Mutation, "refreshAccessToken">>(
-        apiGqlUri,
-        gql`
-          mutation RefreshAccessToken {
-            refreshAccessToken
-          }
-        `
-      )
-        .then((res) => {
-          if (res.data) {
-            accessTokenAccessor.set(res.data.refreshAccessToken);
+    async refreshAccessToken() {
+      try {
+        const res = await makeGqlRequest<Pick<Mutation, 'refreshAccessToken'>>(
+          apiGqlUri,
+          gql`
+            mutation RefreshAccessToken {
+              refreshAccessToken
+            }
+          `,
+        );
 
-            return true;
-          }
+        if (res.data) {
+          accessTokenAccessor.set(res.data.refreshAccessToken);
 
-          authManager.logout();
+          return true;
+        }
 
-          return false;
-        })
-        .catch(() => {
-          authManager.logout();
+        authManager.logout();
 
-          return false;
-        });
+        return false;
+      } catch {
+        authManager.logout();
+
+        return false;
+      }
     },
 
     subscribe(listener) {

@@ -1,15 +1,8 @@
-import { FC } from "react";
-import * as d from "doubter";
-import { Card, CardContent, CardHeader, Stack } from "@mui/material";
+import { FC } from 'react';
+import * as d from 'doubter';
+import { Card, CardContent, CardHeader, Stack } from '@mui/material';
 
-import {
-  IUiField,
-  UiButton,
-  UiFieldErrorCard,
-  UiForm,
-  UiTextInputField,
-  UiTextLink,
-} from "../../../shared";
+import { IUiField, UiButton, UiFieldErrorCard, UiForm, UiTextInputField, UiTextLink } from '../../../shared';
 
 interface IProps {
   field: IUiField<TLoginFormValue>;
@@ -32,14 +25,19 @@ export type TLoginFormValue = d.Input<typeof loginFormShape>;
 
 /**
  * Component for log in feature.
+ *
+ * @param root0
+ * @param root0.field
+ * @param root0.handleSubmit
+ * @param root0.pending
  */
 export const LoginForm: FC<IProps> = ({ field, handleSubmit, pending }) => (
-  <Card variant="outlined">
+  <Card variant='outlined'>
     <CardHeader
-      title="Login"
+      title='Login'
       subheader={
         <>
-          or <UiTextLink href="/sign-up">sign up</UiTextLink>
+          or <UiTextLink href='/sign-up'>sign up</UiTextLink>
         </>
       }
     />
@@ -47,20 +45,11 @@ export const LoginForm: FC<IProps> = ({ field, handleSubmit, pending }) => (
     <CardContent>
       <UiForm onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <UiTextInputField
-            label="Login"
-            disabled={pending}
-            field={field.at("login")}
-          />
+          <UiTextInputField label='Login' disabled={pending} field={field.at('login')} />
 
-          <UiTextInputField
-            label="Password"
-            type="password"
-            disabled={pending}
-            field={field.at("password")}
-          />
+          <UiTextInputField label='Password' type='password' disabled={pending} field={field.at('password')} />
 
-          <UiButton type="submit" pending={pending}>
+          <UiButton type='submit' pending={pending}>
             Confirm
           </UiButton>
 
