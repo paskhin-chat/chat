@@ -1,7 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-
-import { MemberDto } from '../../member/dto/member.dto';
-import { RoomDto } from '../../room/dto/room.dto';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { UserDto } from "../../user/dto/user.dto";
 
 @ObjectType()
 export class MessageDto {
@@ -12,28 +10,16 @@ export class MessageDto {
   public id!: string;
 
   /**
-   * Message's room's id.
+   * Message's user id.
    */
-  @Field(() => ID)
+  @Field(() => UserDto)
+  public user!: string;
+
+  /**
+   * Room's id.
+   */
+  @Field(() => String)
   public roomId!: string;
-
-  /**
-   * Message's room.
-   */
-  @Field(() => RoomDto)
-  public room!: RoomDto;
-
-  /**
-   * Message's member's id.
-   */
-  @Field(() => ID)
-  public memberId!: string;
-
-  /**
-   * Message's member.
-   */
-  @Field(() => MemberDto)
-  public member!: MemberDto;
 
   /**
    * Message's content.

@@ -31,10 +31,8 @@ scalar DateTime
 
 type MessageDto {
   id: ID!
-  roomId: ID!
-  room: RoomDto!
-  memberId: ID!
-  member: MemberDto!
+  user: UserDto!
+  roomId: String!
   content: String!
   sendTime: Date!
 }
@@ -43,11 +41,11 @@ type MessageDto {
 scalar Date
 
 type Query {
+  viewer: UserDto
   user(id: ID!): UserDto
   users: [UserDto!]!
-  viewer: UserDto
   rooms: [RoomDto!]!
-  messages(roomId: ID!): [MessageDto!]!
+  messages(roomId: ID!, cursor: String): [MessageDto!]!
 }
 
 type Mutation {
@@ -55,8 +53,8 @@ type Mutation {
   removeUser(id: ID!): UserDto!
   createUser(input: CreateUserInput!): UserDto!
   register(input: RegisterInput!): String!
-  refreshAccessToken: String!
   login(input: LoginInput!): String!
+  refreshAccessToken: String!
   logout: Boolean!
   createRoom(input: CreateRoomInput!): RoomDto!
   createMessage(input: CreateMessageInput!): MessageDto!

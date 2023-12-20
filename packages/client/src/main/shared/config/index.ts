@@ -1,2 +1,3 @@
-export { config as appConfig } from './config';
-export type { IConfig as IAppConfig } from './config';
+export { config } from "./config";
+export type { IConfig } from "./config";
+export { ConfigContext, useConfig } from "./useConfig";

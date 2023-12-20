@@ -1,27 +1,63 @@
-import 'cross-fetch/polyfill';
-import { render, waitFor } from '@testing-library/react';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { gql } from '@apollo/client';
-import userEvent from '@testing-library/user-event';
-import { faker } from '@faker-js/faker';
-import { CreateMessageInput, MessageDto } from 'api';
+import { render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { faker } from "@faker-js/faker";
+import { MessageDto } from "../../../../main/gen/api-types";
 
-import { MessageUi } from 'feature';
+import { MessageUi } from "../../../../main/features";
+import {
+  config,
+  createAuthManager,
+  createLocalStorageAdapter,
+  createRequestManager,
+  createValueAccessor,
+  IGqlResponse,
+  LocalStorageKey,
+  RequestManagerContext,
+} from "../../../../main/shared";
 
 const roomId = faker.string.uuid();
 const content = faker.word.words();
 
-describe('Message form feature', () => {
-  it('should render message form and create a message', async () => {
-    const { getByRole } = render(
-      <MockedProvider mocks={[createMessageMutationMock]} addTypename={false}>
-        <MessageUi.CreateMessage roomId={roomId} />
-      </MockedProvider>,
+global.fetch = jest.fn() as jest.Mock;
+
+describe("Message form feature", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should render message form and create a message", async () => {
+    (fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        json: () => mockResponse,
+      })
     );
 
-    const form = getByRole('form') as HTMLFormElement;
-    const messageContentInput = getByRole('textbox') as HTMLInputElement;
-    const submitButton = getByRole('button');
+    const authManager = createAuthManager({
+      apiGqlUri: config.apiGqlUri,
+      accessTokenAccessor: createValueAccessor(
+        createLocalStorageAdapter(),
+        LocalStorageKey.ACCESS_TOKEN
+      ),
+    });
+    const requestManager = createRequestManager({
+      authManager,
+      config,
+    });
+
+    const handleSubmittedMock = jest.fn();
+
+    const { getByRole } = render(
+      <RequestManagerContext.Provider value={requestManager}>
+        <MessageUi.CreateMessage
+          roomId={roomId}
+          onSubmitted={handleSubmittedMock}
+        />
+      </RequestManagerContext.Provider>
+    );
+
+    const form = getByRole("form") as HTMLFormElement;
+    const messageContentInput = getByRole("textbox") as HTMLInputElement;
+    const submitButton = getByRole("button");
 
     expect(form).toBeTruthy();
     expect(messageContentInput).toBeTruthy();
@@ -35,56 +71,26 @@ describe('Message form feature', () => {
 
       await userEvent.click(submitButton);
     });
+
+    expect(handleSubmittedMock).toHaveBeenCalled();
   });
 });
 
-const createMessageMutationMock: MockedResponse<
-  { createMessage: MessageDto },
-  { input: CreateMessageInput }
-> = {
-  request: {
-    query: gql`
-      mutation CreateMessage($input: CreateMessageInput!) {
-        createMessage(input: $input) {
-          id
-          content
-          sendTime
-          roomId
-          member {
-            user {
-              id
-              lastName
-              firstName
-            }
-          }
-        }
-      }
-    `,
-    variables: { input: { roomId, content } },
-  },
-  result: {
-    data: {
-      createMessage: {
+const mockResponse: IGqlResponse<{ createMessage: MessageDto }> = {
+  data: {
+    createMessage: {
+      __typename: "MessageDto",
+      id: faker.string.uuid(),
+      content,
+      sendTime: faker.date.past().toISOString(),
+      roomId,
+      user: {
+        __typename: "UserDto",
         id: faker.string.uuid(),
-        content,
-        sendTime: faker.date.past(),
-        roomId,
-        room: {
-          id: faker.string.uuid(),
-          members: [],
-        },
-        memberId: faker.string.uuid(),
-        member: {
-          id: faker.string.uuid(),
-          joinDate: faker.date.past(),
-          user: {
-            id: faker.string.uuid(),
-            login: faker.internet.userName(),
-            lastName: faker.person.lastName(),
-            firstName: faker.person.firstName(),
-            secondName: faker.person.middleName(),
-          },
-        },
+        login: faker.internet.userName(),
+        lastName: faker.person.lastName(),
+        firstName: faker.person.firstName(),
+        secondName: faker.person.middleName(),
       },
     },
   },

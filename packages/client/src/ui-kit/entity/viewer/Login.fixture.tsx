@@ -1,32 +1,32 @@
-import { FC, useEffect } from 'react';
-import noop from 'lodash/noop';
+import { FC, useEffect } from "react";
+import noop from "lodash/noop";
 
-import { ViewerUi } from 'entity';
-import { useUiField } from 'shared';
-import { useBooleanValue, withGlobalStyles } from '../../__utils__';
+import { AuthUi } from "../../../main/entities";
+import { useUiField } from "../../../main/shared";
+import { useBooleanValue, withGlobalStyles } from "../../__utils__";
 
 const LoginFormFixture: FC = () => {
-  const [pending] = useBooleanValue('pending');
-  const [errored] = useBooleanValue('errored');
+  const [pending] = useBooleanValue("pending");
+  const [errored] = useBooleanValue("errored");
 
   const field = useUiField(
     {
-      login: '',
-      password: '',
+      login: "",
+      password: "",
     },
-    ViewerUi.loginFormShape,
+    AuthUi.loginFormShape
   );
 
   useEffect(() => {
     if (errored) {
-      field.setError({ message: 'Error has occurred' });
+      field.setError({ message: "Error has occurred" });
     } else {
       field.clearErrors();
     }
   }, [errored, field]);
 
   return (
-    <ViewerUi.LoginForm field={field} handleSubmit={noop} pending={pending} />
+    <AuthUi.LoginForm field={field} handleSubmit={noop} pending={pending} />
   );
 };
 

@@ -1,45 +1,39 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from '@prisma/client';
-import { UseGuards } from '@nestjs/common';
+import { Args, Context, Mutation, Resolver } from "@nestjs/graphql";
 
-import type { GqlContext } from '../common/context';
-import { UserDto } from '../user/dto/user.dto';
-import { ViewerDataDecorator } from '../common/decorators';
-import { UserService } from '../user/user.service';
+import type { GqlContext } from "../common/context";
 
-import { AuthService } from './auth.service';
-import type { IViewerData } from './auth.service';
-import { RegisterInput } from './dto/register.input';
-import { LoginInput } from './dto/login.input';
-import { AuthGuard } from './auth.guard';
+import { AuthService } from "./auth.service";
+import { RegisterInput } from "./dto/register.input";
+import { LoginInput } from "./dto/login.input";
 
 @Resolver()
 export class AuthResolver {
-  public constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UserService,
-  ) {}
-
-  /**
-   * Gets authenticated user.
-   */
-  @UseGuards(AuthGuard)
-  @Query(() => UserDto, { nullable: true })
-  public async viewer(
-    @ViewerDataDecorator() viewerData: IViewerData,
-  ): Promise<User | null> {
-    return this.usersService.findById(viewerData.id);
-  }
+  public constructor(private readonly authService: AuthService) {}
 
   /**
    * Creates user and returns access token.
    */
   @Mutation(() => String)
   public async register(
-    @Args('input') input: RegisterInput,
-    @Context() context: GqlContext,
+    @Args("input") input: RegisterInput,
+    @Context() context: GqlContext
   ): Promise<string> {
     const [accessToken, refreshToken] = await this.authService.register(input);
+
+    context.setRefreshToken(refreshToken);
+
+    return accessToken;
+  }
+
+  /**
+   * Logs user in and returns access token.
+   */
+  @Mutation(() => String)
+  public async login(
+    @Args("input") input: LoginInput,
+    @Context() context: GqlContext
+  ): Promise<string> {
+    const [accessToken, refreshToken] = await this.authService.login(input);
 
     context.setRefreshToken(refreshToken);
 
@@ -51,33 +45,17 @@ export class AuthResolver {
    */
   @Mutation(() => String)
   public async refreshAccessToken(
-    @Context() context: GqlContext,
+    @Context() context: GqlContext
   ): Promise<string> {
-    return this.authService.refreshAccessToken(context.getRefreshToken() || '');
-  }
-
-  /**
-   * Logs user in and returns access token.
-   */
-  @Mutation(() => String)
-  public async login(
-    @Args('input') input: LoginInput,
-    @Context() context: GqlContext,
-  ): Promise<string> {
-    const [accessToken, refreshToken] = await this.authService.login(input);
-
-    context.setRefreshToken(refreshToken);
-
-    return accessToken;
+    return this.authService.refreshAccessToken(context.getRefreshToken() || "");
   }
 
   /**
    * Logs user out and deletes refresh token.
    */
-  @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   public logout(@Context() context: GqlContext): boolean {
-    context.setRefreshToken('');
+    context.setRefreshToken("");
 
     return true;
   }

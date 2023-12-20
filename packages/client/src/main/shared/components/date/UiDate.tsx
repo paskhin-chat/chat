@@ -1,11 +1,12 @@
-import { FC } from 'react';
-import { formatISO } from 'date-fns';
-import { Typography } from '@mui/material';
+import { FC } from "react";
+import { formatISO, parseJSON } from "date-fns";
+import { Typography } from "@mui/material";
 
-import { format as dateFormat, IDateFormatOptions, UiDateFormat } from './date';
+import { formatDate, IDateFormatOptions, UiDateFormat } from "./date";
+import { DateLike } from "./types";
 
 interface IProps {
-  date: Date;
+  date: DateLike;
   format?: UiDateFormat;
   options?: IDateFormatOptions;
 }
@@ -19,10 +20,10 @@ export const UiDate: FC<IProps> = ({
   options,
 }) => (
   <Typography
-    component='time'
-    title={formatISO(date)}
-    dateTime={dateFormat(date, UiDateFormat.DIGITS)}
+    component="time"
+    title={formatISO(parseJSON(date))}
+    dateTime={formatDate(parseJSON(date), UiDateFormat.DIGITS)}
   >
-    {dateFormat(date, format, options)}
+    {formatDate(parseJSON(date), format, options)}
   </Typography>
 );

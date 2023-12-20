@@ -1,20 +1,22 @@
-import { faker } from '@faker-js/faker';
-import { range } from 'lodash';
-import { FC, useMemo, useState } from 'react';
-import { useValue } from 'react-cosmos/client';
-import { UniqueEnforcer } from 'enforce-unique';
+import { faker } from "@faker-js/faker";
+import { range } from "lodash";
+import { FC, useMemo, useState } from "react";
+import { useValue } from "react-cosmos/client";
+import { UniqueEnforcer } from "enforce-unique";
 
-import { userModel, UserUi } from 'entity';
-import { withGlobalStyles } from '../../__utils__';
-import { getUserName } from '../../__mock__';
+import { UserUi } from "../../../main/entities";
+import { withGlobalStyles } from "../../__utils__";
+import { getUserName } from "../../__mock__";
+import { UserDto } from "../../../main/gen/api-types";
 
 const unq = new UniqueEnforcer();
 
-const getUsers = (count: number): userModel.IUser[] =>
-  range(count).map<userModel.IUser>(() => ({
+const getUsers = (count: number): UserDto[] =>
+  range(count).map<UserDto>(() => ({
+    __typename: "UserDto",
     ...getUserName(),
     id: faker.string.uuid(),
-    dob: faker.date.past(),
+    dob: faker.date.past().toISOString(),
     login: unq.enforce(faker.internet.userName),
   }));
 

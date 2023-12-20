@@ -1,20 +1,20 @@
-import { NestFactory } from '@nestjs/core';
-import cookieParser from 'cookie-parser';
-import * as path from 'node:path';
-import * as process from 'node:process';
-import { loadEnv } from 'exdenv';
-import { ports } from 'constant';
+import { NestFactory } from "@nestjs/core";
+import cookieParser from "cookie-parser";
+import * as path from "node:path";
+import * as process from "node:process";
+import { loadEnv } from "exdenv";
+import { ports } from "constant";
 
-import { envSchema } from './common/env';
-import { PrismaService } from './prisma/prisma.service';
-import { AppModule } from './app.module';
-import { ConfigService } from './config/config.service';
+import { envSchema } from "./common/env";
+import { PrismaService } from "./prisma/prisma.service";
+import { AppModule } from "./app.module";
+import { ConfigService } from "./config/config.service";
 
 loadEnv(envSchema, {
-  corePath: path.resolve(process.cwd(), '../../.env'),
+  corePath: path.resolve(process.cwd(), "../../.env"),
   defaultsPathsMap: {
-    development: path.resolve(process.cwd(), '../../.env.dev.defaults'),
-    test: path.resolve(process.cwd(), '../../.env.test.defaults'),
+    development: path.resolve(process.cwd(), "../../.env.dev.defaults"),
+    test: path.resolve(process.cwd(), "../../.env.test.defaults"),
   },
 });
 

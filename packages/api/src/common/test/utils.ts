@@ -1,13 +1,13 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { urls } from 'constant';
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { urls } from "constant";
 
-import { CookiesName } from '../context';
+import { CookiesName } from "../context";
 
 /**
  * Gql tag.
  */
 export function gql(arr: TemplateStringsArray): string {
-  let query = arr[0] || '';
+  let query = arr[0] || "";
 
   for (let i = 1; i < arguments.length; i += 1) {
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands,prefer-rest-params
@@ -26,11 +26,11 @@ interface ISession {
  * Request function factory.
  */
 export function requestCreator(
-  url = urls.test.api,
+  url = urls.test.apiGql
 ): <Data, Variables = unknown>(
   query: string,
   variables?: Variables,
-  session?: ISession,
+  session?: ISession
 ) => Promise<AxiosResponse<{ data: Data }>> {
   return async (query, variables, session) => {
     try {
@@ -48,7 +48,7 @@ export function requestCreator(
                 Authorization: `Bearer ${session.at}`,
               }
             : undefined,
-        },
+        }
       );
     } catch (error) {
       // eslint-disable-next-line no-console

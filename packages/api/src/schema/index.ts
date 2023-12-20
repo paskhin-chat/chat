@@ -1,2 +1,1 @@
-export * from './connection-params';
-export * from './schema';
+export * from "./schema";

@@ -1,30 +1,37 @@
-import { faker } from '@faker-js/faker';
-import { range } from 'lodash';
-import { add, compareAsc } from 'date-fns';
-import { FC, useMemo } from 'react';
-import { useValue } from 'react-cosmos/client';
+import { faker } from "@faker-js/faker";
+import { range } from "lodash";
+import { add, compareAsc, parseISO } from "date-fns";
+import { FC, useMemo } from "react";
+import { useValue } from "react-cosmos/client";
 
-import { messageModel, MessageUi } from 'entity';
-import { findRandomElement, withGlobalStyles } from '../../__utils__';
-import { getMessageContent, getUserName } from '../../__mock__';
+import { MessageUi } from "../../../main/entities";
+import { findRandomElement, withGlobalStyles } from "../../__utils__";
+import { getMessageContent, getUserName } from "../../__mock__";
+import { MessageDto, UserDto } from "../../../main/gen/api-types";
 
 const getMessages = (
   count: number,
-  members: Array<messageModel.IMessage['member']>,
-  dates: Date[],
-): messageModel.IMessage[] =>
+  users: UserDto[],
+  dates: Date[]
+): MessageDto[] =>
   range(0, count)
-    .map<messageModel.IMessage>(() => ({
-      id: faker.string.uuid(),
-      member: findRandomElement(members)!,
-      sendTime: add(findRandomElement(dates)!, {
-        hours: faker.date.past().getHours(),
-        minutes: faker.date.past().getMinutes(),
-        seconds: faker.date.past().getSeconds(),
-      }),
-      content: getMessageContent(),
-    }))
-    .sort((a, b) => compareAsc(a.sendTime, b.sendTime));
+    .map<MessageDto>(() => {
+      console.log(users, findRandomElement(users));
+
+      return {
+        __typename: "MessageDto",
+        roomId: faker.string.uuid(),
+        id: faker.string.uuid(),
+        user: findRandomElement(users)!,
+        sendTime: add(findRandomElement(dates)!, {
+          hours: faker.date.past().getHours(),
+          minutes: faker.date.past().getMinutes(),
+          seconds: faker.date.past().getSeconds(),
+        }).toISOString(),
+        content: getMessageContent(),
+      };
+    })
+    .sort((a, b) => compareAsc(parseISO(a.sendTime), parseISO(b.sendTime)));
 
 const MessageListFixture: FC = () => {
   const [messageCount] = useValue("message's count", { defaultValue: 25 });
@@ -32,25 +39,31 @@ const MessageListFixture: FC = () => {
 
   const dates = useMemo(
     () => range(messageCount / 5).map(() => faker.date.past()),
-    [messageCount],
+    [messageCount]
   );
 
-  const members = useMemo<Array<messageModel.IMessage['member']>>(
+  const users = useMemo<UserDto[]>(
     () =>
       range(memberCount).map(() => ({
-        userId: faker.string.uuid(),
+        __typename: "UserDto",
+        id: faker.string.uuid(),
+        login: faker.internet.userName(),
         ...getUserName(),
       })),
-    [memberCount],
+    [memberCount]
   );
 
   const messages = useMemo(
-    () => getMessages(messageCount, members, dates),
-    [messageCount, members, dates],
+    () => getMessages(messageCount, users, dates),
+    [messageCount, users, dates]
   );
 
   return (
-    <MessageUi.MessageList messages={messages} viewerId={members[0]!.userId} />
+    <MessageUi.MessageList
+      pending={false}
+      messages={messages}
+      viewerId={users[0]!.id}
+    />
   );
 };
 

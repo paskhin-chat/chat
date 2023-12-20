@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { Message } from '@prisma/client';
-import { ApolloError } from 'apollo-server';
-import { ApolloServerErrorCode } from '@apollo/server/errors';
+import { Injectable } from "@nestjs/common";
+import { Message, User } from "@prisma/client";
+import { ApolloError } from "apollo-server";
+import { ApolloServerErrorCode } from "@apollo/server/errors";
 
-import { PrismaService } from '../prisma/prisma.service';
-import { MemberService } from '../member/member.service';
+import { PrismaService } from "../prisma/prisma.service";
+import { MemberService } from "../member/member.service";
 
-import { CreateMessageInput } from './dto/create-message.input';
+import { CreateMessageInput } from "./dto/create-message.input";
 
 @Injectable()
 export class MessageService {
   public constructor(
     private readonly prismaService: PrismaService,
-    private readonly memberService: MemberService,
+    private readonly memberService: MemberService
   ) {}
 
   /**
@@ -21,10 +21,24 @@ export class MessageService {
   public async findByRoomIdAndUserId(
     roomId: string,
     userId: string,
+    cursor?: string,
+    limit = 10
   ): Promise<Message[] | null> {
     return this.prismaService.room
       .findFirst({ where: { id: roomId, members: { some: { userId } } } })
-      .messages({ orderBy: { sendTime: 'asc' } });
+      .messages({
+        orderBy: { sendTime: "asc" },
+        cursor: cursor ? { id: cursor } : undefined,
+        skip: cursor ? 1 : 0,
+        take: -limit,
+      });
+  }
+
+  public async getUserByMessageId(messageId: string): Promise<User> {
+    return this.prismaService.message
+      .findUnique({ where: { id: messageId } })
+      .member()
+      .user();
   }
 
   /**
@@ -32,17 +46,17 @@ export class MessageService {
    */
   public async createByRoomIdAndUserId(
     input: CreateMessageInput,
-    viewerId: string,
+    viewerId: string
   ): Promise<Message> {
     const viewerMember = await this.memberService.findByRoomIdAndUserId(
       input.roomId,
-      viewerId,
+      viewerId
     );
 
     if (!viewerMember) {
       throw new ApolloError(
         "Viewer's member's not been found",
-        ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE,
+        ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE
       );
     }
 

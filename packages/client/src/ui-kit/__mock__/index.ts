@@ -1,13 +1,13 @@
-import { faker, SexType } from '@faker-js/faker';
+import { faker, SexType } from "@faker-js/faker";
 
-import { formatUserName } from 'shared';
-import { getRandomBool, getRandomValue } from '../__utils__';
+import { getRandomBool, getRandomValue } from "../__utils__";
+import { formatUserName } from "../../main/shared";
 
 /**
  * 50%/50% male/female.
  */
 export function getRandomSexType(): SexType {
-  return getRandomBool() ? 'male' : 'female';
+  return getRandomBool() ? "male" : "female";
 }
 
 /**
@@ -37,7 +37,7 @@ export function getFormattedUserName(): string {
   return formatUserName(
     isAnonymous ? faker.person.firstName(sexType) : undefined,
     isAnonymous ? faker.person.lastName(sexType) : undefined,
-    getRandomValue(faker.person.middleName(sexType)),
+    getRandomValue(faker.person.middleName(sexType))
   );
 }
 

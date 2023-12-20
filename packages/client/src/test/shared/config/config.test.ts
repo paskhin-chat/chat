@@ -1,15 +1,15 @@
-import { appConfig } from 'shared/config';
+import { config } from "../../../main/shared";
 
-describe('Config', () => {
-  it('should be test mode', () => {
-    expect(appConfig.mode).toBe('test');
-    expect(appConfig.test).toBe(true);
-    expect(appConfig.dev).toBe(false);
-    expect(appConfig.prod).toBe(false);
+describe("Config", () => {
+  it("should be test mode", () => {
+    expect(config.mode).toBe("test");
+    expect(config.test).toBe(true);
+    expect(config.dev).toBe(false);
+    expect(config.prod).toBe(false);
   });
 
-  it('should get urls', () => {
-    expect(typeof appConfig.apiUri).toBe('string');
-    expect(typeof appConfig.apiWsUri).toBe('string');
+  it("should get urls", () => {
+    expect(typeof config.apiGqlUri).toBe("string");
+    expect(typeof config.apiWsGqlUri).toBe("string");
   });
 });

@@ -1,19 +1,19 @@
-import { FC } from 'react';
-import noop from 'lodash/noop';
+import { FC } from "react";
+import noop from "lodash/noop";
 
-import { MessageUi } from 'entity';
-import { useUiField } from 'shared';
-import { withGlobalStyles } from '../../__utils__';
+import { MessageUi } from "../../../main/entities";
+import { useUiField } from "../../../main/shared";
+import { withGlobalStyles } from "../../__utils__";
 
 const MessageFormFixture: FC = () => {
   const field = useUiField(
     {
-      content: '',
+      content: "",
     },
-    MessageUi.messageFormShape,
+    MessageUi.messageFormShape
   );
 
-  return <MessageUi.MessageForm field={field} handleSubmit={noop} />;
+  return <MessageUi.CreateMessageForm field={field} handleSubmit={noop} />;
 };
 
 export default withGlobalStyles(MessageFormFixture);

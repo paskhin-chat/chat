@@ -1,13 +1,11 @@
-import { FC, ReactNode } from 'react';
-import { css, styled } from '@mui/material/styles';
+import { FC, ReactNode } from "react";
+import { css, styled } from "@mui/material/styles";
+import { Theme, useMediaQuery } from "@mui/material";
 
 interface IProps {
   aside?: ReactNode;
-  asideHeader?: ReactNode;
-  asideFooter?: ReactNode;
-  contentHeader?: ReactNode;
-  contentFooter?: ReactNode;
-  children?: ReactNode;
+  content?: ReactNode;
+  mobilePriorityPart?: "aside" | "content";
 }
 
 /**
@@ -15,87 +13,121 @@ interface IProps {
  */
 export const UiBasePageLayout: FC<IProps> = ({
   aside,
-  asideHeader,
-  asideFooter,
-  contentHeader,
-  contentFooter,
+  content,
+  mobilePriorityPart,
+}) => {
+  const smUpper = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
+
+  const asideShown = smUpper || mobilePriorityPart === "aside";
+  const containShown = smUpper || mobilePriorityPart === "content";
+
+  return (
+    <SMain>
+      {asideShown && aside}
+
+      {containShown && content}
+    </SMain>
+  );
+};
+
+interface IUiBasePageLayoutAsideProps {
+  header: ReactNode;
+  children: ReactNode;
+  footer: ReactNode;
+  fullWidth?: boolean;
+}
+
+export const UiBasePageLayoutAside: FC<IUiBasePageLayoutAsideProps> = ({
+  header,
   children,
+  footer,
+}) => {
+  return (
+    <SAside>
+      <SHeader>{header}</SHeader>
+
+      <SContent>{children}</SContent>
+
+      <SFooter>{footer}</SFooter>
+    </SAside>
+  );
+};
+
+interface IUiBasePageLayoutContentProps {
+  header: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+}
+
+export const UiBasePageLayoutContent: FC<IUiBasePageLayoutContentProps> = ({
+  header,
+  children,
+  footer,
 }) => (
-  <SMain>
-    {aside && (
-      <SAside fullWidth={!children}>
-        <SHeader>{asideHeader}</SHeader>
+  <SMainPart full={!footer}>
+    <SHeader>{header}</SHeader>
 
-        <SContent>{aside}</SContent>
+    <SContent>{children}</SContent>
 
-        <SFooter>{asideFooter}</SFooter>
-      </SAside>
-    )}
-
-    {children && (
-      <SMainPart full={!contentFooter}>
-        <SHeader>{contentHeader}</SHeader>
-
-        <SContent>{children}</SContent>
-
-        {contentFooter && <SFooter>{contentFooter}</SFooter>}
-      </SMainPart>
-    )}
-  </SMain>
+    {footer && <SFooter>{footer}</SFooter>}
+  </SMainPart>
 );
 
-const SMain = styled('main')`
+const SMain = styled("main")`
   display: flex;
   overflow-y: scroll;
   height: 100dvh;
 `;
 
-const SAside = styled('aside', {
-  shouldForwardProp: (prop) => prop !== 'fullWidth',
-})<{ fullWidth: boolean }>(
-  ({ fullWidth, theme }) => css`
+const SAside = styled("aside")(
+  ({ theme }) => css`
     display: grid;
     grid-template-rows: ${theme.spacing(8)} auto ${theme.spacing(8)};
     grid-template-columns: 1fr;
-    width: ${fullWidth ? '100%' : 'max(35%, 400px)'};
+    width: 100%;
     border-right: ${theme.palette.divider} 1px solid;
-  `,
+
+    ${theme.breakpoints.up("sm")} {
+      width: max(35%, 400px);
+    }
+  `
 );
 
-const SMainPart = styled('div', {
-  shouldForwardProp: (propName) => propName !== 'full',
+const SMainPart = styled("div", {
+  shouldForwardProp: (propName) => propName !== "full",
 })<{ full: boolean }>(
   ({ theme, full }) => css`
     display: grid;
+    height: 100dvh;
     grid-template-rows: ${full
       ? `${theme.spacing(8)} auto`
       : `${theme.spacing(8)} auto ${theme.spacing(8)}`};
     grid-template-columns: 1fr;
     flex-grow: 1;
     width: 100%;
-  `,
+  `
 );
 
-const SHeader = styled('header')(
+const SHeader = styled("header")(
   ({ theme }) => css`
     border-bottom: ${theme.palette.divider} 1px solid;
     display: flex;
     align-items: center;
     padding-inline: ${theme.spacing(2)};
-  `,
+  `
 );
 
-const SFooter = styled('footer')(
+const SFooter = styled("footer")(
   ({ theme }) => css`
     border-top: ${theme.palette.divider} 1px solid;
     display: flex;
     align-items: center;
     padding-inline: ${theme.spacing(2)};
-  `,
+  `
 );
 
-const SContent = styled('div')`
+const SContent = styled("div")`
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;

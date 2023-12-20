@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from "../prisma/prisma.service";
 
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { CreateUserInput } from "./dto/create-user.input";
+import { UpdateUserInput } from "./dto/update-user.input";
 
 @Injectable()
 export class UserService {
@@ -54,6 +54,7 @@ export class UserService {
    * Finds member's user.
    */
   public findUserByMemberId(memberId: string): Promise<User | null> {
+    // TODO: dont use non user methods and check it everywhere
     return this.prismaService.member
       .findUnique({ where: { id: memberId } })
       .user();

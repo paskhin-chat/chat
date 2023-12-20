@@ -1,12 +1,11 @@
-import type { CookieOptions, Request, Response } from 'express';
-import { Context, WebSocket } from 'graphql-ws/lib/server';
-import { ContextFunction } from 'apollo-server-core/src/types';
-import { ApolloError } from 'apollo-server';
-import { ApolloServerErrorCode } from '@apollo/server/errors';
+import type { CookieOptions, Request, Response } from "express";
+import { Context, WebSocket } from "graphql-ws/lib/server";
+import { ContextFunction } from "apollo-server-core/src/types";
+import { ApolloError } from "apollo-server";
+import { ApolloServerErrorCode } from "@apollo/server/errors";
 
-import type { AuthService } from '../../auth/auth.service';
-import { IViewerData } from '../../auth/auth.service';
-import { IConnectionParams } from '../../schema';
+import type { AuthService } from "../../auth/auth.service";
+import { IViewerData } from "../../auth/auth.service";
 
 interface IGraphqlInternalContext {
   req: Request;
@@ -14,7 +13,7 @@ interface IGraphqlInternalContext {
 }
 
 type TGraphqlWsInternalContext = Context<
-  IConnectionParams,
+  { authorization: string },
   { socket: WebSocket; req: Request }
 >;
 
@@ -22,7 +21,7 @@ type TGraphqlWsInternalContext = Context<
  * All available cookie keys.
  */
 export enum CookiesName {
-  REFRESH_TOKEN = 'rt',
+  REFRESH_TOKEN = "rt",
 }
 
 /**
@@ -31,26 +30,26 @@ export enum CookiesName {
 export class GqlContext {
   private readonly context:
     | {
-        type: 'gql';
+        type: "gql";
         value: IGraphqlInternalContext;
       }
     | {
-        type: 'ws';
+        type: "ws";
         value: TGraphqlWsInternalContext;
       };
 
   public constructor(
     private readonly authService: AuthService,
-    internalContext: IGraphqlInternalContext | TGraphqlWsInternalContext,
+    internalContext: IGraphqlInternalContext | TGraphqlWsInternalContext
   ) {
     this.context =
-      'req' in internalContext
+      "req" in internalContext
         ? {
-            type: 'gql',
+            type: "gql",
             value: internalContext,
           }
         : {
-            type: 'ws',
+            type: "ws",
             value: internalContext,
           };
   }
@@ -59,11 +58,11 @@ export class GqlContext {
    * Gets access token.
    */
   public getAccessToken(): string | undefined {
-    if (this.context.type === 'gql') {
+    if (this.context.type === "gql") {
       const [type, token] =
-        this.context.value.req.headers.authorization?.split(' ') ?? [];
+        this.context.value.req.headers.authorization?.split(" ") ?? [];
 
-      return type === 'Bearer' ? token : undefined;
+      return type === "Bearer" ? token : undefined;
     }
 
     return this.context.value.connectionParams?.authorization;
@@ -73,7 +72,7 @@ export class GqlContext {
    * Gets viewer data from access token.
    */
   public async getViewerData(): Promise<IViewerData> {
-    return this.authService.verifyToken(this.getAccessToken() || '');
+    return this.authService.verifyToken(this.getAccessToken() || "");
   }
 
   /**
@@ -94,7 +93,7 @@ export class GqlContext {
   }
 
   private getCookie(name: string): string | undefined {
-    if (this.context.type === 'gql') {
+    if (this.context.type === "gql") {
       return (
         this.context.value.req.cookies as Record<string, string | undefined>
       )[name];
@@ -106,14 +105,14 @@ export class GqlContext {
   }
 
   private setCookie(name: string, value: string, options: CookieOptions): void {
-    if (this.context.type === 'gql') {
+    if (this.context.type === "gql") {
       this.context.value.res.cookie(name, value, options);
 
       return;
     }
     throw new ApolloError(
       "There is no the response in the context. Perhaps it's WS request.",
-      ApolloServerErrorCode.INTERNAL_SERVER_ERROR,
+      ApolloServerErrorCode.INTERNAL_SERVER_ERROR
     );
   }
 }
@@ -122,7 +121,7 @@ export class GqlContext {
  * Creates mutual context for ws subscription connection and http requests.
  */
 export function contextFactory(
-  authService: AuthService,
+  authService: AuthService
 ): ContextFunction<
   IGraphqlInternalContext | TGraphqlWsInternalContext,
   GqlContext

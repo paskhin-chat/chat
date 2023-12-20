@@ -5,32 +5,42 @@ import {
   Query,
   Resolver,
   Subscription,
-} from '@nestjs/graphql';
-import { User } from '@prisma/client';
-import { UseGuards } from '@nestjs/common';
+} from "@nestjs/graphql";
+import { User } from "@prisma/client";
+import { UseGuards } from "@nestjs/common";
 
-import { RedisService } from '../redis/redis.service';
-import { AuthGuard } from '../auth/auth.guard';
+import { RedisService } from "../redis/redis.service";
+import { AuthGuard } from "../auth/auth.guard";
 
-import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { UserService } from "./user.service";
+import { UserDto } from "./dto/user.dto";
+import { CreateUserInput } from "./dto/create-user.input";
+import { UpdateUserInput } from "./dto/update-user.input";
+import { ViewerDataDecorator } from "../common/decorators";
+import type { IViewerData } from "../auth/auth.service";
 
 @Resolver(() => UserDto)
 export class UserResolver {
   public constructor(
     private readonly usersService: UserService,
-    private readonly redisService: RedisService,
+    private readonly redisService: RedisService
   ) {}
+
+  @UseGuards(AuthGuard)
+  @Query(() => UserDto, { nullable: true })
+  public async viewer(
+    @ViewerDataDecorator() viewerData: IViewerData
+  ): Promise<User | null> {
+    return this.usersService.findById(viewerData.id);
+  }
 
   /**
    * Finds one.
    */
   @UseGuards(AuthGuard)
-  @Query(() => UserDto, { name: 'user', nullable: true })
+  @Query(() => UserDto, { name: "user", nullable: true })
   public findOne(
-    @Args('id', { type: () => ID }) id: string,
+    @Args("id", { type: () => ID }) id: string
   ): Promise<User | null> {
     return this.usersService.findById(id);
   }
@@ -39,7 +49,7 @@ export class UserResolver {
    * Finds all.
    */
   @UseGuards(AuthGuard)
-  @Query(() => [UserDto], { name: 'users' })
+  @Query(() => [UserDto], { name: "users" })
   public findAll(): Promise<User[]> {
     return this.usersService.findAllUsers();
   }
@@ -48,7 +58,7 @@ export class UserResolver {
    * Updates user.
    */
   @Mutation(() => UserDto)
-  public updateUser(@Args('input') input: UpdateUserInput): Promise<User> {
+  public updateUser(@Args("input") input: UpdateUserInput): Promise<User> {
     return this.usersService.update(input.id, input);
   }
 
@@ -56,7 +66,7 @@ export class UserResolver {
    * Removes user.
    */
   @Mutation(() => UserDto)
-  public removeUser(@Args('id', { type: () => ID }) id: string): Promise<User> {
+  public removeUser(@Args("id", { type: () => ID }) id: string): Promise<User> {
     return this.usersService.remove(id);
   }
 
@@ -65,11 +75,11 @@ export class UserResolver {
    */
   @Mutation(() => UserDto)
   public async createUser(
-    @Args('input') input: CreateUserInput,
+    @Args("input") input: CreateUserInput
   ): Promise<User> {
     const user = await this.usersService.create(input);
 
-    await this.redisService.publish('userCreated', { userCreated: user });
+    await this.redisService.publish("userCreated", { userCreated: user });
 
     return user;
   }
@@ -79,6 +89,6 @@ export class UserResolver {
    */
   @Subscription(() => UserDto)
   public userCreated(): AsyncIterator<User> {
-    return this.redisService.asyncIterator('userCreated');
+    return this.redisService.asyncIterator("userCreated");
   }
 }

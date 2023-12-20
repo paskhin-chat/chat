@@ -52,8 +52,7 @@
   "dependencies": {
     "doubter": "^2.1.0",
     "lodash": "^4.17.21",
-    "rimraf": "^5.0.0",
-    "utility-types": "^3.10.0"
+    "rimraf": "^5.0.0"
   },
   "config": {
     "commitizen": {

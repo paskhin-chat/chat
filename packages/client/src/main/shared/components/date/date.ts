@@ -1,21 +1,27 @@
-import { format as baseFormat, isSameYear, startOfToday } from 'date-fns';
+import {
+  format as baseFormat,
+  isSameYear,
+  parseJSON,
+  startOfToday,
+} from "date-fns";
+import { DateLike } from "./types";
 
 /**
  * Formats for dates.
  */
 export enum UiDateFormat {
-  FULL = 'full',
-  DIGITS = 'digits',
+  FULL = "full",
+  DIGITS = "digits",
 }
 
 const withYearFormats: Record<UiDateFormat, string> = {
-  [UiDateFormat.FULL]: 'dd MMMM yyy',
-  [UiDateFormat.DIGITS]: 'dd.MM.yyy',
+  [UiDateFormat.FULL]: "dd MMMM yyy",
+  [UiDateFormat.DIGITS]: "dd.MM.yyy",
 };
 
 const yearLessFormats: Record<UiDateFormat, string> = {
-  [UiDateFormat.FULL]: 'dd MMMM',
-  [UiDateFormat.DIGITS]: 'dd.MM',
+  [UiDateFormat.FULL]: "dd MMMM",
+  [UiDateFormat.DIGITS]: "dd.MM",
 };
 
 /**
@@ -33,18 +39,18 @@ export interface IDateFormatOptions {
 /**
  * Formats date.
  */
-export function format(
-  date: Date,
+export function formatDate(
+  date: DateLike,
   ft: UiDateFormat = UiDateFormat.FULL,
-  options?: IDateFormatOptions,
+  options?: IDateFormatOptions
 ): string {
   const actualYear = options?.actualYear ?? true;
 
   const actualFormat = actualYear
-    ? isSameYear(startOfToday(), date)
+    ? isSameYear(startOfToday(), parseJSON(date))
       ? yearLessFormats[ft]
       : withYearFormats[ft]
     : withYearFormats[ft];
 
-  return baseFormat(date, actualFormat);
+  return baseFormat(parseJSON(date), actualFormat);
 }

@@ -1,8 +1,9 @@
-import { format as baseFormat } from 'date-fns';
+import { format as baseFormat, parseJSON } from "date-fns";
+import { DateLike } from "./types";
 
 /**
  * Formats time.
  */
-export function format(date: Date): string {
-  return baseFormat(date, 'HH:mm');
+export function formatTime(date: DateLike): string {
+  return baseFormat(parseJSON(date), "HH:mm");
 }

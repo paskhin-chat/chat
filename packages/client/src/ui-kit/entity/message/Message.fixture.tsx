@@ -1,44 +1,47 @@
-import { useSelect, useValue } from 'react-cosmos/client';
-import { faker } from '@faker-js/faker';
-import { FC } from 'react';
-import { parseISO } from 'date-fns';
+import { useSelect, useValue } from "react-cosmos/client";
+import { faker } from "@faker-js/faker";
+import { FC } from "react";
 
-import { MessageUi } from 'entity';
-import { withGlobalStyles, useBooleanValue } from '../../__utils__';
-import { getMessageContent } from '../../__mock__';
-import { formatUserName } from 'shared';
+import { MessageUi } from "../../../main/entities";
+import { withGlobalStyles, useBooleanValue } from "../../__utils__";
+import { getMessageContent, getUserName } from "../../__mock__";
+import { formatUserName } from "../../../main/shared";
+import { UserDto } from "../../../main/gen/api-types";
 
 const defaultContent = getMessageContent();
 const defaultTime = faker.date.anytime().toISOString();
 
 const MessageFixture: FC = () => {
-  const [position] = useSelect('position', {
-    defaultValue: 'right',
-    options: ['left', 'right'],
+  const [position] = useSelect("position", {
+    defaultValue: "right",
+    options: ["left", "right"],
   });
-  const [content] = useValue('content', {
+  const [content] = useValue("content", {
     defaultValue: defaultContent,
   });
-  const [time] = useValue('time', {
+  const [time] = useValue("time", {
     defaultValue: defaultTime,
   });
-  const [isAuthorViewer] = useBooleanValue('isAuthorViewer');
+  const [isAuthorViewer] = useBooleanValue("isAuthorViewer");
 
-  const member = {
-    userId: faker.string.uuid(),
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+  const user: UserDto = {
+    __typename: "UserDto",
+    id: faker.string.uuid(),
+    login: faker.internet.userName(),
+    ...getUserName(),
   };
 
   return (
     <MessageUi.Message
       message={{
+        __typename: "MessageDto",
         content,
-        sendTime: parseISO(time),
-        member,
+        sendTime: time,
         id: faker.string.uuid(),
+        roomId: faker.string.uuid(),
+        user,
       }}
-      title={isAuthorViewer ? 'You' : formatUserName(member)}
+      title={isAuthorViewer ? "You" : formatUserName(user)}
       position={position}
     />
   );
