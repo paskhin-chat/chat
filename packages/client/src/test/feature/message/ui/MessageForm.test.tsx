@@ -1,22 +1,52 @@
-import 'cross-fetch/polyfill';
-import { act, render } from '@testing-library/react';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { gql } from '@apollo/client';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { faker } from '@faker-js/faker';
-import { CreateMessageInput, MessageDto } from 'api';
 
-import { MessageUi } from 'feature';
+import {
+  MessageDto,
+  config,
+  createAuthManager,
+  createLocalStorageAdapter,
+  createRequestManager,
+  createValueAccessor,
+  IGqlResponse,
+  LocalStorageKey,
+  RequestManagerContext,
+} from '../../../../main/shared';
+import { MessageUi } from '../../../../main/features';
 
 const roomId = faker.string.uuid();
 const content = faker.word.words();
 
+global.fetch = jest.fn();
+
 describe('Message form feature', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should render message form and create a message', async () => {
+    (fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        json: () => mockResponse,
+      }),
+    );
+
+    const authManager = createAuthManager({
+      apiGqlUri: config.apiGqlUri,
+      accessTokenAccessor: createValueAccessor(createLocalStorageAdapter(), LocalStorageKey.ACCESS_TOKEN),
+    });
+    const requestManager = createRequestManager({
+      authManager,
+      config,
+    });
+
+    const handleSubmittedMock = jest.fn();
+
     const { getByRole } = render(
-      <MockedProvider mocks={[createMessageMutationMock]} addTypename={false}>
-        <MessageUi.MessageForm roomId={roomId} />
-      </MockedProvider>,
+      <RequestManagerContext.Provider value={requestManager}>
+        <MessageUi.CreateMessage roomId={roomId} onSubmitted={handleSubmittedMock} />
+      </RequestManagerContext.Provider>,
     );
 
     const form = getByRole('form') as HTMLFormElement;
@@ -27,7 +57,7 @@ describe('Message form feature', () => {
     expect(messageContentInput).toBeTruthy();
     expect(submitButton).toBeTruthy();
 
-    await act(async () => {
+    await waitFor(async () => {
       await userEvent.click(messageContentInput);
       await userEvent.keyboard(content);
 
@@ -35,56 +65,26 @@ describe('Message form feature', () => {
 
       await userEvent.click(submitButton);
     });
+
+    expect(handleSubmittedMock).toHaveBeenCalled();
   });
 });
 
-const createMessageMutationMock: MockedResponse<
-  { createMessage: MessageDto },
-  { input: CreateMessageInput }
-> = {
-  request: {
-    query: gql`
-      mutation CreateMessage($input: CreateMessageInput!) {
-        createMessage(input: $input) {
-          id
-          content
-          sendTime
-          roomId
-          member {
-            user {
-              id
-              lastName
-              firstName
-            }
-          }
-        }
-      }
-    `,
-    variables: { input: { roomId, content } },
-  },
-  result: {
-    data: {
-      createMessage: {
+const mockResponse: IGqlResponse<{ createMessage: MessageDto }> = {
+  data: {
+    createMessage: {
+      __typename: 'MessageDto',
+      id: faker.string.uuid(),
+      content,
+      sendTime: faker.date.past().toISOString(),
+      roomId,
+      user: {
+        __typename: 'UserDto',
         id: faker.string.uuid(),
-        content,
-        sendTime: faker.date.past(),
-        roomId,
-        room: {
-          id: faker.string.uuid(),
-          members: [],
-        },
-        memberId: faker.string.uuid(),
-        member: {
-          id: faker.string.uuid(),
-          joinDate: faker.date.past(),
-          user: {
-            id: faker.string.uuid(),
-            login: faker.internet.userName(),
-            lastName: faker.person.lastName(),
-            firstName: faker.person.firstName(),
-            secondName: faker.person.middleName(),
-          },
-        },
+        login: faker.internet.userName(),
+        lastName: faker.person.lastName(),
+        firstName: faker.person.firstName(),
+        secondName: faker.person.middleName(),
       },
     },
   },

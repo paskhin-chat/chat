@@ -27,8 +27,9 @@ interface IDomains {
 }
 
 interface IUrls {
+  apiGql: string;
   api: string;
-  ws: string;
+  wsGql: string;
   client: string;
   ui: string;
 }
@@ -80,20 +81,23 @@ export const ports: IEnvironmental<IPorts> = {
  */
 export const urls: IEnvironmental<IUrls> = {
   prod: {
-    api: `${Protocol.HTTPS}://${domains.prod.api}:${ports.prod.api}/graphql`,
-    ws: `${Protocol.WSS}://${domains.prod.api}:${ports.prod.api}/graphql`,
+    apiGql: `${Protocol.HTTPS}://${domains.prod.api}:${ports.prod.api}/graphql`,
+    api: `${Protocol.HTTPS}://${domains.prod.api}:${ports.prod.api}`,
+    wsGql: `${Protocol.WSS}://${domains.prod.api}:${ports.prod.api}/graphql`,
     client: `${Protocol.HTTPS}://${domains.prod.client}:${ports.prod.client}`,
     ui: `${Protocol.HTTPS}://${domains.prod.ui}:${ports.prod.ui}`,
   },
   dev: {
-    api: `${Protocol.HTTP}://${domains.dev.api}:${ports.dev.api}/graphql`,
-    ws: `${Protocol.WS}://${domains.dev.api}:${ports.dev.api}/graphql`,
+    apiGql: `${Protocol.HTTP}://${domains.dev.api}:${ports.dev.api}/graphql`,
+    api: `${Protocol.HTTP}://${domains.dev.api}:${ports.dev.api}`,
+    wsGql: `${Protocol.WS}://${domains.dev.api}:${ports.dev.api}/graphql`,
     client: `${Protocol.HTTP}://${domains.dev.client}:${ports.dev.client}`,
     ui: `${Protocol.HTTP}://${domains.dev.ui}:${ports.dev.ui}`,
   },
   test: {
-    api: `${Protocol.HTTP}://${domains.test.api}:${ports.test.api}/graphql`,
-    ws: `${Protocol.WS}://${domains.test.api}:${ports.test.api}/graphql`,
+    apiGql: `${Protocol.HTTP}://${domains.test.api}:${ports.test.api}/graphql`,
+    api: `${Protocol.HTTP}://${domains.test.api}:${ports.test.api}`,
+    wsGql: `${Protocol.WS}://${domains.test.api}:${ports.test.api}/graphql`,
     client: `${Protocol.HTTP}://${domains.test.client}:${ports.test.client}`,
     ui: `${Protocol.HTTP}://${domains.test.ui}:${ports.test.ui}`,
   },

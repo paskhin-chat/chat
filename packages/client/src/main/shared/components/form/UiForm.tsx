@@ -1,7 +1,7 @@
-import { HTMLAttributes, FC, ReactNode, SyntheticEvent } from 'react';
-import styled from 'styled-components';
+import { FC, ReactNode, SyntheticEvent } from 'react';
+import { Box, BoxProps } from '@mui/material';
 
-interface IProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+interface IProps extends Omit<BoxProps<'form'>, 'onSubmit' | 'component'> {
   onSubmit?: () => void;
   children?: ReactNode | undefined;
 }
@@ -16,10 +16,8 @@ export const UiForm: FC<IProps> = ({ onSubmit, children, ...props }) => {
   };
 
   return (
-    <SUiForm {...props} role='form' noValidate={true} onSubmit={handleSubmit}>
+    <Box flexGrow={1} {...props} role='form' noValidate={true} component='form' onSubmit={handleSubmit}>
       {children}
-    </SUiForm>
+    </Box>
   );
 };
-
-const SUiForm = styled.form``;

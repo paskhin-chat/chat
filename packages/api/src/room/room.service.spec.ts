@@ -52,10 +52,7 @@ describe('RoomService', () => {
 
     const viewerId = users.splice(0, 1)[0]?.id;
 
-    const room = await service.create(
-      { userIds: users.map((user) => user.id) },
-      viewerId || '',
-    );
+    const room = await service.create({ userIds: users.map(user => user.id) }, viewerId || '');
 
     expect(isUUID(room.id)).toEqual(true);
     expect(isDate(room.creationDate)).toEqual(true);
@@ -80,22 +77,16 @@ describe('RoomService', () => {
 
     const viewerId = users.splice(0, 1)[0]!.id;
 
-    const viewerPersonalRoom = await service.create(
-      { userIds: [viewerId] },
-      viewerId,
-    );
+    const viewerPersonalRoom = await service.create({ userIds: [viewerId] }, viewerId);
 
-    const createdRoom = await service.create(
-      { userIds: users.map((user) => user.id) },
-      viewerId,
-    );
+    const createdRoom = await service.create({ userIds: users.map(user => user.id) }, viewerId);
 
     expect(isUUID(viewerPersonalRoom.id)).toEqual(true);
     expect(isUUID(createdRoom.id)).toEqual(true);
 
     /**
-     * If the ids match, the code works wrong - not create a new room, and
-     * instead returns the room with narrowed user ids.
+     * If the ids match, the code works wrong - not create a new room, and instead returns the room with narrowed user
+     * ids.
      */
     expect(viewerPersonalRoom.id).not.toEqual(createdRoom.id);
   });

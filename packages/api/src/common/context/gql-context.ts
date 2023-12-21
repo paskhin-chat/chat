@@ -6,17 +6,13 @@ import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import type { AuthService } from '../../auth/auth.service';
 import { IViewerData } from '../../auth/auth.service';
-import { IConnectionParams } from '../../schema';
 
 interface IGraphqlInternalContext {
   req: Request;
   res: Response;
 }
 
-type TGraphqlWsInternalContext = Context<
-  IConnectionParams,
-  { socket: WebSocket; req: Request }
->;
+type TGraphqlWsInternalContext = Context<{ authorization: string }, { socket: WebSocket; req: Request }>;
 
 /**
  * All available cookie keys.
@@ -60,8 +56,7 @@ export class GqlContext {
    */
   public getAccessToken(): string | undefined {
     if (this.context.type === 'gql') {
-      const [type, token] =
-        this.context.value.req.headers.authorization?.split(' ') ?? [];
+      const [type, token] = this.context.value.req.headers.authorization?.split(' ') ?? [];
 
       return type === 'Bearer' ? token : undefined;
     }
@@ -95,14 +90,10 @@ export class GqlContext {
 
   private getCookie(name: string): string | undefined {
     if (this.context.type === 'gql') {
-      return (
-        this.context.value.req.cookies as Record<string, string | undefined>
-      )[name];
+      return (this.context.value.req.cookies as Record<string, string | undefined>)[name];
     }
 
-    return (
-      this.context.value.extra.req.cookies as Record<string, string | undefined>
-    )[name];
+    return (this.context.value.extra.req.cookies as Record<string, string | undefined>)[name];
   }
 
   private setCookie(name: string, value: string, options: CookieOptions): void {
@@ -123,9 +114,6 @@ export class GqlContext {
  */
 export function contextFactory(
   authService: AuthService,
-): ContextFunction<
-  IGraphqlInternalContext | TGraphqlWsInternalContext,
-  GqlContext
-> {
-  return (context) => new GqlContext(authService, context);
+): ContextFunction<IGraphqlInternalContext | TGraphqlWsInternalContext, GqlContext> {
+  return context => new GqlContext(authService, context);
 }

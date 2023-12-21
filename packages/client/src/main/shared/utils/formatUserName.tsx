@@ -1,5 +1,7 @@
 import capitalize from 'lodash/capitalize';
 
+import { Maybe } from '../api';
+
 /**
  * Can be used instead of real user first name.
  */
@@ -20,50 +22,46 @@ export interface IUserFullName {
    * @example
    *   'Dmitrii';
    */
-  firstName?: string;
+  firstName?: Maybe<string>;
   /**
    * Last name.
    *
    * @example
    *   'Paskhin';
    */
-  lastName?: string;
+  lastName?: Maybe<string>;
   /**
    * Second name.
    *
    * @example
    *   'Sergeevich';
    */
-  secondName?: string;
+  secondName?: Maybe<string>;
 }
 
 /**
  * Formats user full name.
  */
-export function formatUserName(fullName?: IUserFullName): string;
+export function formatUserName(fullName?: Maybe<IUserFullName>): string;
+
+/**
+ * Formats user full name.
+ */
+export function formatUserName(firstName?: Maybe<string>, lastName?: Maybe<string>, secondName?: Maybe<string>): string;
 
 /**
  * Formats user full name.
  */
 export function formatUserName(
-  firstName?: string,
-  lastName?: string,
-  secondName?: string,
-): string;
-
-/**
- * Formats user full name.
- */
-export function formatUserName(
-  name?: string | IUserFullName,
-  lastName?: string,
-  secondName?: string,
+  name?: Maybe<string | IUserFullName>,
+  lastName?: Maybe<string>,
+  secondName?: Maybe<string>,
 ): string {
   let fName = DEFAULT_FIRST_NAME;
   let lName = DEFAULT_LAST_NAME;
   let sName = '';
 
-  if (typeof name === 'object') {
+  if (typeof name === 'object' && name !== null) {
     fName = name.firstName || fName;
     lName = name.lastName || lName;
     sName = name.secondName || sName;
@@ -74,10 +72,7 @@ export function formatUserName(
   }
 
   if (sName) {
-    return (
-      `${capitalize(lName)} ${fName.at(0)?.toUpperCase()}.` +
-      ` ${sName.at(0)?.toUpperCase()}.`
-    );
+    return `${capitalize(lName)} ${fName.at(0)?.toUpperCase()}. ${sName.at(0)?.toUpperCase()}.`;
   }
 
   return `${fName} ${lName}`;

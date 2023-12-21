@@ -8,7 +8,7 @@
     "require": "./dist/index.cjs"
   },
   "scripts": {
-    "build:prod": "npm run clean:dist && ttsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "build:prod": "npm run clean:dist && tsc --project tsconfig.build.json && rollup --input ./dist/index.js --file ./dist/index.cjs --format cjs",
     "build:start": "exit 0",
     "build:watch": "exit 0",
     "clean:dist": "rimraf './dist'",

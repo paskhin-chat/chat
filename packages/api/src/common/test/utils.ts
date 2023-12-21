@@ -26,7 +26,7 @@ interface ISession {
  * Request function factory.
  */
 export function requestCreator(
-  url = urls.test.api,
+  url = urls.test.apiGql,
 ): <Data, Variables = unknown>(
   query: string,
   variables?: Variables,

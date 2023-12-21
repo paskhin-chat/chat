@@ -29,8 +29,8 @@ loadEnv(envSchema, {
   app.use(cookieParser(configService.cookiesSecretToken));
 
   /**
-   * Here used a dev variable because the API port in production mode is set by
-   * nginx and in test mode is set in test files.
+   * Here used a dev variable because the API port in production mode is set by nginx and in test mode is set in test
+   * files.
    */
   await app.listen(ports.dev.api);
 })();

@@ -1,11 +1,7 @@
 import { faker } from '@faker-js/faker';
 import capitalize from 'lodash/capitalize';
 
-import {
-  DEFAULT_FIRST_NAME,
-  DEFAULT_LAST_NAME,
-  formatUserName,
-} from 'shared/utils';
+import { DEFAULT_FIRST_NAME, DEFAULT_LAST_NAME, formatUserName } from '../../../main/shared';
 
 describe('Format user name', () => {
   it('should format using full name object', () => {
@@ -19,37 +15,26 @@ describe('Format user name', () => {
         lastName,
         secondName,
       }),
-    ).toBe(
-      `${capitalize(lastName)} ${firstName.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
-    );
+    ).toBe(`${capitalize(lastName)} ${firstName.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`);
     expect(
       formatUserName({
         firstName,
         secondName,
       }),
-    ).toBe(
-      `${DEFAULT_LAST_NAME} ${firstName.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
-    );
+    ).toBe(`${DEFAULT_LAST_NAME} ${firstName.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`);
     expect(
       formatUserName({
         lastName,
         secondName,
       }),
-    ).toBe(
-      `${capitalize(lastName)} ${DEFAULT_FIRST_NAME.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
-    );
+    ).toBe(`${capitalize(lastName)} ${DEFAULT_FIRST_NAME.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`);
     expect(
       formatUserName({
         firstName,
         lastName,
       }),
     ).toBe(`${firstName} ${lastName}`);
-    expect(formatUserName({})).toBe(
-      `${DEFAULT_FIRST_NAME} ${DEFAULT_LAST_NAME}`,
-    );
+    expect(formatUserName({})).toBe(`${DEFAULT_FIRST_NAME} ${DEFAULT_LAST_NAME}`);
   });
 
   it('should format using name params', () => {
@@ -58,22 +43,15 @@ describe('Format user name', () => {
     const secondName = faker.person.middleName();
 
     expect(formatUserName(firstName, lastName, secondName)).toBe(
-      `${capitalize(lastName)} ${firstName.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
+      `${capitalize(lastName)} ${firstName.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`,
     );
     expect(formatUserName(firstName, undefined, secondName)).toBe(
-      `${DEFAULT_LAST_NAME} ${firstName.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
+      `${DEFAULT_LAST_NAME} ${firstName.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`,
     );
     expect(formatUserName(undefined, lastName, secondName)).toBe(
-      `${capitalize(lastName)} ${DEFAULT_FIRST_NAME.at(0)?.toUpperCase()}.` +
-        ` ${secondName.at(0)?.toUpperCase()}.`,
+      `${capitalize(lastName)} ${DEFAULT_FIRST_NAME.at(0)?.toUpperCase()}. ${secondName.at(0)?.toUpperCase()}.`,
     );
-    expect(formatUserName(firstName, lastName)).toBe(
-      `${firstName} ${lastName}`,
-    );
-    expect(formatUserName({})).toBe(
-      `${DEFAULT_FIRST_NAME} ${DEFAULT_LAST_NAME}`,
-    );
+    expect(formatUserName(firstName, lastName)).toBe(`${firstName} ${lastName}`);
+    expect(formatUserName({})).toBe(`${DEFAULT_FIRST_NAME} ${DEFAULT_LAST_NAME}`);
   });
 });

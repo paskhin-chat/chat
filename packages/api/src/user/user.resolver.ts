@@ -1,16 +1,11 @@
-import {
-  Args,
-  ID,
-  Mutation,
-  Query,
-  Resolver,
-  Subscription,
-} from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { User } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
 
 import { RedisService } from '../redis/redis.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { ViewerDataDecorator } from '../common/decorators';
+import type { IViewerData } from '../auth/auth.service';
 
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
@@ -19,19 +14,20 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 @Resolver(() => UserDto)
 export class UserResolver {
-  public constructor(
-    private readonly usersService: UserService,
-    private readonly redisService: RedisService,
-  ) {}
+  public constructor(private readonly usersService: UserService, private readonly redisService: RedisService) {}
+
+  @UseGuards(AuthGuard)
+  @Query(() => UserDto, { nullable: true })
+  public async viewer(@ViewerDataDecorator() viewerData: IViewerData): Promise<User | null> {
+    return this.usersService.findById(viewerData.id);
+  }
 
   /**
    * Finds one.
    */
   @UseGuards(AuthGuard)
   @Query(() => UserDto, { name: 'user', nullable: true })
-  public findOne(
-    @Args('id', { type: () => ID }) id: string,
-  ): Promise<User | null> {
+  public findOne(@Args('id', { type: () => ID }) id: string): Promise<User | null> {
     return this.usersService.findById(id);
   }
 
@@ -64,9 +60,7 @@ export class UserResolver {
    * Creates user.
    */
   @Mutation(() => UserDto)
-  public async createUser(
-    @Args('input') input: CreateUserInput,
-  ): Promise<User> {
+  public async createUser(@Args('input') input: CreateUserInput): Promise<User> {
     const user = await this.usersService.create(input);
 
     await this.redisService.publish('userCreated', { userCreated: user });

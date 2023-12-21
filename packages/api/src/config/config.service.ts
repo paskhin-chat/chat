@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as process from 'node:process';
-import * as constants from 'constant';
 
 import { IEnv } from '../common/env';
 
@@ -63,16 +62,6 @@ export class ConfigService {
   }
 
   /**
-   * Client URL.
-   */
-  public get allowedCorsClientUrls(): string[] {
-    return [
-      constants.urls.dev.client,
-      `${constants.Protocol.HTTP}://${constants.domains.dev.api}:${constants.ports.dev.api}`,
-    ];
-  }
-
-  /**
    * Gets expires in property of JWT tokens.
    */
   public get jwtTokensDuration(): {
@@ -86,7 +75,7 @@ export class ConfigService {
     rt: string;
   } {
     return {
-      at: '30m',
+      at: this.prod ? '1m' : '1d',
       rt: '30d',
     };
   }

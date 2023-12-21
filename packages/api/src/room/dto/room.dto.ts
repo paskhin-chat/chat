@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, GraphQLISODateTime } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 
 import { MemberDto } from '../../member/dto/member.dto';
 

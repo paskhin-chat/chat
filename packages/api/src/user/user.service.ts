@@ -54,9 +54,8 @@ export class UserService {
    * Finds member's user.
    */
   public findUserByMemberId(memberId: string): Promise<User | null> {
-    return this.prismaService.member
-      .findUnique({ where: { id: memberId } })
-      .user();
+    // TODO: dont use non user methods and check it everywhere
+    return this.prismaService.member.findUnique({ where: { id: memberId } }).user();
   }
 
   /**

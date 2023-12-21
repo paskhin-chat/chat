@@ -20,25 +20,18 @@ export class MemberService {
    * Finds room's members.
    */
   public async findByRoomId(roomId: string): Promise<Member[] | null> {
-    return this.prismaService.room
-      .findUnique({ where: { id: roomId } })
-      .members();
+    return this.prismaService.room.findUnique({ where: { id: roomId } }).members();
   }
 
   /**
    * Finds member by room's id and user's id.
    */
-  public async findByRoomIdAndUserId(
-    roomId: string,
-    userId: string,
-  ): Promise<Member | null> {
-    const members = await this.prismaService.room
-      .findUnique({ where: { id: roomId } })
-      .members({
-        where: {
-          userId,
-        },
-      });
+  public async findByRoomIdAndUserId(roomId: string, userId: string): Promise<Member | null> {
+    const members = await this.prismaService.room.findUnique({ where: { id: roomId } }).members({
+      where: {
+        userId,
+      },
+    });
 
     return members?.[0] || null;
   }

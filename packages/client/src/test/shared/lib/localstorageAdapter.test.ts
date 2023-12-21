@@ -1,7 +1,9 @@
-import { localStorageAdapter } from 'shared/lib';
+import { createLocalStorageAdapter } from '../../../main/shared';
 
 describe('Localstorage adapter', () => {
   it('should set and get a value', () => {
+    const localStorageAdapter = createLocalStorageAdapter();
+
     const simpleValue = 'simple-value';
     const complicatedValue = {
       id: '1234',
@@ -15,19 +17,19 @@ describe('Localstorage adapter', () => {
     expect(localStorageAdapter.get('simple')).toBe(simpleValue);
     expect(typeof localStorage.getItem('simple')).toBe('string');
 
-    expect(localStorageAdapter.get('complicated')).toStrictEqual(
-      complicatedValue,
-    );
+    expect(localStorageAdapter.get('complicated')).toStrictEqual(complicatedValue);
     expect(typeof localStorage.getItem('complicated')).toBe('string');
   });
 
   it('should delete a value', () => {
+    const localStorageAdapter = createLocalStorageAdapter();
+
     localStorageAdapter.set('simple', 'value');
 
     expect(localStorageAdapter.get('simple')).toBe('value');
 
     localStorageAdapter.delete('simple');
 
-    expect(localStorageAdapter.get('simple')).toBe(undefined);
+    expect(localStorageAdapter.get('simple')).toBe(null);
   });
 });

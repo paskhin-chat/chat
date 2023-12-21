@@ -10,10 +10,7 @@ import { CreateRoomInput } from './dto/create-room.input';
 
 @Injectable()
 export class RoomService {
-  public constructor(
-    private readonly prismaService: PrismaService,
-    private readonly usersService: UserService,
-  ) {}
+  public constructor(private readonly prismaService: PrismaService, private readonly usersService: UserService) {}
 
   /**
    * Finds or creates room by users.
@@ -33,7 +30,7 @@ export class RoomService {
           name: input.name,
           members: {
             createMany: {
-              data: userIds.map((id) => ({ userId: id })),
+              data: userIds.map(id => ({ userId: id })),
             },
           },
         },
@@ -79,6 +76,6 @@ export class RoomService {
       },
     });
 
-    return rooms.find((room) => room.members.length === userIds.length) || null;
+    return rooms.find(room => room.members.length === userIds.length) || null;
   }
 }

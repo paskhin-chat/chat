@@ -9,7 +9,7 @@ module.exports = {
     project: ['packages/*/tsconfig.eslint.json', 'tsconfig.eslint.json'],
     sourceType: 'module',
   },
-  plugins: ['styled-components-varname', 'jsdoc'],
+  plugins: ['styled-components-varname'],
   extends: [
     'plugin:eslint-comments/recommended',
     'plugin:promise/recommended',
@@ -43,20 +43,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/unbound-method': 'off',
     'import/no-unresolved': 'error',
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        trailingComma: 'all',
-        jsxSingleQuote: true,
-        tabWidth: 2,
-        jsdocSingleLineComment: false,
-        plugins: ['prettier-plugin-jsdoc'],
-      },
-      {
-        usePrettierrc: false,
-      },
-    ],
     'styled-components-varname/varname': [
       'error',
       {
@@ -133,12 +119,7 @@ module.exports = {
         allowAsStatement: true,
       },
     ],
-    'no-restricted-syntax': [
-      'error',
-      'ForInStatement',
-      'LabeledStatement',
-      'WithStatement',
-    ],
+    'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
     'no-await-in-loop': 'off',
     'promise/prefer-await-to-then': 'error',
     quotes: [
@@ -164,39 +145,8 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'unicorn/no-null': 'off',
-    'jsdoc/multiline-blocks': [
-      'error',
-      {
-        noSingleLineBlocks: true,
-      },
-    ],
-    'jsdoc/newline-after-description': ['error'],
-    'jsdoc/require-description-complete-sentence': [
-      'error',
-      {
-        newlineBeforeCapsAssumesBadSentenceEnd: true,
-      },
-    ],
-    'jsdoc/require-throws': 'off',
-    'jsdoc/require-jsdoc': [
-      'error',
-      {
-        checkConstructors: false,
-        contexts: [
-          'TSInterfaceDeclaration',
-          'TSTypeAliasDeclaration',
-          'TSPropertySignature',
-          'TSEnumDeclaration',
-          'TSMethodSignature',
-          'ExportDefaultDeclaration',
-          'ExportNamedDeclaration[declaration][declaration.declarations.0.id.name!="getServerSideProps"][declaration.type!="ClassDeclaration"]',
-          'PropertyDefinition:not([accessibility="private"])',
-          'MethodDefinition:not([accessibility="private"])',
-          'ClassProperty:not([accessibility="private"])',
-        ],
-        publicOnly: true,
-      },
-    ],
+    'unicorn/prefer-spread': 'off',
+    'no-underscore-dangle': 'off',
     '@typescript-eslint/naming-convention': [
       'error',
       {
@@ -211,14 +161,6 @@ module.exports = {
         selector: 'variable',
         format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
       },
-      {
-        custom: {
-          match: true,
-          regex: '^[TI][A-Z]',
-        },
-        format: ['PascalCase'],
-        selector: ['typeAlias'],
-      },
     ],
     '@typescript-eslint/no-floating-promises': [
       'error',
@@ -227,12 +169,7 @@ module.exports = {
         ignoreVoid: true,
       },
     ],
-    '@typescript-eslint/no-shadow': [
-      'error',
-      {
-        allow: ['name'],
-      },
-    ],
+    '@typescript-eslint/no-shadow': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-unnecessary-condition': 'error',
@@ -256,9 +193,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
-      extends: [
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
-      ],
+      extends: ['plugin:@typescript-eslint/recommended-requiring-type-checking'],
       rules: {
         '@typescript-eslint/array-type': [
           'error',
@@ -363,7 +298,6 @@ module.exports = {
     {
       files: ['*.fixture.tsx'],
       rules: {
-        'jsdoc/require-jsdoc': ['off'],
         'i18next/no-literal-string': ['off'],
       },
     },

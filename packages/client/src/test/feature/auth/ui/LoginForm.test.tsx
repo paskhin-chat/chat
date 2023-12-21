@@ -1,13 +1,18 @@
-import 'cross-fetch/polyfill';
-import { act, render, waitFor } from '@testing-library/react';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { gql } from '@apollo/client';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { faker } from '@faker-js/faker';
-import { LoginInput } from 'api';
 
-import { AuthUi } from 'feature';
-import { accessTokenProvider } from 'shared';
+import { AuthUi } from '../../../../main/features';
+import {
+  AuthManagerContext,
+  config,
+  createAuthManager,
+  createLocalStorageAdapter,
+  createRequestManager,
+  createValueAccessor,
+  LocalStorageKey,
+  RequestManagerContext,
+} from '../../../../main/shared';
 
 const login = faker.internet.userName({
   firstName: faker.person.firstName(),
@@ -16,16 +21,43 @@ const login = faker.internet.userName({
 const password = faker.internet.password({ length: 6 });
 const accessToken = 'access-token';
 
+global.fetch = jest.fn();
+
 describe('Login form feature', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should render login form and log user in', async () => {
-    const { getByRole, findAllByRole } = render(
-      <MockedProvider mocks={[loginMutationMock]} addTypename={false}>
-        <AuthUi.LoginForm />
-      </MockedProvider>,
+    (fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        json: () => ({
+          data: {
+            login: accessToken,
+          },
+        }),
+      }),
+    );
+
+    const authManager = createAuthManager({
+      apiGqlUri: config.apiGqlUri,
+      accessTokenAccessor: createValueAccessor(createLocalStorageAdapter(), LocalStorageKey.ACCESS_TOKEN),
+    });
+    const requestManager = createRequestManager({
+      authManager,
+      config,
+    });
+
+    const { getByRole, getByLabelText } = render(
+      <AuthManagerContext.Provider value={authManager}>
+        <RequestManagerContext.Provider value={requestManager}>
+          <AuthUi.Login />
+        </RequestManagerContext.Provider>
+      </AuthManagerContext.Provider>,
     );
 
     const form = getByRole('form') as HTMLFormElement;
-    const [loginInput, passwordInput] = (await findAllByRole('textbox')) as [
+    const [loginInput, passwordInput] = (await Promise.all([getByLabelText('Login'), getByLabelText('Password')])) as [
       HTMLInputElement,
       HTMLInputElement,
     ];
@@ -36,39 +68,16 @@ describe('Login form feature', () => {
     expect(passwordInput).toBeTruthy();
     expect(submitButton).toBeTruthy();
 
-    await act(async () => {
-      await userEvent.click(loginInput);
-      await userEvent.keyboard(login);
-      await userEvent.click(passwordInput);
-      await userEvent.keyboard(password);
+    await userEvent.click(loginInput);
+    await userEvent.keyboard(login);
+    await userEvent.click(passwordInput);
+    await userEvent.keyboard(password);
 
-      expect(loginInput.value).toBe(login);
-      expect(passwordInput.value).toBe(password);
+    expect(loginInput.value).toBe(login);
+    expect(passwordInput.value).toBe(password);
 
-      await userEvent.click(submitButton);
-    });
+    await userEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(accessTokenProvider.get()).toBe(accessToken);
-    });
+    expect(authManager.accessToken).toBe(accessToken);
   });
 });
-
-const loginMutationMock: MockedResponse<
-  { login: string },
-  { input: LoginInput }
-> = {
-  request: {
-    query: gql`
-      mutation Login($input: LoginInput!) {
-        login(input: $input)
-      }
-    `,
-    variables: { input: { login, password } },
-  },
-  result: {
-    data: {
-      login: accessToken,
-    },
-  },
-};

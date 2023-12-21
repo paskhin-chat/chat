@@ -23,11 +23,15 @@ export interface IConfig {
   /**
    * Uri for accessing api.
    */
+  apiGqlUri: string;
+  /**
+   * Uri for accessing api.
+   */
   apiUri: string;
   /**
    * Uri for accessing api subscriptions.
    */
-  apiWsUri: string;
+  apiWsGqlUri: string;
 }
 
 /**
@@ -54,6 +58,17 @@ export const config: IConfig = {
   get test() {
     return config.mode === 'test';
   },
+  get apiGqlUri() {
+    if (config.prod) {
+      return urls.prod.apiGql;
+    }
+
+    if (config.test) {
+      return urls.test.apiGql;
+    }
+
+    return urls.dev.apiGql;
+  },
   get apiUri() {
     if (config.prod) {
       return urls.prod.api;
@@ -65,15 +80,15 @@ export const config: IConfig = {
 
     return urls.dev.api;
   },
-  get apiWsUri() {
+  get apiWsGqlUri() {
     if (config.prod) {
-      return urls.prod.ws;
+      return urls.prod.wsGql;
     }
 
     if (config.test) {
-      return urls.test.ws;
+      return urls.test.wsGql;
     }
 
-    return urls.dev.ws;
+    return urls.dev.wsGql;
   },
 };

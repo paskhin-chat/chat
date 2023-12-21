@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { UiButton } from 'shared/components';
+import { UiButton } from '../../../../main/shared';
 
 describe('UiButton component', () => {
   test('Rendered', () => {

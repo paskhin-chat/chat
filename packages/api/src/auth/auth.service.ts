@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { pick } from 'lodash';
-import { UserInputError, AuthenticationError } from 'apollo-server';
+import { AuthenticationError, UserInputError } from 'apollo-server';
 
 import { UserService } from '../user/user.service';
 import { ConfigService } from '../config/config.service';
@@ -67,10 +67,7 @@ export class AuthService {
    */
   public async verifyToken(token: string): Promise<IViewerData> {
     try {
-      return pick(await this.jwtService.verifyAsync<IViewerData>(token), [
-        'id',
-        'login',
-      ]);
+      return pick(await this.jwtService.verifyAsync<IViewerData>(token), ['id', 'login']);
     } catch {
       throw new AuthenticationError('Unauthorized');
     }
@@ -80,10 +77,7 @@ export class AuthService {
    * Refreshes access token using refresh token.
    */
   public async refreshAccessToken(refreshToken: string): Promise<string> {
-    return this.generateToken(
-      await this.verifyToken(refreshToken),
-      this.configService.jwtTokensDuration.at,
-    );
+    return this.generateToken(await this.verifyToken(refreshToken), this.configService.jwtTokensDuration.at);
   }
 
   private async generateTokens(user: User): Promise<[string, string]> {
@@ -93,13 +87,7 @@ export class AuthService {
     ]);
   }
 
-  private async generateToken<Data extends IViewerData>(
-    data: Data,
-    expiresIn: string,
-  ): Promise<string> {
-    return this.jwtService.signAsync(
-      pick<Data, keyof Data>(data, ['id', 'login']),
-      { expiresIn },
-    );
+  private async generateToken<Data extends IViewerData>(data: Data, expiresIn: string): Promise<string> {
+    return this.jwtService.signAsync(pick<Data, keyof Data>(data, ['id', 'login']), { expiresIn });
   }
 }

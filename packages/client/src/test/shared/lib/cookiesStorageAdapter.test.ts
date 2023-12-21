@@ -1,9 +1,11 @@
 import Cookies from 'js-cookie';
 
-import { cookiesStorageAdapter } from 'shared/lib';
+import { createCookiesStorageAdapter } from '../../../main/shared';
 
 describe('Cookies storage adapter', () => {
   it('should set and get a value', () => {
+    const cookiesStorageAdapter = createCookiesStorageAdapter();
+
     const simpleValue = 'simple-value';
     const complicatedValue = {
       id: '1234',
@@ -17,19 +19,19 @@ describe('Cookies storage adapter', () => {
     expect(cookiesStorageAdapter.get('simple')).toBe(simpleValue);
     expect(typeof Cookies.get('simple')).toBe('string');
 
-    expect(cookiesStorageAdapter.get('complicated')).toStrictEqual(
-      complicatedValue,
-    );
+    expect(cookiesStorageAdapter.get('complicated')).toStrictEqual(complicatedValue);
     expect(typeof Cookies.get('complicated')).toBe('string');
   });
 
   it('should delete a value', () => {
+    const cookiesStorageAdapter = createCookiesStorageAdapter();
+
     cookiesStorageAdapter.set('simple', 'value');
 
     expect(cookiesStorageAdapter.get('simple')).toBe('value');
 
     cookiesStorageAdapter.delete('simple');
 
-    expect(cookiesStorageAdapter.get('simple')).toBe(undefined);
+    expect(cookiesStorageAdapter.get('simple')).toBe(null);
   });
 });

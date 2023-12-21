@@ -13,16 +13,12 @@ export class AuthGuard implements CanActivate {
    * If request authorized.
    */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    const gqlContext =
-      GqlExecutionContext.create(context).getContext<GqlContext>();
+    const gqlContext = GqlExecutionContext.create(context).getContext<GqlContext>();
 
     const accessToken = gqlContext.getAccessToken() || '';
     const refreshToken = gqlContext.getRefreshToken() || '';
 
-    await Promise.all([
-      this.authService.verifyToken(accessToken),
-      this.authService.verifyToken(refreshToken),
-    ]);
+    await Promise.all([this.authService.verifyToken(accessToken), this.authService.verifyToken(refreshToken)]);
 
     return true;
   }
