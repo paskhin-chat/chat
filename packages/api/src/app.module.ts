@@ -27,9 +27,9 @@ import { DateScalar } from './common/graphql';
       driver: ApolloDriver,
       useFactory: (configService: ConfigService, authService: AuthService) => ({
         driver: ApolloDriver,
-        autoSchemaFile: './src/gen/schema.gql',
+        autoSchemaFile: './src/schema/schema.gql',
         definitions: {
-          path: './src/gen/index.ts',
+          path: './src/schema/index.ts',
         },
         subscriptions: {
           'graphql-ws': {
