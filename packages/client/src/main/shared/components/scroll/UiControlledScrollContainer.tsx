@@ -75,7 +75,6 @@ export const UiControlledScrollContainer: FC<IProps> = ({ refHandler, children, 
 
 const SParent = styled('div')`
   overflow-y: scroll;
-  flex-grow: 1;
 `;
 
 const SChild = styled('div')`

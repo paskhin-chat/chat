@@ -78,7 +78,14 @@ export const Room: FC<IProps> = ({ roomId }) => {
     >
       <UiControlledScrollContainer
         refHandler={scrollHandlerRef}
-        sx={{ display: messagesStore.state.length === 0 ? 'flex' : 'block' }}
+        sx={
+          messagesStore.state.length === 0
+            ? { display: 'flex', flexGrow: 1 }
+            : {
+                display: 'block',
+                marginTop: 'auto',
+              }
+        }
       >
         <IntersectionSpy target={<div />} onIntersect={handleLoadMore}>
           <MessageUi.MessageList

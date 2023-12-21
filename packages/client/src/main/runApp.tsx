@@ -9,7 +9,7 @@ import { App } from './app';
 export function runApp(): void {
   createRoot(document.querySelector('#root')!).render(
     <StrictMode>
-      <App />,
+      <App />
     </StrictMode>,
   );
 }
