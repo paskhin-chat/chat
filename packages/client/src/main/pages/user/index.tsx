@@ -48,7 +48,10 @@ const UserPage: FC<IProps> = ({ params }) => {
         </UiBasePageLayoutAside>
       }
       content={
-        <UiBasePageLayoutContent header={<Typography>Here is a user header</Typography>}>
+        <UiBasePageLayoutContent
+          header={<Typography>Here is a user header</Typography>}
+          onGoBack={() => setLocation('/rooms')}
+        >
           <UiFlexCentered>
             {userId ? (
               <UiButton onClick={() => handleCreateRoom(userId)}>Create a room</UiButton>

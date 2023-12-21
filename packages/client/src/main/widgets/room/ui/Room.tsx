@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 import { Typography } from '@mui/material';
+import { useLocation } from 'wouter';
 
 import {
   IntersectionSpy,
@@ -21,6 +22,8 @@ interface IProps {
  * @widget
  */
 export const Room: FC<IProps> = ({ roomId }) => {
+  const [, setLocation] = useLocation();
+
   const scrollHandlerRef = useRef<IUiControlledScrollContainerRefHandler>(null);
 
   // TODO: maybe I don't need to use this store, because I can use simple useState
@@ -65,7 +68,10 @@ export const Room: FC<IProps> = ({ roomId }) => {
 
   if (!viewerId || !roomId) {
     return (
-      <UiBasePageLayoutContent header={<Typography>Chat room messages</Typography>}>
+      <UiBasePageLayoutContent
+        header={<Typography>Chat room messages</Typography>}
+        onGoBack={() => setLocation('/rooms')}
+      >
         <UiFlexCentered>{roomId ? <UiCirclePending /> : <Typography>Choose a room</Typography>}</UiFlexCentered>
       </UiBasePageLayoutContent>
     );
@@ -75,6 +81,7 @@ export const Room: FC<IProps> = ({ roomId }) => {
     <UiBasePageLayoutContent
       header={<Typography>Chat room messages</Typography>}
       footer={<MessageFeatureUi.CreateMessage roomId={roomId} onSubmitted={handleMessageSent} />}
+      onGoBack={() => setLocation('/rooms')}
     >
       <UiControlledScrollContainer
         refHandler={scrollHandlerRef}

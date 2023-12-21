@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { css, styled } from '@mui/material/styles';
-import { Theme, useMediaQuery } from '@mui/material';
+import { IconButton, Theme, useMediaQuery } from '@mui/material';
+import { ArrowBackIosNew } from '@mui/icons-material';
 
 interface IProps {
   aside?: ReactNode;
@@ -46,11 +47,20 @@ interface IUiBasePageLayoutContentProps {
   header: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
+  onGoBack?: () => void;
 }
 
-export const UiBasePageLayoutContent: FC<IUiBasePageLayoutContentProps> = ({ header, children, footer }) => (
+export const UiBasePageLayoutContent: FC<IUiBasePageLayoutContentProps> = ({ header, children, footer, onGoBack }) => (
   <SMainPart full={!footer}>
-    <SHeader>{header}</SHeader>
+    <SHeader>
+      {onGoBack && (
+        <IconButton onClick={onGoBack}>
+          <ArrowBackIosNew />
+        </IconButton>
+      )}
+
+      {header}
+    </SHeader>
 
     <SContent>{children}</SContent>
 
@@ -97,6 +107,7 @@ const SHeader = styled('header')(
     display: flex;
     align-items: center;
     padding-inline: ${theme.spacing(2)};
+    column-gap: ${theme.spacing(1)};
   `,
 );
 
