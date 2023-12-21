@@ -1,7 +1,7 @@
 import { IValueAccessor } from '../storage';
 import { gql } from '../api/gql';
 import { makeGqlRequest } from '../api/makeGqlRequest';
-import { Mutation } from '../../gen/api-types';
+import type { Mutation } from '../api';
 import { EventBus } from '../lib';
 
 export interface IAuthManager {

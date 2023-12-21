@@ -5,8 +5,12 @@ import {
   ISubscriptionOptions,
   useGqlExecutor,
   useSubscription,
+  Mutation,
+  MutationCreateMessageArgs,
+  Query,
+  QueryMessagesArgs,
+  Subscription,
 } from '../../../shared';
-import { Mutation, MutationCreateMessageArgs, Query, QueryMessagesArgs, Subscription } from '../../../gen/api-types';
 
 export function useMessagesExecutor(
   options?: IGqlExecutorOptions<Pick<Query, 'messages'>, QueryMessagesArgs>,

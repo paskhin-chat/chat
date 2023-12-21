@@ -6,7 +6,7 @@ import { useValue } from 'react-cosmos/client';
 import { RoomUi } from '../../../main/entities';
 import { findRandomIndex, getRandomValue, withGlobalStyles } from '../../__utils__';
 import { getUserName } from '../../__mock__';
-import { RoomDto } from '../../../main/gen/api-types';
+import { RoomDto } from '../../../main/shared';
 
 const getRooms = (count: number): RoomDto[] =>
   range(count).map<RoomDto>(() => ({

@@ -3,8 +3,7 @@ import { Box, List, ListItem, ListSubheader } from '@mui/material';
 import { formatISO, formatRFC3339, parseISO, startOfDay } from 'date-fns';
 import { css, styled } from '@mui/material/styles';
 
-import { MessageDto } from '../../../gen/api-types';
-import { formatUserName, UiCirclePending, UiDate, UiFlexCentered } from '../../../shared';
+import { MessageDto, formatUserName, UiCirclePending, UiDate, UiFlexCentered } from '../../../shared';
 
 import { Message } from './Message';
 

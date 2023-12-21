@@ -1,8 +1,7 @@
 import { FC, useMemo } from 'react';
 import { Divider, List, ListItemButton, ListItemText, Stack } from '@mui/material';
 
-import { RoomDto } from '../../../gen/api-types';
-import { formatUserName } from '../../../shared';
+import { RoomDto, formatUserName } from '../../../shared';
 
 interface IProps {
   viewerId: string;

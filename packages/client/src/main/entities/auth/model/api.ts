@@ -1,5 +1,13 @@
-import { gql, IGqlExecutor, IGqlExecutorOptions, useAuthManager, useGqlExecutor } from '../../../shared';
-import { Mutation, MutationLoginArgs, MutationRegisterArgs } from '../../../gen/api-types';
+import {
+  gql,
+  IGqlExecutor,
+  IGqlExecutorOptions,
+  useAuthManager,
+  useGqlExecutor,
+  Mutation,
+  MutationLoginArgs,
+  MutationRegisterArgs,
+} from '../../../shared';
 
 export function useLoginExecutor(
   options?: IGqlExecutorOptions<Pick<Mutation, 'login'>, MutationLoginArgs>,

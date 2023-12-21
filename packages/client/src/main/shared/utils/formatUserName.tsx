@@ -1,6 +1,6 @@
 import capitalize from 'lodash/capitalize';
 
-import { Maybe } from '../types';
+import { Maybe } from '../api';
 
 /**
  * Can be used instead of real user first name.

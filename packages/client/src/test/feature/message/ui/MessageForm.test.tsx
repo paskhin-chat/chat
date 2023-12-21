@@ -2,9 +2,8 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { faker } from '@faker-js/faker';
 
-import { MessageDto } from '../../../../main/gen/api-types';
-import { MessageUi } from '../../../../main/features';
 import {
+  MessageDto,
   config,
   createAuthManager,
   createLocalStorageAdapter,
@@ -14,6 +13,7 @@ import {
   LocalStorageKey,
   RequestManagerContext,
 } from '../../../../main/shared';
+import { MessageUi } from '../../../../main/features';
 
 const roomId = faker.string.uuid();
 const content = faker.word.words();

@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect } from 'react';
 
-import { UserDto } from '../../../gen/api-types';
-import { createBaseStore, IBaseStore } from '../../../shared/store/createBaseStore';
-import { useRerender } from '../../../shared';
+import { UserDto, createBaseStore, IBaseStore, useRerender } from '../../../shared';
 
 const ViewerStoreContext = createContext(createBaseStore<UserDto>());
 

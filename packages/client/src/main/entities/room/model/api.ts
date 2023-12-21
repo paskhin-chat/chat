@@ -1,5 +1,12 @@
-import { gql, IGqlExecutor, IGqlExecutorOptions, useGqlExecutor } from '../../../shared';
-import { Mutation, MutationCreateRoomArgs, Query } from '../../../gen/api-types';
+import {
+  gql,
+  IGqlExecutor,
+  IGqlExecutorOptions,
+  useGqlExecutor,
+  Mutation,
+  MutationCreateRoomArgs,
+  Query,
+} from '../../../shared';
 
 export function useRoomsExecutor(options?: IGqlExecutorOptions<Pick<Query, 'rooms'>>): IGqlExecutor {
   return useGqlExecutor(roomsQuery, options);

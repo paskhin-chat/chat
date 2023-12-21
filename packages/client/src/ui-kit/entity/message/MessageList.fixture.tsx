@@ -7,7 +7,7 @@ import { useValue } from 'react-cosmos/client';
 import { MessageUi } from '../../../main/entities';
 import { findRandomElement, withGlobalStyles } from '../../__utils__';
 import { getMessageContent, getUserName } from '../../__mock__';
-import { MessageDto, UserDto } from '../../../main/gen/api-types';
+import { MessageDto, UserDto } from '../../../main/shared';
 
 const getMessages = (count: number, users: UserDto[], dates: Date[]): MessageDto[] =>
   range(0, count)

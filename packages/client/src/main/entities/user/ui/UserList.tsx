@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import { Divider, List, ListItemButton, ListItemText, Stack } from '@mui/material';
 
-import { UserDto } from '../../../gen/api-types';
-import { formatUserName } from '../../../shared';
+import { UserDto, formatUserName } from '../../../shared';
 
 interface IProps {
   users: UserDto[];

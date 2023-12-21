@@ -1,13 +1,16 @@
 schema: http://localhost:3002/graphql
 generates:
-  ./src/main/gen/api-types.ts:
+  ./src/main/shared/api/schema.ts:
     plugins:
       - typescript
     config:
       nonOptionalTypename: true
       maybeValue: T | null | undefined
-      declarationKind: 'interface'
+      declarationKind: type
       strictScalars: true
       scalars:
         Date: string
         DateTime: string
+hooks:
+  afterAllFileWrite:
+    - eslint --fix

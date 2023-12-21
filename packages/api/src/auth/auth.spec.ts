@@ -9,7 +9,7 @@ import { ports } from 'constant';
 import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
 import { createModule, gql, requestCreator, resetDatabase } from '../common/test';
-import { LoginInput, RegisterInput, UserDto } from '../schema';
+import { LoginInput, RegisterInput, UserDto } from '../gen';
 
 import { AuthService } from './auth.service';
 

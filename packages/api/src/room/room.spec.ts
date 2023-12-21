@@ -8,7 +8,7 @@ import { ConfigService } from '../config/config.service';
 import { RedisService } from '../redis/redis.service';
 import { createModule, gql, requestCreator, resetDatabase } from '../common/test';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateRoomInput, RoomDto } from '../schema';
+import { CreateRoomInput, RoomDto } from '../gen';
 import { AuthService } from '../auth/auth.service';
 
 describe('Room integration', () => {

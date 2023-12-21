@@ -7,7 +7,7 @@ import { UniqueEnforcer } from 'enforce-unique';
 import { UserUi } from '../../../main/entities';
 import { withGlobalStyles } from '../../__utils__';
 import { getUserName } from '../../__mock__';
-import { UserDto } from '../../../main/gen/api-types';
+import { UserDto } from '../../../main/shared';
 
 const unq = new UniqueEnforcer();
 

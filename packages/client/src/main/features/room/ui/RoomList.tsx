@@ -2,8 +2,7 @@ import { FC, useState } from 'react';
 import { useLocation } from 'wouter';
 
 import { roomModel, RoomUi, viewerModel } from '../../../entities';
-import { UiCirclePending, UiFlexCentered, useEffectOnce } from '../../../shared';
-import { RoomDto } from '../../../gen/api-types';
+import { UiCirclePending, UiFlexCentered, useEffectOnce, RoomDto } from '../../../shared';
 
 interface IProps {
   roomId?: string;

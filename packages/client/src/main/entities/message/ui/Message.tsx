@@ -2,8 +2,7 @@ import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { css, styled } from '@mui/material/styles';
 
-import { UiTime } from '../../../shared';
-import { MessageDto } from '../../../gen/api-types';
+import { UiTime, MessageDto } from '../../../shared';
 
 interface IProps {
   message: MessageDto;

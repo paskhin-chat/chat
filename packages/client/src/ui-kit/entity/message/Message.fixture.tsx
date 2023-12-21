@@ -5,8 +5,7 @@ import { FC } from 'react';
 import { MessageUi } from '../../../main/entities';
 import { useBooleanValue, withGlobalStyles } from '../../__utils__';
 import { getMessageContent, getUserName } from '../../__mock__';
-import { formatUserName } from '../../../main/shared';
-import { UserDto } from '../../../main/gen/api-types';
+import { formatUserName, UserDto } from '../../../main/shared';
 
 const defaultContent = getMessageContent();
 const defaultTime = faker.date.anytime().toISOString();

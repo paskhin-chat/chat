@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect } from 'react';
 
-import { createListStore, IListStore, useRerender } from '../../../shared';
-import { MessageDto } from '../../../gen/api-types';
+import { createListStore, IListStore, useRerender, MessageDto } from '../../../shared';
 
 const MessagesStoreContext = createContext(createListStore<MessageDto>());
 

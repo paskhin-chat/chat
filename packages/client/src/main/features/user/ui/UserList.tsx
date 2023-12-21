@@ -2,8 +2,7 @@ import { FC, useState } from 'react';
 import { useLocation } from 'wouter';
 
 import { userModel, UserUi } from '../../../entities';
-import { UiCirclePending, UiFlexCentered, useEffectOnce } from '../../../shared';
-import { UserDto } from '../../../gen/api-types';
+import { UiCirclePending, UiFlexCentered, useEffectOnce, UserDto } from '../../../shared';
 
 interface IProps {
   userId?: string;
